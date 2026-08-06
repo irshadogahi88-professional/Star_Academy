@@ -37,8 +37,51 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
 
   if (apiKey && apiKey !== 'your_gemini_api_key_here') {
     try {
+      const { SchemaType } = require('@google/generative-ai')
       const genAI = new GoogleGenerativeAI(apiKey)
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
+      
+      const mcqSchema = {
+        type: SchemaType.ARRAY,
+        description: "List of multiple choice questions extracted from the document",
+        items: {
+          type: SchemaType.OBJECT,
+          properties: {
+            questionText: {
+              type: SchemaType.STRING,
+              description: "The complete question statement. Do NOT include the question number (e.g. '1.', 'Q2'). MUST include any multi-line statements (like I, II, III) if they are part of the question."
+            },
+            options: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING },
+              description: "Exactly 4 options for the MCQ. Remove the A), B), C), D) prefixes.",
+              minItems: 4,
+              maxItems: 4
+            },
+            correctIndex: {
+              type: SchemaType.INTEGER,
+              description: "The index (0 to 3) of the correct option if the answer is indicated in the document. Set to 0 if unknown."
+            },
+            explanation: {
+              type: SchemaType.STRING,
+              description: "Any explanation or hint provided in the text. Empty string if none."
+            },
+            subject: { type: SchemaType.STRING, description: "Subject of the question" },
+            class: { type: SchemaType.STRING, description: "Grade/Class level" },
+            chapter: { type: SchemaType.STRING, description: "Chapter or Topic heading" },
+            difficulty: { type: SchemaType.STRING, description: "Difficulty level (Easy, Medium, Hard)" },
+            sourceDoc: { type: SchemaType.STRING, description: "Source document filename" }
+          },
+          required: ["questionText", "options", "correctIndex", "explanation", "subject", "class", "chapter", "difficulty", "sourceDoc"]
+        }
+      }
+
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-1.5-flash-latest',
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: mcqSchema
+        }
+      })
 
       const prompt = `You are an expert educational AI specialized in parsing complex MDCAT, ECAT, Physics, Mathematics, and Logical Reasoning (LR) test papers. Extract all Multiple Choice Questions (MCQs) from this document for subject "${subject}" (Grade/Level: "${classLevel}"). 
 
@@ -52,20 +95,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       7. CHAPTER & ANSWER: Assign a relevant chapter based on nearest heading. If the answer is indicated in the text (e.g., "Ans: A"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.
 
       
-      Return ONLY a valid JSON array of question objects matching this structure (no markdown code fences, no extra text):
-      [
-        {
-          "questionText": "Full question statement",
-          "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
-          "correctIndex": 0,
-          "explanation": "Brief explanation if present",
-          "subject": "${subject}",
-          "class": "${classLevel}",
-          "chapter": "Chapter Heading",
-          "difficulty": "Medium",
-          "sourceDoc": "${filename}"
-        }
-      ]`;
+      // No JSON array example needed in prompt since we use responseSchema
 
       if (fileBuffer) {
         // Native Gemini File Parsing (Supports PDF, Word, etc.)
