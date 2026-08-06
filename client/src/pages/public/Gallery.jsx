@@ -34,7 +34,7 @@ export default function Gallery() {
   useEffect(() => {
     const fetchGallery = async () => {
       try {
-        const res = await api.get('/api/gallery')
+        const res = await api.get('/gallery')
         if (res.data?.success) {
           setImages(res.data.data)
         }

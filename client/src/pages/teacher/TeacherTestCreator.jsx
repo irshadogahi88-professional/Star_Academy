@@ -17,6 +17,8 @@ export default function TeacherTestCreator() {
     startTime: '',
     endTime: '',
     showResultsToStudents: true,
+    allowPracticeMode: true,
+    showAnswersAtEnd: true,
   })
   const [created, setCreated] = useState(false)
 
@@ -120,7 +122,9 @@ export default function TeacherTestCreator() {
         mcqIds: mcqIds,
         startTime: formData.startTime || null,
         endTime: formData.endTime || null,
-        showResultsToStudents: formData.showResultsToStudents
+        showResultsToStudents: formData.showResultsToStudents,
+        allowPracticeMode: formData.allowPracticeMode,
+        showAnswersAtEnd: formData.showAnswersAtEnd
       })
       
       const testData = testRes.data
@@ -153,7 +157,9 @@ export default function TeacherTestCreator() {
           mcqIds: selectedMcqIds,
           startTime: formData.startTime || null,
           endTime: formData.endTime || null,
-          showResultsToStudents: formData.showResultsToStudents
+          showResultsToStudents: formData.showResultsToStudents,
+          allowPracticeMode: formData.allowPracticeMode,
+          showAnswersAtEnd: formData.showAnswersAtEnd
         })
         
         const data = response.data
@@ -182,7 +188,9 @@ export default function TeacherTestCreator() {
           randomCount: Math.min(100, Math.max(10, Math.floor(formData.totalMarks / 5))), // estimate count based on marks, max 100
           startTime: formData.startTime || null,
           endTime: formData.endTime || null,
-          showResultsToStudents: formData.showResultsToStudents
+          showResultsToStudents: formData.showResultsToStudents,
+          allowPracticeMode: formData.allowPracticeMode,
+          showAnswersAtEnd: formData.showAnswersAtEnd
         })
         
         const data = response.data
@@ -405,16 +413,29 @@ export default function TeacherTestCreator() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#DCE8DD] cursor-pointer hover:border-[#147a4a] transition-colors shadow-sm">
+              <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#DCE8DD] cursor-pointer hover:border-[#147a4a] transition-colors shadow-sm mb-3">
                 <input
                   type="checkbox"
-                  checked={formData.showResultsToStudents}
-                  onChange={(e) => setFormData({ ...formData, showResultsToStudents: e.target.checked })}
+                  checked={formData.allowPracticeMode}
+                  onChange={(e) => setFormData({ ...formData, allowPracticeMode: e.target.checked })}
                   className="w-5 h-5 text-[#147a4a] bg-gray-100 border-gray-300 rounded focus:ring-[#147a4a]"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm font-bold text-[#0E4429]">Show Correct Answers Upon Submission</span>
-                  <span className="text-xs text-[#3a4a40]">Uncheck this to hide correct options from students after they finish (Prevents sharing answers during exams).</span>
+                  <span className="text-sm font-bold text-[#0E4429]">Allow Practice Mode</span>
+                  <span className="text-xs text-[#3a4a40]">Uncheck this to force students to only take this test in Exam Mode (strict timer, no instant answers).</span>
+                </div>
+              </label>
+              
+              <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#DCE8DD] cursor-pointer hover:border-[#147a4a] transition-colors shadow-sm">
+                <input
+                  type="checkbox"
+                  checked={formData.showAnswersAtEnd}
+                  onChange={(e) => setFormData({ ...formData, showAnswersAtEnd: e.target.checked })}
+                  className="w-5 h-5 text-[#147a4a] bg-gray-100 border-gray-300 rounded focus:ring-[#147a4a]"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-[#0E4429]">Show Detailed Answers at End</span>
+                  <span className="text-xs text-[#3a4a40]">Uncheck this to hide the correct options and explanations in the final result screen. They will only see their Score.</span>
                 </div>
               </label>
             </div>

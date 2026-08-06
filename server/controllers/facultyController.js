@@ -1,12 +1,19 @@
 const Faculty = require('../models/Faculty')
 const { logAudit } = require('../middleware/auditLogger')
+const cache = require('../utils/cache')
 
 // @desc    Get all active faculty (public)
 // @route   GET /api/faculty
 // @access  Public
 exports.getFaculty = async (req, res) => {
   try {
+    const cachedData = cache.getCache('faculty_active')
+    if (cachedData) {
+      return res.status(200).json({ success: true, count: cachedData.length, data: cachedData })
+    }
+
     const faculty = await Faculty.find({ isActive: true }).sort('order')
+    cache.setCache('faculty_active', faculty, 900) // cache for 15 mins
     res.status(200).json({ success: true, count: faculty.length, data: faculty })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -36,6 +43,8 @@ exports.createFaculty = async (req, res) => {
     const faculty = await Faculty.create(req.body)
 
     await logAudit(req, 'CREATE_FACULTY', 'Faculty', faculty._id, `Added faculty member: ${faculty.name} (${faculty.subject})`)
+    
+    cache.invalidateCache('faculty_active')
 
     res.status(201).json({ success: true, data: faculty })
   } catch (error) {
@@ -58,6 +67,8 @@ exports.updateFaculty = async (req, res) => {
 
     await logAudit(req, 'UPDATE_FACULTY', 'Faculty', faculty._id, `Updated faculty profile: ${faculty.name}`)
 
+    cache.invalidateCache('faculty_active')
+
     res.status(200).json({ success: true, data: faculty })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -78,6 +89,8 @@ exports.deleteFaculty = async (req, res) => {
     await faculty.deleteOne()
 
     await logAudit(req, 'DELETE_FACULTY', 'Faculty', req.params.id, `Removed faculty member: ${name}`)
+
+    cache.invalidateCache('faculty_active')
 
     res.status(200).json({ success: true, message: `Faculty member ${name} removed` })
   } catch (error) {

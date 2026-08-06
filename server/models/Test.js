@@ -38,6 +38,8 @@ const TestSchema = new mongoose.Schema(
     startTime: { type: Date, default: null },
     endTime: { type: Date, default: null },
     showResultsToStudents: { type: Boolean, default: true },
+    allowPracticeMode: { type: Boolean, default: true },
+    showAnswersAtEnd: { type: Boolean, default: true },
   },
   { timestamps: true }
 )

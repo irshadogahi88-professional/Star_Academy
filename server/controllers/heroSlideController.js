@@ -1,12 +1,19 @@
 const HeroSlide = require('../models/HeroSlide')
 const { logAudit } = require('../middleware/auditLogger')
+const cache = require('../utils/cache')
 
 // @desc    Get all active hero slides (public)
 // @route   GET /api/hero-slides
 // @access  Public
 exports.getHeroSlides = async (req, res) => {
   try {
+    const cachedData = cache.getCache('hero_slides_active')
+    if (cachedData) {
+      return res.status(200).json({ success: true, count: cachedData.length, data: cachedData })
+    }
+
     const slides = await HeroSlide.find({ isActive: true }).sort('order')
+    cache.setCache('hero_slides_active', slides, 900) // 15 mins
     res.status(200).json({ success: true, count: slides.length, data: slides })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -37,6 +44,8 @@ exports.createHeroSlide = async (req, res) => {
 
     await logAudit(req, 'CREATE_HERO_SLIDE', 'HeroSlide', slide._id, `Published hero banner: "${slide.title}"`)
 
+    cache.invalidateCache('hero_slides_active')
+
     res.status(201).json({ success: true, data: slide })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -58,6 +67,8 @@ exports.updateHeroSlide = async (req, res) => {
 
     await logAudit(req, 'UPDATE_HERO_SLIDE', 'HeroSlide', slide._id, `Updated hero banner: "${slide.title}"`)
 
+    cache.invalidateCache('hero_slides_active')
+
     res.status(200).json({ success: true, data: slide })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -78,6 +89,8 @@ exports.deleteHeroSlide = async (req, res) => {
     await slide.deleteOne()
 
     await logAudit(req, 'DELETE_HERO_SLIDE', 'HeroSlide', req.params.id, `Removed hero banner: "${title}"`)
+
+    cache.invalidateCache('hero_slides_active')
 
     res.status(200).json({ success: true, message: `Hero slide "${title}" removed` })
   } catch (error) {

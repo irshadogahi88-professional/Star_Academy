@@ -4,6 +4,7 @@ const Lecture = require('../models/Lecture')
 const Test = require('../models/Test')
 const MCQ = require('../models/MCQ')
 const { logAudit } = require('../middleware/auditLogger')
+const cache = require('../utils/cache')
 
 // @desc    Get all registered students
 // @route   GET /api/admin/students
@@ -198,6 +199,11 @@ exports.getAdminMetrics = async (req, res) => {
 // @access  Public
 exports.getPublicStats = async (req, res) => {
   try {
+    const cachedData = cache.getCache('public_stats')
+    if (cachedData) {
+      return res.json({ success: true, stats: cachedData })
+    }
+
     const Faculty = require('../models/Faculty')
     const approvedStudents = await User.countDocuments({ role: 'student', isApproved: true })
     const totalLectures = await Lecture.countDocuments()
@@ -205,15 +211,19 @@ exports.getPublicStats = async (req, res) => {
     const totalMCQs = await MCQ.countDocuments()
     const totalFaculty = await Faculty.countDocuments({ isActive: true })
 
+    const stats = {
+      students: approvedStudents,
+      lectures: totalLectures,
+      tests: totalTests,
+      mcqs: totalMCQs,
+      faculty: totalFaculty,
+    }
+
+    cache.setCache('public_stats', stats, 1800) // 30 mins
+
     res.json({
       success: true,
-      stats: {
-        students: approvedStudents,
-        lectures: totalLectures,
-        tests: totalTests,
-        mcqs: totalMCQs,
-        faculty: totalFaculty,
-      },
+      stats,
     })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })

@@ -1,11 +1,18 @@
 const Gallery = require('../models/Gallery')
+const cache = require('../utils/cache')
 
 // @desc    Get all active gallery images (Public)
 // @route   GET /api/gallery
 // @access  Public
 exports.getGalleryImages = async (req, res) => {
   try {
+    const cachedData = cache.getCache('gallery_active')
+    if (cachedData) {
+      return res.status(200).json({ success: true, count: cachedData.length, data: cachedData })
+    }
+
     const images = await Gallery.find({ isActive: true }).sort('order createdAt')
+    cache.setCache('gallery_active', images, 900) // 15 mins
     res.status(200).json({ success: true, count: images.length, data: images })
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' })
@@ -37,6 +44,8 @@ exports.createGalleryImage = async (req, res) => {
 
     const image = await Gallery.create(req.body)
 
+    cache.invalidateCache('gallery_active')
+
     res.status(201).json({ success: true, data: image })
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -61,6 +70,8 @@ exports.updateGalleryImage = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Image not found' })
     }
 
+    cache.invalidateCache('gallery_active')
+
     res.status(200).json({ success: true, data: image })
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server Error' })
@@ -80,6 +91,8 @@ exports.deleteGalleryImage = async (req, res) => {
 
     const title = image.title
     await image.deleteOne()
+
+    cache.invalidateCache('gallery_active')
 
     res.status(200).json({ success: true, data: {} })
   } catch (error) {

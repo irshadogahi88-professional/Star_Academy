@@ -1,12 +1,19 @@
 const SuccessStory = require('../models/SuccessStory')
 const { logAudit } = require('../middleware/auditLogger')
+const cache = require('../utils/cache')
 
 // @desc    Get all success stories (public)
 // @route   GET /api/success-stories
 // @access  Public
 exports.getSuccessStories = async (req, res) => {
   try {
+    const cachedData = cache.getCache('success_stories')
+    if (cachedData) {
+      return res.status(200).json({ success: true, count: cachedData.length, data: cachedData })
+    }
+
     const stories = await SuccessStory.find({}).sort('-year order').populate('createdBy', 'fullName')
+    cache.setCache('success_stories', stories, 900) // 15 mins
     res.status(200).json({ success: true, count: stories.length, data: stories })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -22,6 +29,8 @@ exports.createSuccessStory = async (req, res) => {
     const story = await SuccessStory.create(req.body)
 
     await logAudit(req, 'CREATE_SUCCESS_STORY', 'SuccessStory', story._id, `Published success story: ${story.studentName} — ${story.achievement}`)
+
+    cache.invalidateCache('success_stories')
 
     res.status(201).json({ success: true, data: story })
   } catch (error) {
@@ -44,6 +53,8 @@ exports.updateSuccessStory = async (req, res) => {
 
     await logAudit(req, 'UPDATE_SUCCESS_STORY', 'SuccessStory', story._id, `Updated story: ${story.studentName}`)
 
+    cache.invalidateCache('success_stories')
+
     res.status(200).json({ success: true, data: story })
   } catch (error) {
     res.status(500).json({ success: false, message: error.message })
@@ -64,6 +75,8 @@ exports.deleteSuccessStory = async (req, res) => {
     await story.deleteOne()
 
     await logAudit(req, 'DELETE_SUCCESS_STORY', 'SuccessStory', req.params.id, `Deleted success story: ${name}`)
+
+    cache.invalidateCache('success_stories')
 
     res.status(200).json({ success: true, message: `Success story for ${name} removed` })
   } catch (error) {

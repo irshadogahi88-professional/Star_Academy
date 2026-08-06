@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { FaClock, FaExclamationTriangle, FaCheckCircle, FaArrowRight, FaArrowLeft, FaFlag } from 'react-icons/fa'
+import { FaClock, FaExclamationTriangle, FaCheckCircle, FaArrowRight, FaArrowLeft, FaFlag, FaTimesCircle, FaLightbulb, FaBrain } from 'react-icons/fa'
+import { motion, AnimatePresence } from 'framer-motion'
 import testService from '../../services/testService'
-
-// Dummy questions removed
 
 export default function TestAttempt() {
   const { id } = useParams()
@@ -13,10 +12,13 @@ export default function TestAttempt() {
   const [testInfo, setTestInfo] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const [testState, setTestState] = useState('intro') // 'intro', 'running'
+  const [mode, setMode] = useState('exam') // 'practice', 'exam'
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState({}) // { questionId: optionIndex }
   const [flagged, setFlagged] = useState({}) // { questionId: boolean }
-  const [timeLeft, setTimeLeft] = useState(600) // Default 10 minutes
+  const [timeLeft, setTimeLeft] = useState(0)
   const [tabSwitches, setTabSwitches] = useState(0)
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -41,6 +43,8 @@ export default function TestAttempt() {
 
   // Timer countdown
   useEffect(() => {
+    if (testState !== 'running' || mode !== 'exam') return
+
     if (timeLeft <= 0) {
       handleSubmitTest(true)
       return
@@ -49,10 +53,12 @@ export default function TestAttempt() {
       setTimeLeft((prev) => prev - 1)
     }, 1000)
     return () => clearInterval(timer)
-  }, [timeLeft])
+  }, [timeLeft, testState, mode])
 
-  // Window blur / Tab switch detector
+  // Window blur / Tab switch detector (only in exam mode)
   useEffect(() => {
+    if (testState !== 'running' || mode !== 'exam') return
+
     const handleBlur = () => {
       setTabSwitches((prev) => {
         const next = prev + 1
@@ -65,7 +71,7 @@ export default function TestAttempt() {
     }
     window.addEventListener('blur', handleBlur)
     return () => window.removeEventListener('blur', handleBlur)
-  }, [])
+  }, [testState, mode])
 
   const currentQ = questions.length > 0 ? questions[currentIndex] : null
 
@@ -77,6 +83,9 @@ export default function TestAttempt() {
 
   const handleSelectOption = (optionIndex) => {
     if (currentQ) {
+      if (mode === 'practice' && userAnswers[currentQ._id || currentQ.id] !== undefined) {
+        return // Prevent changing answer in practice mode
+      }
       setUserAnswers((prev) => ({ ...prev, [currentQ._id || currentQ.id]: optionIndex }))
     }
   }
@@ -87,15 +96,20 @@ export default function TestAttempt() {
     }
   }
 
+  const handleStart = (selectedMode) => {
+    setMode(selectedMode)
+    setTestState('running')
+  }
+
   const handleSubmitTest = async (auto = false) => {
     if (isSubmitting) return
     setIsSubmitting(true)
 
-    // Call backend API evaluation if available
+    // Call backend API evaluation
     const payload = {
       answers: userAnswers,
       tabSwitches,
-      timeTakenSeconds: 600 - timeLeft,
+      timeTakenSeconds: testInfo ? (testInfo.durationMinutes * 60) - timeLeft : 0,
       autoSubmitted: auto,
     }
 
@@ -111,7 +125,7 @@ export default function TestAttempt() {
       // Fallback local scoring if API fails
       questions.forEach((q) => {
         if (userAnswers[q._id || q.id] === q.correctOptionIndex) {
-          score += 4
+          score += 4 // Assuming 4 marks per correct answer
         }
       })
     }
@@ -124,201 +138,325 @@ export default function TestAttempt() {
         autoSubmitted: auto,
         tabSwitches,
         apiData: resultPayload,
+        testInfo, // Pass test info to result screen for constraints check
       },
     })
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen bg-cream">
+        <div className="w-12 h-12 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-[#0E4429]">No questions found for this test.</h2>
-        <button onClick={() => navigate('/student/tests')} className="btn-primary mt-4 text-xs !py-3 px-6">Return to Tests</button>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-cream px-4 text-center">
+        <FaExclamationTriangle className="text-[#0E4429] mb-4" size={48} />
+        <h2 className="text-3xl font-black text-[#0E4429] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>No Questions Available</h2>
+        <p className="text-gray-600 mb-6">This test currently has no questions assigned to it.</p>
+        <button onClick={() => navigate('/student/tests')} className="btn-primary">Return to Dashboard</button>
       </div>
     )
   }
 
-  return (
-    <div className="space-y-6">
-      {/* Top Test Header Bar */}
-      <div className="card !p-5 bg-[#0E4429] text-white flex flex-wrap items-center justify-between gap-4 border-none shadow-lg">
-        <div>
-          <span className="badge badge-gold text-xs font-bold mb-1">Physics • MDCAT Test</span>
-          <h1 className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-            Kinematics & Dynamics Model Exam
-          </h1>
-        </div>
+  if (testState === 'intro') {
+    const allowPractice = testInfo?.allowPracticeMode !== false // Default true if undefined
 
-        {/* Server Timer */}
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl border border-white/20">
-            <FaClock className="text-[#D4A64A]" />
-            <span className="font-mono text-lg font-bold text-white">{formatTime(timeLeft)}</span>
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#f8f9fa] to-cream flex items-center justify-center p-6">
+        <div className="max-w-4xl w-full">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl font-black text-[#0E4429] mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+              {testInfo?.title}
+            </h1>
+            <p className="text-lg text-[#3a4a40]">How would you like to attempt this test?</p>
           </div>
 
-          <button
-            onClick={() => handleSubmitTest(false)}
-            disabled={isSubmitting}
-            className="btn-gold text-xs !py-2.5 !px-5"
-          >
-            <span>{isSubmitting ? 'Evaluating...' : 'Submit Test'}</span>
-            <FaCheckCircle size={14} />
-          </button>
-        </div>
-      </div>
-
-      {/* Tab Switch Warning Notice */}
-      {tabSwitches > 0 && (
-        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 text-xs font-bold flex items-center gap-3">
-          <FaExclamationTriangle size={18} className="text-amber-600 flex-shrink-0" />
-          <span>Warning: Tab switch detected ({tabSwitches}/3). Exceeding 3 tab switches will automatically trigger final submission.</span>
-        </div>
-      )}
-
-      {/* Main Attempt Grid */}
-      <div className="grid lg:grid-cols-4 gap-8">
-        {/* Question Panel (Left 3 cols) */}
-        <div className="lg:col-span-3 card !p-8 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-[#DCE8DD]">
-            <span className="font-bold text-sm text-[#0E4429]">
-              Question {currentIndex + 1} of {questions.length}
-            </span>
-            <button
-              onClick={toggleFlag}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                flagged[currentQ._id || currentQ.id]
-                  ? 'bg-amber-500 text-white'
-                  : 'bg-[#F1ECE0] text-[#3a4a40] hover:bg-amber-500/20'
+          <div className="grid md:grid-cols-2 gap-8">
+            <button 
+              onClick={() => handleStart('practice')}
+              disabled={!allowPractice}
+              className={`group flex flex-col items-center text-center p-10 rounded-[2rem] border-2 transition-all duration-300 ${
+                allowPractice 
+                  ? 'bg-white border-[#DCE8DD] hover:border-[#147a4a] hover:shadow-2xl hover:-translate-y-2' 
+                  : 'bg-gray-100 border-gray-200 opacity-60 cursor-not-allowed'
               }`}
             >
-              <FaFlag size={11} />
-              <span>{flagged[currentQ._id || currentQ.id] ? 'Flagged' : 'Flag Question'}</span>
+              <div className={`w-20 h-20 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
+                allowPractice 
+                  ? 'bg-[#147a4a]/10 text-[#147a4a] group-hover:bg-[#147a4a] group-hover:text-white'
+                  : 'bg-gray-200 text-gray-400'
+              }`}>
+                <FaBrain size={36} />
+              </div>
+              <h3 className="text-2xl font-black text-[#0E4429] mb-3">Practice Mode</h3>
+              <p className="text-sm text-[#3a4a40] leading-relaxed">
+                {allowPractice 
+                  ? 'Learn as you go. Selecting an answer immediately reveals the correct option and detailed explanation. No timer.'
+                  : 'Practice mode has been disabled for this test by your instructor.'
+                }
+              </p>
             </button>
-          </div>
 
-          <p className="text-base sm:text-lg font-bold text-[#1C2620] leading-relaxed">
-            {currentQ.questionText}
-          </p>
-
-          {/* MCQ Options */}
-          <div className="space-y-3 pt-2">
-            {currentQ.options.map((opt, idx) => {
-              const isSelected = userAnswers[currentQ._id || currentQ.id] === idx
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleSelectOption(idx)}
-                  className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-4 ${
-                    isSelected
-                      ? 'border-[#147a4a] bg-[#147a4a]/10 font-bold text-[#0E4429]'
-                      : 'border-[#DCE8DD] hover:border-[#147a4a]/40 bg-white'
-                  }`}
-                >
-                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                    isSelected ? 'bg-[#147a4a] text-white' : 'bg-[#F1ECE0] text-[#1C2620]'
-                  }`}>
-                    {String.fromCharCode(65 + idx)}
-                  </span>
-                  <span className="text-sm">{opt}</span>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-between pt-6 border-t border-[#DCE8DD]">
-            <button
-              disabled={currentIndex === 0}
-              onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-              className="btn-outline text-xs !py-2.5 disabled:opacity-40 disabled:cursor-not-allowed"
+            <button 
+              onClick={() => handleStart('exam')}
+              className="group flex flex-col items-center text-center p-10 rounded-[2rem] border-2 border-[#DCE8DD] bg-white hover:border-[#D4A64A] hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
             >
-              <FaArrowLeft size={12} />
-              <span>Previous</span>
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-gold/10 text-gold-dark group-hover:bg-gradient-gold group-hover:text-white transition-colors">
+                <FaClock size={36} />
+              </div>
+              <h3 className="text-2xl font-black text-[#0E4429] mb-3">Exam Mode</h3>
+              <p className="text-sm text-[#3a4a40] leading-relaxed">
+                Strict timer enabled. Answers are hidden until the final submission. Anti-cheat window blur tracking is active. Tests your true readiness.
+              </p>
             </button>
-
-            <button
-              disabled={currentIndex === questions.length - 1}
-              onClick={() => setCurrentIndex((prev) => Math.min(questions.length - 1, prev + 1))}
-              className="btn-primary text-xs !py-2.5 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <span>Next</span>
-              <FaArrowRight size={12} />
-            </button>
-          </div>
-        </div>
-
-        {/* Question Navigator Drawer (Right 1 col) */}
-        <div className="card !p-6 space-y-4 h-fit">
-          <h3 className="font-bold text-sm text-[#0E4429] uppercase tracking-wider">Question Navigator</h3>
-          
-          <div className="grid grid-cols-5 gap-2">
-            {questions.map((q, idx) => {
-              const isCurrent = idx === currentIndex
-              const isAnswered = userAnswers[q._id || q.id] !== undefined
-              const isFlagged = flagged[q._id || q.id]
-
-              return (
-                <button
-                  key={q.id}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`h-10 rounded-xl text-xs font-bold transition-all relative ${
-                    isCurrent
-                      ? 'ring-2 ring-[#0E4429] bg-[#147a4a] text-white shadow-xs'
-                      : isAnswered
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                      : 'bg-[#F1ECE0] text-[#1C2620] hover:bg-[#147a4a]/20'
-                  }`}
-                >
-                  {idx + 1}
-                  {isFlagged && <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-amber-500" />}
-                </button>
-              )
-            })}
-          </div>
-
-          <div className="pt-4 border-t border-[#DCE8DD] space-y-2 text-xs font-semibold text-[#3a4a40]">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#147a4a]" /> Answered
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#F1ECE0] border" /> Unanswered
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-amber-500" /> Flagged
-            </div>
           </div>
         </div>
       </div>
+    )
+  }
 
-      {/* Blur Warning Modal */}
-      {showWarningModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border border-amber-500/40">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto text-2xl">
-              <FaExclamationTriangle />
+  const hasAnsweredCurrent = userAnswers[currentQ._id || currentQ.id] !== undefined
+
+  return (
+    <div className="min-h-screen bg-[#f8f9fa] flex flex-col font-sans selection:bg-[#147a4a]/20">
+      {/* Top Header */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 h-20 flex items-center justify-between px-6 sm:px-10 sticky top-0 z-40 shadow-sm">
+        <div>
+          <h1 className="font-extrabold text-[#0E4429] text-xl truncate max-w-[200px] sm:max-w-md">{testInfo?.title}</h1>
+          <p className="text-sm font-bold text-[#147a4a] mt-0.5">Question {currentIndex + 1} of {questions.length}</p>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <div className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-bold ${
+            mode === 'exam' 
+              ? (timeLeft < 60 ? 'bg-red-50 text-red-600 animate-pulse' : 'bg-gold/10 text-gold-dark') 
+              : 'bg-[#147a4a]/10 text-[#147a4a]'
+          }`}>
+            {mode === 'exam' ? <FaClock className="w-4 h-4" /> : <FaBrain className="w-4 h-4" />}
+            <span className="tracking-wide">
+              {mode === 'exam' ? formatTime(timeLeft) : 'Practice Mode'}
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 max-w-7xl mx-auto w-full p-4 sm:p-8 flex flex-col lg:flex-row gap-8 items-start">
+        
+        {/* Main Question Area */}
+        <div className="flex-1 w-full">
+          <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-8 sm:p-12 mb-8 relative overflow-hidden min-h-[400px]">
+            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#147a4a] to-gold"></div>
+            
+            <div className="flex justify-between items-start mb-8 gap-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-[#0E4429] leading-relaxed pl-2">
+                {currentQ.questionText}
+              </h2>
+              <button
+                onClick={toggleFlag}
+                title="Flag Question"
+                className={`flex-shrink-0 p-3 rounded-xl transition-all ${
+                  flagged[currentQ._id || currentQ.id]
+                    ? 'bg-amber-100 text-amber-600 ring-2 ring-amber-500'
+                    : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
+                }`}
+              >
+                <FaFlag size={18} />
+              </button>
             </div>
-            <h3 className="font-bold text-xl text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
-              Window Blur Detected
-            </h3>
-            <p className="text-sm text-[#3a4a40] leading-relaxed">
-              Navigating away from the test tab is monitored during timed exams. You have switched windows {tabSwitches} time(s). 3 switches will force auto-submission.
-            </p>
+            
+            <div className="space-y-4 pl-2">
+              {currentQ.options.map((opt, idx) => {
+                const isSelected = userAnswers[currentQ._id || currentQ.id] === idx
+                
+                let btnClass = "border-gray-200 hover:border-[#147a4a]/50 hover:bg-[#147a4a]/5 text-gray-700 bg-white"
+                let iconContent = isSelected ? <div className="w-3 h-3 bg-[#147a4a] rounded-full" /> : null
+                let iconBorder = isSelected ? "border-[#147a4a]" : "border-gray-300"
+                
+                if (mode === "practice" && hasAnsweredCurrent) {
+                  const isCorrectOption = currentQ.correctOptionIndex === idx
+                  
+                  if (isCorrectOption) {
+                    btnClass = "border-emerald-500 bg-emerald-50 text-emerald-900 font-bold shadow-sm"
+                    iconContent = <FaCheckCircle className="w-full h-full text-emerald-500" />
+                    iconBorder = "border-transparent"
+                  } else if (isSelected && !isCorrectOption) {
+                    btnClass = "border-red-400 bg-red-50 text-red-900 font-bold"
+                    iconContent = <FaTimesCircle className="w-full h-full text-red-500" />
+                    iconBorder = "border-transparent"
+                  } else {
+                    btnClass = "border-gray-100 opacity-50 cursor-not-allowed bg-white"
+                  }
+                } else if (isSelected) {
+                  btnClass = "border-[#147a4a] bg-[#147a4a]/10 text-[#0E4429] font-bold shadow-sm ring-1 ring-[#147a4a]"
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelectOption(idx)}
+                    disabled={mode === "practice" && hasAnsweredCurrent}
+                    className={`w-full text-left p-5 sm:p-6 rounded-2xl border-2 transition-all duration-300 flex items-center group ${btnClass}`}
+                  >
+                    <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center mr-5 flex-shrink-0 transition-colors ${iconBorder}`}>
+                      {iconContent}
+                    </div>
+                    <span className="text-base sm:text-lg leading-relaxed">{opt}</span>
+                  </button>
+                )
+              })}
+            </div>
+            
+            {/* Practice Mode Explanation Dropdown */}
+            <AnimatePresence>
+              {mode === "practice" && hasAnsweredCurrent && currentQ.explanation && (
+                <motion.div 
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: 'auto', marginTop: 40 }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  className="ml-2 overflow-hidden"
+                >
+                  <div className="p-6 bg-blue-50/80 border border-blue-200 rounded-2xl">
+                    <div className="flex items-start space-x-3">
+                      <FaLightbulb className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="text-blue-900 font-bold mb-2">Explanation</h4>
+                        <p className="text-blue-800 leading-relaxed text-sm sm:text-base">{currentQ.explanation}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex items-center justify-between">
             <button
-              onClick={() => setShowWarningModal(false)}
-              className="btn-primary w-full text-xs !py-3"
+              onClick={() => setCurrentIndex(c => Math.max(0, c - 1))}
+              disabled={currentIndex === 0}
+              className="flex items-center space-x-3 px-6 sm:px-8 py-4 rounded-2xl font-bold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 shadow-sm disabled:opacity-50 transition-all"
             >
-              <span>I Understand — Resume Test</span>
+              <FaArrowLeft size={14} />
+              <span className="hidden sm:inline">Previous</span>
+            </button>
+            
+            <button
+              onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
+              disabled={currentIndex === questions.length - 1}
+              className="flex items-center space-x-3 px-8 sm:px-10 py-4 bg-[#0E4429] hover:bg-[#0a321e] text-white rounded-2xl font-bold shadow-lg shadow-[#0E4429]/20 transition-all disabled:opacity-50 hover:-translate-y-0.5"
+            >
+              <span className="hidden sm:inline">Next</span>
+              <FaArrowRight size={14} />
             </button>
           </div>
         </div>
-      )}
+
+        {/* Navigation Sidebar */}
+        <div className="w-full lg:w-80 flex-shrink-0">
+          <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 sm:p-8 sticky top-28">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="font-black text-[#0E4429] uppercase tracking-wider text-sm">Question Tracker</h3>
+              <span className="text-xs font-bold text-gray-400">{Object.keys(userAnswers).length} / {questions.length}</span>
+            </div>
+            
+            <div className="grid grid-cols-5 gap-3 mb-8">
+              {questions.map((q, idx) => {
+                const isAttempted = userAnswers[q._id || q.id] !== undefined
+                const isCurrent = currentIndex === idx
+                const isFlagged = flagged[q._id || q.id]
+                
+                let btnClass = "bg-gray-100 text-gray-500 hover:bg-gray-200 border-transparent"
+                if (isAttempted) {
+                  btnClass = "bg-[#147a4a] text-white border-transparent shadow-sm shadow-[#147a4a]/30"
+                }
+                if (isCurrent) {
+                  btnClass = isAttempted 
+                    ? "bg-[#0E4429] text-white ring-2 ring-offset-2 ring-[#0E4429]" 
+                    : "bg-white text-[#147a4a] border-[#147a4a] border-2"
+                }
+
+                return (
+                  <button
+                    key={q._id || q.id}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`relative w-full aspect-square rounded-xl font-bold text-sm flex items-center justify-center transition-all ${btnClass} ${!isCurrent && !isAttempted && 'border border-gray-200'}`}
+                  >
+                    {idx + 1}
+                    {isFlagged && (
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border-2 border-white rounded-full"></span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="space-y-4 mb-10 p-4 bg-gray-50 rounded-2xl">
+              <div className="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-gray-600">
+                <div className="w-3 h-3 rounded-full bg-[#147a4a]"></div>
+                <span>Answered ({Object.keys(userAnswers).length})</span>
+              </div>
+              <div className="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-gray-600">
+                <div className="w-3 h-3 rounded-full bg-gray-200 border border-gray-300"></div>
+                <span>Not Attempted ({questions.length - Object.keys(userAnswers).length})</span>
+              </div>
+              <div className="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-gray-600">
+                <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                <span>Flagged ({Object.values(flagged).filter(Boolean).length})</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => handleSubmitTest(false)}
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-gradient-gold hover:bg-gold-dark text-[#0E4429] rounded-xl font-black shadow-lg shadow-gold/30 transition-all disabled:opacity-50"
+            >
+              <span>{isSubmitting ? "Grading..." : "Submit Test"}</span>
+              <FaCheckCircle size={18} />
+            </button>
+          </div>
+        </div>
+
+      </main>
+
+      {/* Blur Warning Modal (Only for Exam Mode) */}
+      <AnimatePresence>
+        {showWarningModal && mode === 'exam' && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-3xl max-w-md w-full p-8 text-center space-y-6 shadow-2xl border border-amber-500/40"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto">
+                <FaExclamationTriangle size={32} />
+              </div>
+              <div>
+                <h3 className="font-black text-2xl text-[#0E4429] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Window Blur Detected
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Navigating away from the test tab is strictly monitored during timed exams. You have switched windows <strong className="text-amber-600">{tabSwitches} time(s)</strong>. 3 switches will force auto-submission.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowWarningModal(false)}
+                className="w-full py-4 bg-[#0E4429] hover:bg-[#0a321e] text-white rounded-xl font-bold shadow-md transition-colors"
+              >
+                I Understand — Resume Test
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
