@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import axios from 'axios'
+import api from '../../services/api'
 import { FaStar, FaGraduationCap, FaTrophy, FaFlask, FaBookOpen, FaArrowRight, FaUserGraduate, FaChevronRight, FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaAward } from 'react-icons/fa'
 import { GiDna1, GiAtom } from 'react-icons/gi'
 import { TbMathSymbols } from 'react-icons/tb'
@@ -41,19 +41,19 @@ export default function Home() {
   const [isSuccessHovered, setIsSuccessHovered] = useState(false)
 
   useEffect(() => {
-    axios.get('/api/admin/public-stats').then((res) => {
+    api.get('/api/admin/public-stats').then((res) => {
       if (res.data?.success && res.data?.stats) setLiveStats(res.data.stats)
     }).catch(() => {})
 
-    axios.get('/api/faculty').then((res) => {
+    api.get('/api/faculty').then((res) => {
       if (res.data?.success) setFacultyPreview(res.data.data.slice(0, 8))
     }).catch(() => {})
 
-    axios.get('/api/success-stories').then((res) => {
+    api.get('/api/success-stories').then((res) => {
       if (res.data?.success) setAchievements(res.data.data.slice(0, 8))
     }).catch(() => {})
 
-    axios.get('/api/hero-slides').then((res) => {
+    api.get('/api/hero-slides').then((res) => {
       if (res.data?.success && res.data?.data?.length > 0) {
         setHeroSlides(res.data.data)
       }
