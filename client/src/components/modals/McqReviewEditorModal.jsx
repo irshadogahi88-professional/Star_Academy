@@ -80,7 +80,7 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-      <div className="card w-full max-w-4xl max-h-[90vh] flex flex-col !p-6 bg-white border-2 border-[#D4A64A] shadow-2xl">
+      <div className="card w-full max-w-4xl max-h-[90vh] flex flex-col !p-6 modal-glass shadow-2xl">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-[#DCE8DD] pb-4 flex-shrink-0">
           <div>

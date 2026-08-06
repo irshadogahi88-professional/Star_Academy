@@ -72,44 +72,46 @@ export default function TeacherHome() {
       </div>
 
       {/* Metrics Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center text-xl font-bold flex-shrink-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 lg:col-span-2 hover:bg-emerald-50/50 transition-all border border-emerald-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center text-2xl font-bold shrink-0">
             <FaUserGraduate />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Enrolled Students</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.students}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">Enrolled Students</p>
+            <p className="text-3xl sm:text-4xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.students}</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#D4A64A]/15 text-[#b8893a] flex items-center justify-center text-xl font-bold flex-shrink-0">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 hover:bg-amber-50/50 transition-all border border-amber-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-[#D4A64A]/15 text-[#b8893a] flex items-center justify-center text-2xl font-bold shrink-0">
             <FaQuestionCircle />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">MCQ Question Bank</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.mcqs?.toLocaleString()}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">MCQ Bank</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.mcqs?.toLocaleString()}</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 hover:bg-purple-50/50 transition-all border border-purple-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-2xl font-bold shrink-0">
             <FaFileAlt />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Active Tests</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.tests}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">Active Tests</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.tests}</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
-            <FaVideo />
-          </div>
-          <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Video Lectures</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.lectures}</p>
+        <div className="card rounded-3xl !p-6 flex items-center justify-between gap-4 lg:col-span-4 hover:bg-blue-50/50 transition-all border border-blue-900/10">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-3xl font-bold shrink-0">
+              <FaVideo />
+            </div>
+            <div>
+              <p className="text-sm font-black uppercase tracking-widest text-[#3a4a40]">Video Lectures Available</p>
+              <p className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.lectures}</p>
+            </div>
           </div>
         </div>
       </div>

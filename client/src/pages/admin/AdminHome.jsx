@@ -89,53 +89,58 @@ export default function AdminHome() {
       </div>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        <div className="card p-6 flex items-center gap-4 border border-emerald-900/10 shadow-md bg-white">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="card rounded-3xl p-6 flex flex-col justify-center items-start gap-4 border border-emerald-900/10 shadow-md bg-white lg:col-span-2 hover:bg-emerald-50/50 transition-all">
           <div className="w-14 h-14 rounded-2xl bg-emerald-primary/10 text-emerald-primary flex items-center justify-center text-2xl shrink-0">
             <FaUsers />
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-charcoal-light">Total Registered</p>
-            <p className="text-2xl font-black text-emerald-dark mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+            <p className="text-3xl sm:text-4xl font-black text-emerald-dark mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
               {loading ? '...' : `${metrics.totalStudents} Students`}
             </p>
           </div>
         </div>
 
-        <div className="card p-6 flex items-center gap-4 border border-amber-900/10 shadow-md bg-white">
+        <div className="card rounded-3xl p-6 flex flex-col justify-center items-start gap-4 border border-amber-900/10 shadow-md bg-white hover:bg-amber-50/50 transition-all">
           <div className="w-14 h-14 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center text-2xl shrink-0">
             <FaClock />
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-charcoal-light">Pending Approvals</p>
-            <p className="text-2xl font-black text-amber-700 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
-              {loading ? '...' : `${metrics.pendingStudents} Accounts`}
+            <p className="text-2xl sm:text-3xl font-black text-amber-700 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+              {loading ? '...' : `${metrics.pendingStudents}`}
             </p>
           </div>
         </div>
 
-        <div className="card p-6 flex items-center gap-4 border border-emerald-600/10 shadow-md bg-white">
+        <div className="card rounded-3xl p-6 flex flex-col justify-center items-start gap-4 border border-emerald-600/10 shadow-md bg-white hover:bg-emerald-50/50 transition-all">
           <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl shrink-0">
             <FaCheckCircle />
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-charcoal-light">Approved Accounts</p>
-            <p className="text-2xl font-black text-emerald-700 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
-              {loading ? '...' : `${metrics.approvedStudents} Active`}
+            <p className="text-2xl sm:text-3xl font-black text-emerald-700 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+              {loading ? '...' : `${metrics.approvedStudents}`}
             </p>
           </div>
         </div>
 
-        <div className="card p-6 flex items-center gap-4 border border-blue-900/10 shadow-md bg-white">
-          <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-2xl shrink-0">
-            <FaFileInvoiceDollar />
+        <div className="card rounded-3xl p-6 flex items-center justify-between gap-4 border border-blue-900/10 shadow-md bg-white lg:col-span-4 hover:bg-blue-50/50 transition-all">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-3xl shrink-0">
+              <FaFileInvoiceDollar />
+            </div>
+            <div>
+              <p className="text-sm font-black uppercase tracking-widest text-charcoal-light">Total Test Submissions</p>
+              <p className="text-3xl font-black text-blue-800 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+                {loading ? '...' : `${metrics.totalSubmissions} Attempts`}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest text-charcoal-light">Test Submissions</p>
-            <p className="text-2xl font-black text-blue-800 mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
-              {loading ? '...' : `${metrics.totalSubmissions} Attempts`}
-            </p>
-          </div>
+          <Link to="/admin/tests" className="btn-outline hidden sm:flex !rounded-2xl">
+            View Reports
+          </Link>
         </div>
       </div>
 

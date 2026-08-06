@@ -40,9 +40,9 @@ export default function ClerkLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBF8F1] flex flex-col lg:flex-row">
+    <div className="min-h-screen aurora-bg flex flex-col lg:flex-row">
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex flex-col w-72 bg-[#082d1b] text-white flex-shrink-0 min-h-screen sticky top-0 shadow-2xl border-r border-[#147a4a]/40">
+      <aside className="hidden lg:flex flex-col w-72 sidebar-glass text-white flex-shrink-0 min-h-screen sticky top-0 z-50">
         {/* Brand Header */}
         <div className="p-6 border-b border-[#147a4a]/40 flex items-center gap-3">
           <img src="/images/logo.png" alt="Star Academy Logo" className="h-10 w-10 rounded-full border-2 border-[#D4A64A]" />

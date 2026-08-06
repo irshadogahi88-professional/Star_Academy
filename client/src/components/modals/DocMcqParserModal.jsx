@@ -75,7 +75,7 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="card w-full max-w-xl !p-6 space-y-5 bg-white border-2 border-[#147a4a]/30 shadow-2xl">
+      <div className="card w-full max-w-xl !p-6 space-y-5 modal-glass shadow-2xl">
         <div className="flex items-center justify-between border-b border-[#DCE8DD] pb-4">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center font-bold">

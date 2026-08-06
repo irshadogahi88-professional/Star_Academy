@@ -81,45 +81,46 @@ export default function DashboardHome() {
         </div>
       </div>
 
-      {/* Quick Metrics Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center text-xl font-bold flex-shrink-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 lg:col-span-2 hover:bg-emerald-50/50 transition-all border border-emerald-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center text-2xl font-bold shrink-0">
             <FaClipboardCheck />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Tests Attempted</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.testsAttempted}</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">Tests Attempted</p>
+            <p className="text-3xl sm:text-4xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.testsAttempted}</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#D4A64A]/15 text-[#b8893a] flex items-center justify-center text-xl font-bold flex-shrink-0">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 hover:bg-amber-50/50 transition-all border border-amber-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-[#D4A64A]/15 text-[#b8893a] flex items-center justify-center text-2xl font-bold shrink-0">
             <FaCheckCircle />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Average Score</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.avgScore}%</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">Average Score</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.avgScore}%</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+        <div className="card rounded-3xl !p-6 flex flex-col justify-center items-start gap-4 hover:bg-orange-50/50 transition-all border border-orange-900/10">
+          <div className="w-14 h-14 rounded-2xl bg-orange-500/10 text-orange-600 flex items-center justify-center text-2xl font-bold shrink-0">
             <FaFire />
           </div>
           <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Study Streak</p>
-            <p className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.streak} Day{metrics.streak !== 1 ? 's' : ''} 🔥</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#3a4a40]">Study Streak</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{metrics.streak} Day{metrics.streak !== 1 ? 's' : ''} 🔥</p>
           </div>
         </div>
 
-        <div className="card !p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
-            <FaReceipt />
-          </div>
-          <div>
-            <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#3a4a40]">Fee Status</p>
-            <p className="text-sm font-bold text-emerald-700 mt-0.5">{user?.isApproved ? 'Paid & Verified' : 'Pending Verification'}</p>
+        <div className="card rounded-3xl !p-6 flex items-center justify-between gap-4 lg:col-span-4 hover:bg-blue-50/50 transition-all border border-blue-900/10">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 text-blue-600 flex items-center justify-center text-3xl font-bold shrink-0">
+              <FaReceipt />
+            </div>
+            <div>
+              <p className="text-sm font-black uppercase tracking-widest text-[#3a4a40]">Fee Status</p>
+              <p className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>{user?.isApproved ? 'Paid & Verified' : 'Pending Verification'}</p>
+            </div>
           </div>
         </div>
       </div>

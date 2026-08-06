@@ -4,6 +4,7 @@ import { FaImage, FaTimes, FaChevronRight } from 'react-icons/fa'
 import api from '../../services/api'
 import ScrollReveal from '../../components/animations/ScrollReveal'
 import SpotlightCard from '../../components/ui/SpotlightCard'
+import TiltCard from '../../components/animations/TiltCard'
 
 export default function Gallery() {
   const [images, setImages] = useState([])
@@ -137,34 +138,36 @@ export default function Gallery() {
                 <div ref={carouselRef} className="scroll-carousel items-stretch">
                   {images.map((img) => (
                     <div key={img._id} className="w-[300px] sm:w-[350px] lg:w-[400px] shrink-0">
-                      <SpotlightCard 
-                        className="card p-4 h-full cursor-pointer group bg-white hover:bg-cream-alt transition-colors border-2 border-transparent hover:border-gold/30"
-                      >
-                        <div 
-                          className="w-full h-64 rounded-xl overflow-hidden mb-4 relative"
-                          onClick={() => setSelectedImage(img)}
+                      <TiltCard intensity={3} className="h-full">
+                        <SpotlightCard 
+                          className="card p-4 h-full cursor-pointer group bg-white hover:bg-cream-alt transition-colors border-2 border-transparent hover:border-gold/30"
                         >
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all z-10 flex items-center justify-center">
-                            <span className="opacity-0 group-hover:opacity-100 text-white font-black tracking-wider text-sm bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm transform translate-y-4 group-hover:translate-y-0 transition-all">
-                              View Full Size
-                            </span>
+                          <div 
+                            className="w-full h-64 rounded-xl overflow-hidden mb-4 relative"
+                            onClick={() => setSelectedImage(img)}
+                          >
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all z-10 flex items-center justify-center">
+                              <span className="opacity-0 group-hover:opacity-100 text-white font-black tracking-wider text-sm bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm transform translate-y-4 group-hover:translate-y-0 transition-all">
+                                View Full Size
+                              </span>
+                            </div>
+                            <img 
+                              loading="lazy"
+                              src={getDirectImageUrl(img.imageUrl)} 
+                              alt={img.title}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
                           </div>
-                          <img 
-                            loading="lazy"
-                            src={getDirectImageUrl(img.imageUrl)} 
-                            alt={img.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                          />
-                        </div>
-                        <div>
-                          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-primary mb-1 block">
-                            {img.category || 'General'}
-                          </span>
-                          <h3 className="text-lg font-extrabold text-emerald-dark leading-tight line-clamp-2">
-                            {img.title}
-                          </h3>
-                        </div>
-                      </SpotlightCard>
+                          <div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-primary mb-1 block">
+                              {img.category || 'General'}
+                            </span>
+                            <h3 className="text-lg font-extrabold text-emerald-dark leading-tight line-clamp-2">
+                              {img.title}
+                            </h3>
+                          </div>
+                        </SpotlightCard>
+                      </TiltCard>
                     </div>
                   ))}
                 </div>

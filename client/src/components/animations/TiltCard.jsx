@@ -1,39 +1,22 @@
-import { useRef } from 'react'
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion'
+import Tilt from 'react-parallax-tilt'
 
-export default function TiltCard({ children, className = '', intensity = 15 }) {
-  const ref = useRef(null)
-  const x = useMotionValue(0.5)
-  const y = useMotionValue(0.5)
-
-  const rotateX = useSpring(useTransform(y, [0, 1], [intensity, -intensity]), { stiffness: 300, damping: 30 })
-  const rotateY = useSpring(useTransform(x, [0, 1], [-intensity, intensity]), { stiffness: 300, damping: 30 })
-
-  const handleMouseMove = (e) => {
-    const rect = ref.current.getBoundingClientRect()
-    x.set((e.clientX - rect.left) / rect.width)
-    y.set((e.clientY - rect.top) / rect.height)
-  }
-
-  const handleMouseLeave = () => {
-    x.set(0.5)
-    y.set(0.5)
-  }
-
+export default function TiltCard({ children, className = '', intensity = 5 }) {
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: 'preserve-3d',
-        perspective: 1000,
-      }}
+    <Tilt
+      tiltMaxAngleX={intensity}
+      tiltMaxAngleY={intensity}
+      perspective={1000}
+      scale={1.02}
+      transitionSpeed={2000}
+      gyroscope={true}
+      glareEnable={true}
+      glareMaxOpacity={0.15}
+      glareColor="#ffffff"
+      glarePosition="all"
+      glareBorderRadius="1.5rem"
       className={className}
     >
       {children}
-    </motion.div>
+    </Tilt>
   )
 }

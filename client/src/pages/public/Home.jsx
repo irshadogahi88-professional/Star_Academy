@@ -43,21 +43,21 @@ export default function Home() {
   useEffect(() => {
     api.get('/admin/public-stats').then((res) => {
       if (res.data?.success && res.data?.stats) setLiveStats(res.data.stats)
-    }).catch(() => {})
+    }).catch(() => { })
 
     api.get('/faculty').then((res) => {
       if (res.data?.success) setFacultyPreview(res.data.data.slice(0, 8))
-    }).catch(() => {})
+    }).catch(() => { })
 
     api.get('/success-stories').then((res) => {
       if (res.data?.success) setAchievements(res.data.data.slice(0, 8))
-    }).catch(() => {})
+    }).catch(() => { })
 
     api.get('/hero-slides').then((res) => {
       if (res.data?.success && res.data?.data?.length > 0) {
         setHeroSlides(res.data.data)
       }
-    }).catch(() => {})
+    }).catch(() => { })
   }, [])
 
   // Auto-cycle hero slides every 5 seconds
@@ -84,7 +84,7 @@ export default function Home() {
 
     let facultyInterval;
     let successInterval;
-    
+
     if (!isFacultyHovered) {
       facultyInterval = setInterval(() => scrollCarousel(facultyRef), 3500)
     }
@@ -123,7 +123,7 @@ export default function Home() {
           </div>
         )) : (
           <div className="absolute inset-0">
-            <img src="/images/adv-1.png" alt="Star Educational Academy" className="w-full h-full object-cover" />
+            <img src="/images/.png" alt="Star Educational Academy" className="w-full h-full object-cover" />
           </div>
         )}
 
@@ -133,7 +133,7 @@ export default function Home() {
 
         {/* Centered Overlay Content */}
         <div className="relative z-30 section-container flex flex-col items-center justify-center text-center gap-6 sm:gap-8 pt-32 pb-32 sm:pt-40 sm:pb-40">
-          
+
           {/* Badge */}
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <span className="inline-flex items-center gap-2.5 px-5 py-2.5 text-xs font-black rounded-full shadow-lg bg-[#082d1b]/80 border border-[#D4A64A] text-[#D4A64A] backdrop-blur-sm">
@@ -171,8 +171,8 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="text-base sm:text-xl leading-relaxed font-medium text-white/90 max-w-2xl mx-auto"
           >
-            Premier coaching for Grades IX–XII. Pre-Medical & Pre-Engineering 
-            tracks with expert faculty and proven results. ECAT & MCAT preparation 
+            Premier coaching for Grades IX–XII. Pre-Medical & Pre-Engineering
+            tracks with expert faculty and proven results. ECAT & MCAT preparation
             that delivers <strong className="font-extrabold text-[#e6c36e]">outstanding success</strong>.
           </motion.p>
 
@@ -190,7 +190,7 @@ export default function Home() {
               <FaGraduationCap size={26} />
               <span>Apply Now</span>
             </Link>
-            
+
             <Link
               to="/about"
               className="h-14 px-10 rounded-2xl bg-white/10 hover:bg-white text-white hover:text-[#0E4429] border-2 border-white/40 font-black text-base sm:text-lg transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-3 shrink-0 shadow-xl"
@@ -247,7 +247,7 @@ export default function Home() {
         {/* Bottom wave */}
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-20 translate-y-1">
           <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 50L48 45C96 40 192 30 288 33C384 36 480 52 576 58C672 64 768 60 864 52C960 44 1056 32 1152 30C1248 28 1344 36 1392 40L1440 44V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="var(--color-cream)"/>
+            <path d="M0 50L48 45C96 40 192 30 288 33C384 36 480 52 576 58C672 64 768 60 864 52C960 44 1056 32 1152 30C1248 28 1344 36 1392 40L1440 44V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="var(--color-cream)" />
           </svg>
         </div>
       </section>
@@ -298,17 +298,17 @@ export default function Home() {
                 <span className="text-gradient-gold inline-block">Dedication & Excellence</span>
               </h2>
               <p className="text-base leading-relaxed text-charcoal-light">
-                Star Educational Academy is where hardworking boys and girls build a bright 
-                and successful future through dedication and excellence. With separate classes 
-                for Pre-Medical and Pre-Engineering tracks, we provide focused coaching for 
+                Star Educational Academy is where hardworking boys and girls build a bright
+                and successful future through dedication and excellence. With separate classes
+                for Pre-Medical and Pre-Engineering tracks, we provide focused coaching for
                 Grades IX, X, XI & XII.
               </p>
               <p className="text-base leading-relaxed text-charcoal-light">
-                Our expert faculty, led by Sir Irshad Ahmed Ogahi, has consistently delivered 
-                outstanding results — including the 1st Position in MDCAT across District Ghotki 
+                Our expert faculty, led by Sir Irshad Ahmed Ogahi, has consistently delivered
+                outstanding results — including the 1st Position in MDCAT across District Ghotki
                 and 30+ medical admissions in a single year.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-4 pt-2">
                 {[
                   { label: 'Expert Faculty', value: '6+ Teachers' },
@@ -354,7 +354,7 @@ export default function Home() {
             </p>
           </ScrollReveal>
 
-          <div 
+          <div
             className="relative w-full max-w-full overflow-visible"
             onMouseEnter={() => setIsFacultyHovered(true)}
             onMouseLeave={() => setIsFacultyHovered(false)}
@@ -386,32 +386,32 @@ export default function Home() {
                 <div key={member._id || i} className="w-[280px] sm:w-[320px]">
                   <SpotlightCard className="card group text-center overflow-hidden h-full flex flex-col items-center justify-between p-6! space-y-4">
                     <div className="flex flex-col items-center text-center w-full">
-                        <div className="relative mx-auto w-28 h-28 mb-4 rounded-full overflow-hidden ring-4 ring-sage group-hover:ring-gold/60 transition-all duration-300 shadow-md bg-emerald-primary/10 flex items-center justify-center">
-                          {member.photoUrl ? (
-                            <img src={getDirectImageUrl(member.photoUrl)} alt={member.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <span className="text-4xl font-black text-emerald-primary">{member.name?.charAt(4) || member.name?.charAt(0)}</span>
-                          )}
-                        </div>
-                        <div className="flex items-center justify-center gap-2 mb-1.5">
-                          <span className="text-lg text-emerald-primary">{subjectIcons[member.subject] || <FaStar />}</span>
-                          <span className="text-xs font-extrabold uppercase tracking-wider text-gold-dark">
-                            {member.subject}
-                          </span>
-                        </div>
-                        <h3 className="text-lg font-extrabold text-emerald-dark text-center" style={{ fontFamily: 'var(--font-heading)' }}>
-                          {member.name}
-                        </h3>
+                      <div className="relative mx-auto w-28 h-28 mb-4 rounded-full overflow-hidden ring-4 ring-sage group-hover:ring-gold/60 transition-all duration-300 shadow-md bg-emerald-primary/10 flex items-center justify-center">
+                        {member.photoUrl ? (
+                          <img src={getDirectImageUrl(member.photoUrl)} alt={member.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-4xl font-black text-emerald-primary">{member.name?.charAt(4) || member.name?.charAt(0)}</span>
+                        )}
                       </div>
-                      {member.designation && member.designation !== 'Faculty Member' ? (
-                        <div className="mt-2 text-center">
-                          <span className="badge badge-emerald text-xs font-bold">
-                            {member.designation}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="h-6" />
-                      )}
+                      <div className="flex items-center justify-center gap-2 mb-1.5">
+                        <span className="text-lg text-emerald-primary">{subjectIcons[member.subject] || <FaStar />}</span>
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-gold-dark">
+                          {member.subject}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-extrabold text-emerald-dark text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                        {member.name}
+                      </h3>
+                    </div>
+                    {member.designation && member.designation !== 'Faculty Member' ? (
+                      <div className="mt-2 text-center">
+                        <span className="badge badge-emerald text-xs font-bold">
+                          {member.designation}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="h-6" />
+                    )}
                   </SpotlightCard>
                 </div>
               ))}
@@ -439,12 +439,12 @@ export default function Home() {
               Our Students <span className="text-gradient-gold inline">Shine Bright</span>
             </h2>
             <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-white/90">
-              Every year, our students achieve remarkable results in board exams, MDCAT, ECAT, 
+              Every year, our students achieve remarkable results in board exams, MDCAT, ECAT,
               and secure admissions in top universities across Pakistan.
             </p>
           </ScrollReveal>
 
-          <div 
+          <div
             className="relative w-full max-w-full overflow-visible"
             onMouseEnter={() => setIsSuccessHovered(true)}
             onMouseLeave={() => setIsSuccessHovered(false)}
@@ -471,14 +471,14 @@ export default function Home() {
             >
               <FaChevronRight size={16} />
             </button>
-            
+
             <div ref={successRef} className="scroll-carousel">
               {achievements.map((story, i) => (
                 <div key={story._id || i} className="w-[280px] sm:w-[320px]">
                   <SpotlightCard className="card group relative overflow-hidden h-full flex flex-col p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-900/50 transition-all border-none bg-white">
                     {/* Gold accent top */}
                     <div className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-500 bg-gradient-to-r from-gold to-gold-light" />
-                    
+
                     <div className="space-y-4 flex-1">
                       <div className="flex flex-col items-center mb-2">
                         <div className="w-24 h-24 rounded-full border-4 border-gold shadow-lg overflow-hidden mb-3 bg-cream-alt flex items-center justify-center">
@@ -494,7 +494,7 @@ export default function Home() {
                           ))}
                         </div>
                       </div>
-                      
+
                       <div className="text-center">
                         <h3 className="text-xl font-extrabold text-emerald-dark leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
                           {story.studentName || story.name}
@@ -509,7 +509,7 @@ export default function Home() {
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="pt-4 border-t border-sage mt-6 flex items-center justify-between relative z-10">
                       <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-black bg-gold/10 text-gold-dark border border-gold/30">
                         {story.year}
@@ -539,13 +539,13 @@ export default function Home() {
           <ScrollReveal>
             <div className="relative overflow-hidden rounded-3xl p-8 sm:p-14 lg:p-20 text-center shadow-2xl max-w-4xl mx-auto bg-gradient-to-br from-[#0E4429] via-[#147a4a] to-[#082d1b] border-2 border-[#D4A64A]/40">
               <div className="relative z-10 flex flex-col items-center text-center gap-6 sm:gap-8">
-                
+
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] text-center" style={{ fontFamily: 'var(--font-heading)' }}>
                   Session 2026 is <span className="text-gradient-gold inline">Now Open</span>
                 </h2>
-                
+
                 <p className="text-base sm:text-lg leading-relaxed text-white/95 text-center max-w-2xl font-medium">
-                  Admission forms & advance seat booking available from <strong className="text-[#e6c36e] font-extrabold">20-07-2026</strong>. 
+                  Admission forms & advance seat booking available from <strong className="text-[#e6c36e] font-extrabold">20-07-2026</strong>.
                   Classes commence <strong className="text-[#e6c36e] font-extrabold">10-08-2026</strong>.
                 </p>
 

@@ -4,6 +4,7 @@ import ScrollReveal from '../../components/animations/ScrollReveal'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import successStoryService from '../../services/successStoryService'
 import SpotlightCard from '../../components/ui/SpotlightCard'
+import TiltCard from '../../components/animations/TiltCard'
 import { getDirectImageUrl } from '../../utils/imageHelper'
 
 export default function SuccessStories() {
@@ -59,8 +60,9 @@ export default function SuccessStories() {
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {stories.map((story) => (
                 <StaggerItem key={story._id}>
-                  <SpotlightCard className="card group relative overflow-hidden">
-                    {/* Gold accent top */}
+                  <TiltCard intensity={5} className="h-full">
+                    <SpotlightCard className="card group relative overflow-hidden h-full">
+                      {/* Gold accent top */}
                     <div className="absolute top-0 left-0 right-0 h-1 transition-all duration-500"
                       style={{ background: 'linear-gradient(90deg, var(--color-gold), var(--color-gold-light))' }} />
 
@@ -106,6 +108,7 @@ export default function SuccessStories() {
                       <FaGraduationCap size={18} style={{ color: 'var(--color-sage)' }} className="group-hover:text-emerald-primary transition-colors" />
                     </div>
                   </SpotlightCard>
+                  </TiltCard>
                 </StaggerItem>
               ))}
             </StaggerContainer>
