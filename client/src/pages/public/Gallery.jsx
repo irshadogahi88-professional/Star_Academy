@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FaImage, FaTimes, FaChevronRight } from 'react-icons/fa'
-import axios from 'axios'
+import api from '../../services/api'
 import ScrollReveal from '../../components/animations/ScrollReveal'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 
@@ -34,7 +34,7 @@ export default function Gallery() {
   useEffect(() => {
     const fetchGallery = async () => {
       try {
-        const res = await axios.get('/api/gallery')
+        const res = await api.get('/api/gallery')
         if (res.data?.success) {
           setImages(res.data.data)
         }
@@ -154,7 +154,6 @@ export default function Gallery() {
                             src={getDirectImageUrl(img.imageUrl)} 
                             alt={img.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            loading="lazy"
                           />
                         </div>
                         <div>
