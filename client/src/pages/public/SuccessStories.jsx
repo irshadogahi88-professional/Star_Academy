@@ -114,8 +114,11 @@ export default function SuccessStories() {
             </StaggerContainer>
           )}
 
+          {/* Spacer */}
+          <div className="h-16 sm:h-24" />
+
           {/* More coming soon */}
-          <ScrollReveal className="text-center mt-20 sm:mt-28">
+          <ScrollReveal className="text-center">
             <div className="card-glass p-8 rounded-2xl bg-[#0a1b14]/50 border border-[#10b981]/15 max-w-2xl mx-auto">
               <Trophy size={32} className="mx-auto mb-4 text-amber-500" />
               <h3 className="text-xl font-bold mb-2 text-white">

@@ -59,14 +59,50 @@ const faqs = [
   },
 ]
 
+const defaultMilestones = [
+  {
+    year: '2016',
+    title: 'Star Academy Founded',
+    description: 'Founded with a vision to provide quality education and premier MDCAT/ECAT coaching in Ghotki, starting with a single classroom.'
+  },
+  {
+    year: '2018',
+    title: 'Separate Gender Classrooms',
+    description: 'Introduced dedicated, separate classroom sessions for boys and girls in Mathematics, Science, and English to ensure a comfortable and focused learning environment.'
+  },
+  {
+    year: '2021',
+    title: 'Record Board Results',
+    description: 'Achieved a milestone with over 45 students securing top A-1 grades in the Intermediate Board Examinations, establishing the academy as a premier educational institute.'
+  },
+  {
+    year: '2024',
+    title: 'MDCAT & ECAT Admissions',
+    description: 'Over 30 students secured admission in top medical colleges (LUMHS, SMBBMU) and engineering universities (NED, MUET) across Pakistan.'
+  },
+  {
+    year: '2026',
+    title: 'Online Testing Portal Launch',
+    description: 'Launched our proprietary online mock test engine, analytics dashboard, and digital student portal to prepare students for computer-based tests.'
+  }
+]
+
 export default function About() {
   const [openFaqIndex, setOpenFaqIndex] = useState(0)
   const [milestones, setMilestones] = useState([])
 
   useEffect(() => {
     const fetchMilestones = async () => {
-      const res = await milestoneService.getMilestones()
-      if (res && res.success) setMilestones(res.data)
+      try {
+        const res = await milestoneService.getMilestones()
+        if (res && res.success && res.data && res.data.length > 0) {
+          setMilestones(res.data)
+        } else {
+          setMilestones(defaultMilestones)
+        }
+      } catch (err) {
+        setMilestones(defaultMilestones)
+      }
     }
     fetchMilestones()
   }, [])
