@@ -71,7 +71,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       }
 
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-1.5-flash-latest',
+        model: 'gemini-flash-latest',
         generationConfig: {
           responseMimeType: "application/json",
           responseSchema: mcqSchema
@@ -87,30 +87,25 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       4. MULTIPLE STATEMENTS (LR): If a question contains multiple Roman numeral statements (I, II, III, IV) in the body, include those statements inside the "questionText" field.
       5. EXTRACT EXACTLY 4 OPTIONS: Options may be formatted as (A, B, C, D), (a, b, c, d), or (i, ii, iii, iv). Some options might be combination statements (e.g., "A) I & III only", "B) All of these"). Ensure you extract exactly 4 distinct options. Remove the letter prefix (A, B) from the final option text.
       6. AVOID CORRUPTION: Double-check that no options are cut off, merged, or mismatched. If a question is severely corrupted, skip it.
-      7. FIND ANSWER: If the answer is indicated in the text (e.g., "Ans: A", "CORRECT ANSWER: quickly"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.`;
+      7. FIND ANSWER: If the answer is indicated in the text (e.g., "Ans: A", "CORRECT ANSWER: quickly", "Correct Option: C"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.`;
 
-      
-      // No JSON array example needed in prompt since we use responseSchema
-      if (fileBuffer) {
-        // Native Gemini File Parsing (Supports PDF, Word, etc.)
-        console.log('Using native Gemini document parsing...');
-        
-        let fileMime = mimeType || 'application/pdf';
-        if (filename.endsWith('.docx')) fileMime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        
-        const filePart = {
-          inlineData: {
-            data: fileBuffer.toString('base64'),
-            mimeType: fileMime
-          }
-        };
+      // Try native PDF parsing first if it is a PDF
+      const isPdf = fileBuffer && (filename.toLowerCase().endsWith('.pdf') || (mimeType && mimeType.toLowerCase().includes('pdf')));
+      if (isPdf) {
+        try {
+          console.log('Using native Gemini PDF document parsing...');
+          const filePart = {
+            inlineData: {
+              data: fileBuffer.toString('base64'),
+              mimeType: 'application/pdf'
+            }
+          };
 
-        const result = await model.generateContent([filePart, prompt]);
-        const responseText = result.response.text();
-        
-        const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-        if (jsonMatch) {
-          try {
+          const result = await model.generateContent([filePart, prompt]);
+          const responseText = result.response.text();
+          
+          const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
             const parsedArray = JSON.parse(jsonMatch[0]);
             if (Array.isArray(parsedArray)) {
               allMcqs = parsedArray.map(mcq => ({
@@ -122,12 +117,15 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
                 sourceDoc: filename
               }));
             }
-          } catch (parseErr) {
-            console.warn('Failed to parse Gemini file JSON.');
           }
+        } catch (pdfErr) {
+          console.warn('Native Gemini PDF parsing failed, falling back to text chunking:', pdfErr.message);
         }
-      } else {
-        // Fallback to text chunks
+      }
+
+      // If not a PDF or native PDF parsing failed/returned no MCQs, use text chunks with Gemini
+      if (allMcqs.length === 0) {
+        console.log('Using Gemini text chunk parsing...');
         for (const chunk of chunks) {
           const chunkPrompt = prompt + `\n\nText Chunk:\n"""${chunk}"""`;
           const result = await model.generateContent(chunkPrompt)
@@ -148,7 +146,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
                 })));
               }
             } catch (parseErr) {
-              console.warn('Failed to parse chunk JSON.');
+              console.warn('Failed to parse chunk JSON:', parseErr.message);
             }
           }
         }
