@@ -96,6 +96,8 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
 
       
       // No JSON array example needed in prompt since we use responseSchema
+      `;
+
 
       if (fileBuffer) {
         // Native Gemini File Parsing (Supports PDF, Word, etc.)
