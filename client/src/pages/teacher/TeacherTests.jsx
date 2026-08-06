@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaFileAlt, FaEdit, FaTrash, FaEye, FaPlusCircle, FaTimes, FaSave, FaExclamationTriangle } from 'react-icons/fa'
+import { FileText, Edit2, Trash2, Eye, PlusCircle, X, Save, AlertTriangle } from 'lucide-react'
 import api from '../../services/api'
 import { useAuthStore } from '../../store/useAuthStore'
 
@@ -86,69 +86,69 @@ export default function TeacherTests() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaFileAlt size={12} /> Examination Module
+          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <FileText size={12} /> Examination Module
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Manage Tests
           </h1>
-          <p className="text-xs text-[#3a4a40]">
+          <p className="text-xs text-emerald-100/70 font-semibold">
             Review, edit, or delete existing examinations.
           </p>
         </div>
-        <Link to="/teacher/tests/create" className="btn-gold text-sm shadow-md">
-          <FaPlusCircle size={16} /> Create New Test
+        <Link to="/teacher/tests/create" className="btn-gold text-sm shadow-md flex items-center gap-1.5 self-start sm:self-center">
+          <PlusCircle size={16} /> Create New Test
         </Link>
       </div>
 
-      <div className="card !p-0 overflow-hidden border-2 border-[#DCE8DD]">
+      <div className="card-glass !p-0 overflow-hidden border border-[#10b981]/15 bg-[#0a1b14]/50 rounded-3xl shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="bg-[#0E4429] text-white font-extrabold border-b border-[#DCE8DD]">
+              <tr className="bg-[#060e0a] text-white font-extrabold border-b border-[#10b981]/15 uppercase tracking-wider">
                 <th className="p-4">Test Title & Subject</th>
                 <th className="p-4">Configuration</th>
                 <th className="p-4">Access Window</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#DCE8DD]">
+            <tbody className="divide-y divide-[#10b981]/10 text-emerald-100">
               {loading ? (
                 <tr>
-                  <td colSpan="4" className="p-8 text-center text-[#3a4a40] font-bold">Loading...</td>
+                  <td colSpan="4" className="p-8 text-center text-emerald-100/50 font-bold">Loading...</td>
                 </tr>
               ) : tests.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="p-8 text-center text-[#3a4a40] font-bold">No tests found.</td>
+                  <td colSpan="4" className="p-8 text-center text-emerald-100/50 font-bold">No tests found.</td>
                 </tr>
               ) : (
                 tests.map(t => (
-                  <tr key={t._id} className="hover:bg-[#F1ECE0]/40 transition-colors">
-                    <td className="p-4 font-bold text-[#0E4429]">
+                  <tr key={t._id} className="hover:bg-[#10b981]/5 transition-colors">
+                    <td className="p-4 font-bold text-white">
                       <p className="font-extrabold text-sm">{t.title}</p>
-                      <p className="text-[10px] text-[#147a4a] font-black uppercase mt-0.5">{t.subject} • Class {t.grade || '11'}</p>
+                      <p className="text-[10px] text-emerald-400 font-black uppercase mt-0.5">{t.subject} • Class {t.grade || '11'}</p>
                     </td>
-                    <td className="p-4 font-medium text-[#3a4a40]">
-                      <p>{t.questions?.length || 0} Questions</p>
-                      <p className="text-[10px] text-amber-700 font-bold">{t.durationMinutes} Minutes Limit</p>
+                    <td className="p-4 font-medium text-emerald-100/70">
+                      <p className="font-bold">{t.questions?.length || 0} Questions</p>
+                      <p className="text-[10px] text-amber-400 font-bold mt-0.5">{t.durationMinutes} Minutes Limit</p>
                     </td>
-                    <td className="p-4 font-medium text-[#3a4a40] text-[11px]">
-                      {t.startTime ? <p className="text-emerald-700 font-bold">Starts: {new Date(t.startTime).toLocaleString()}</p> : <p>Starts: Anytime</p>}
-                      {t.endTime ? <p className="text-red-600 font-bold">Ends: {new Date(t.endTime).toLocaleString()}</p> : <p>Ends: Never</p>}
+                    <td className="p-4 font-medium text-emerald-100/60 text-[11px]">
+                      {t.startTime ? <p className="text-emerald-400 font-bold">Starts: {new Date(t.startTime).toLocaleString()}</p> : <p>Starts: Anytime</p>}
+                      {t.endTime ? <p className="text-red-400 font-bold mt-0.5">Ends: {new Date(t.endTime).toLocaleString()}</p> : <p className="mt-0.5">Ends: Never</p>}
                     </td>
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button onClick={() => setPreviewTest(t)} className="px-2 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-bold text-xs" title="Preview Questions">
-                          <FaEye size={12} />
+                        <button onClick={() => setPreviewTest(t)} className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 font-bold text-xs" title="Preview Questions">
+                          <Eye size={12} />
                         </button>
-                        <button onClick={() => setEditingTest(t)} className="px-2 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-xs" title="Edit Test Details">
-                          <FaEdit size={12} />
+                        <button onClick={() => setEditingTest(t)} className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 font-bold text-xs" title="Edit Test Details">
+                          <Edit2 size={12} />
                         </button>
-                        <button onClick={() => setDeletingId(t._id)} className="px-2 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs" title="Delete Test">
-                          <FaTrash size={12} />
+                        <button onClick={() => setDeletingId(t._id)} className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 font-bold text-xs" title="Delete Test">
+                          <Trash2 size={12} />
                         </button>
                       </div>
                     </td>
@@ -162,21 +162,21 @@ export default function TeacherTests() {
 
       {/* Preview Modal */}
       {previewTest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-2xl max-h-[80vh] flex flex-col bg-white border-2 border-[#147a4a]/30 shadow-2xl overflow-hidden">
-            <div className="p-4 border-b border-[#DCE8DD] flex items-center justify-between bg-[#F1ECE0]">
-              <h2 className="text-lg font-black text-[#0E4429]">{previewTest.title} (Preview)</h2>
-              <button onClick={() => setPreviewTest(null)} className="text-gray-500 hover:text-red-500">
-                <FaTimes size={18} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-2xl max-h-[80vh] flex flex-col bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="p-4 border-b border-[#10b981]/15 flex items-center justify-between bg-[#060e0a]">
+              <h2 className="text-lg font-black text-white">{previewTest.title} (Preview)</h2>
+              <button onClick={() => setPreviewTest(null)} className="text-emerald-100/50 hover:text-red-400 transition-colors">
+                <X size={18} />
               </button>
             </div>
             <div className="p-4 overflow-y-auto space-y-4">
               {previewTest.questions?.map((q, idx) => (
-                <div key={idx} className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
-                  <p className="font-bold text-sm text-[#0E4429]">{idx + 1}. {q.questionText}</p>
+                <div key={idx} className="p-4 bg-[#060e0a]/40 border border-[#10b981]/15 rounded-xl space-y-2">
+                  <p className="font-bold text-sm text-white">{idx + 1}. {q.questionText}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
                     {q.options.map((opt, oIdx) => (
-                      <div key={oIdx} className={`p-2 rounded-md text-xs font-semibold ${q.correctOptionIndex === oIdx ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-white border border-gray-200'}`}>
+                      <div key={oIdx} className={`p-2 rounded-md text-xs font-semibold ${q.correctOptionIndex === oIdx ? 'bg-emerald-500/10 border border-emerald-500 text-emerald-400' : 'bg-[#0a1b14] border border-[#10b981]/10 text-emerald-100/70'}`}>
                         {String.fromCharCode(65 + oIdx)}. {opt}
                       </div>
                     ))}
@@ -190,38 +190,38 @@ export default function TeacherTests() {
 
       {/* Edit Modal */}
       {editingTest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-lg !p-6 space-y-4 bg-white border-2 border-[#147a4a]/30 shadow-2xl">
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-lg !p-6 space-y-4 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl font-black text-white">
               Edit Test Configuration
             </h2>
             <form onSubmit={handleEditSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Test Title</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Test Title</label>
                 <input
                   type="text" required
                   value={editingTest.title}
                   onChange={e => setEditingTest({ ...editingTest, title: e.target.value })}
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Time Limit (Minutes)</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Time Limit (Minutes)</label>
                 <input
                   type="number" required min="1"
                   value={editingTest.durationMinutes}
                   onChange={e => setEditingTest({ ...editingTest, durationMinutes: Number(e.target.value) })}
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-3 sm:col-span-1">
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Subject</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Subject</label>
                   <select
                     value={editingTest.subject}
                     onChange={e => setEditingTest({ ...editingTest, subject: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-emerald-400 font-extrabold focus:outline-none"
                   >
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
@@ -235,11 +235,11 @@ export default function TeacherTests() {
                   </select>
                 </div>
                 <div className="col-span-3 sm:col-span-1">
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Grade/Class</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Grade/Class</label>
                   <select
                     value={editingTest.grade}
                     onChange={e => setEditingTest({ ...editingTest, grade: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-emerald-400 font-extrabold focus:outline-none"
                   >
                     <option value="11">Class 11</option>
                     <option value="12">Class 12</option>
@@ -250,11 +250,11 @@ export default function TeacherTests() {
                   </select>
                 </div>
                 <div className="col-span-3 sm:col-span-1">
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Test Mode</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Test Mode</label>
                   <select
                     value={editingTest.mode || 'test'}
                     onChange={e => setEditingTest({ ...editingTest, mode: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-emerald-400 font-extrabold focus:outline-none"
                   >
                     <option value="test">Test Mode</option>
                     <option value="practice">Practice Mode</option>
@@ -263,21 +263,21 @@ export default function TeacherTests() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Open Time (Optional)</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Open Time (Optional)</label>
                   <input
                     type="datetime-local"
                     value={editingTest.startTime ? new Date(new Date(editingTest.startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
                     onChange={e => setEditingTest({ ...editingTest, startTime: e.target.value || null })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Close Time (Optional)</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Close Time (Optional)</label>
                   <input
                     type="datetime-local"
                     value={editingTest.endTime ? new Date(new Date(editingTest.endTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
                     onChange={e => setEditingTest({ ...editingTest, endTime: e.target.value || null })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
                   />
                 </div>
               </div>
@@ -286,31 +286,31 @@ export default function TeacherTests() {
                   type="checkbox" 
                   checked={editingTest.showResultsToStudents} 
                   onChange={e => setEditingTest({ ...editingTest, showResultsToStudents: e.target.checked })} 
-                  className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" 
+                  className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#060e0a] border-[#10b981]/25" 
                 />
-                <span className="text-xs font-bold text-[#0E4429]">Allow students to view correct answers after submission</span>
+                <span className="text-xs font-bold text-emerald-100/70">Allow students to view correct answers after submission</span>
               </label>
 
-              <div className="border-t border-[#DCE8DD] pt-4 mt-4">
+              <div className="border-t border-[#10b981]/15 pt-4 mt-4">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429]">
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-white">
                     Manage Questions ({editingTest.questions?.length || 0})
                   </label>
-                  <button type="button" onClick={() => setShowAddQuestion(!showAddQuestion)} className="text-xs font-bold text-[#147a4a] hover:text-[#0E4429] flex items-center gap-1">
-                    <FaPlusCircle /> Add Custom MCQ
+                  <button type="button" onClick={() => setShowAddQuestion(!showAddQuestion)} className="text-xs font-bold text-emerald-400 hover:text-white flex items-center gap-1">
+                    <PlusCircle size={12} /> Add Custom MCQ
                   </button>
                 </div>
 
                 {showAddQuestion && (
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg mb-3 space-y-2">
-                    <input type="text" placeholder="Question Text" value={newQuestion.questionText} onChange={e => setNewQuestion({...newQuestion, questionText: e.target.value})} className="w-full px-2 py-1.5 text-xs rounded border border-gray-300" />
+                  <div className="p-3 bg-[#060e0a]/65 border border-[#10b981]/25 rounded-lg mb-3 space-y-2">
+                    <input type="text" placeholder="Question Text" value={newQuestion.questionText} onChange={e => setNewQuestion({...newQuestion, questionText: e.target.value})} className="w-full px-2 py-1.5 text-xs rounded bg-[#060e0a] border border-[#10b981]/25 text-white" />
                     <div className="grid grid-cols-2 gap-2">
                       {newQuestion.options.map((opt, oIdx) => (
                         <div key={oIdx} className="flex items-center gap-2">
-                          <input type="radio" name="newCorrectOpt" checked={newQuestion.correctOptionIndex === oIdx} onChange={() => setNewQuestion({...newQuestion, correctOptionIndex: oIdx})} />
+                          <input type="radio" name="newCorrectOpt" checked={newQuestion.correctOptionIndex === oIdx} onChange={() => setNewQuestion({...newQuestion, correctOptionIndex: oIdx})} className="text-emerald-500 focus:ring-emerald-500" />
                           <input type="text" placeholder={`Option ${String.fromCharCode(65 + oIdx)}`} value={opt} onChange={e => {
                             const newOpts = [...newQuestion.options]; newOpts[oIdx] = e.target.value; setNewQuestion({...newQuestion, options: newOpts})
-                          }} className="w-full px-2 py-1 text-xs rounded border border-gray-300" />
+                          }} className="w-full px-2 py-1 text-xs rounded bg-[#060e0a] border border-[#10b981]/25 text-white" />
                         </div>
                       ))}
                     </div>
@@ -320,29 +320,29 @@ export default function TeacherTests() {
 
                 <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
                   {editingTest.questions?.map((q, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 border border-gray-200 rounded-lg">
-                      <span className="text-xs font-semibold text-[#0E4429] truncate w-3/4">
+                    <div key={idx} className="flex items-center justify-between p-2 bg-[#060e0a]/40 border border-[#10b981]/15 rounded-lg">
+                      <span className="text-xs font-semibold text-white truncate w-3/4">
                         {idx + 1}. {q.questionText}
                       </span>
                       <button 
                         type="button" 
                         onClick={() => removeQuestion(idx)} 
-                        className="text-red-500 hover:text-red-700 p-1"
+                        className="text-red-400 hover:text-red-300 p-1"
                         title="Remove Question"
                       >
-                        <FaTrash size={12} />
+                        <Trash2 size={12} />
                       </button>
                     </div>
                   ))}
                   {(!editingTest.questions || editingTest.questions.length === 0) && (
-                    <p className="text-xs text-gray-500">No questions available.</p>
+                    <p className="text-xs text-emerald-100/50">No questions available.</p>
                   )}
                 </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setEditingTest(null)} className="px-4 py-2 rounded-xl text-xs font-bold text-gray-500 border border-gray-300">Cancel</button>
-                <button type="submit" className="btn-gold text-xs !py-2 !px-5"><FaSave /> Save</button>
+                <button type="button" onClick={() => setEditingTest(null)} className="px-4 py-2 rounded-xl text-xs font-bold text-emerald-100/70 bg-[#060e0a] border border-[#10b981]/25 hover:bg-[#0a1b14]">Cancel</button>
+                <button type="submit" className="btn-gold text-xs !py-2 !px-5 flex items-center gap-1"><Save size={12} /> Save</button>
               </div>
             </form>
           </div>
@@ -351,16 +351,16 @@ export default function TeacherTests() {
 
       {/* Delete Confirm Modal */}
       {deletingId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-sm !p-6 space-y-4 bg-white border-2 border-red-500/30 text-center">
-            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
-              <FaExclamationTriangle size={24} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-sm !p-6 space-y-4 bg-[#0a1b14] border border-red-500/30 rounded-3xl text-center shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 flex items-center justify-center mx-auto">
+              <AlertTriangle size={24} />
             </div>
-            <h2 className="text-lg font-black text-red-600">Delete Test?</h2>
-            <p className="text-xs font-bold text-[#3a4a40]">This action is permanent and cannot be undone.</p>
+            <h2 className="text-lg font-black text-red-400">Delete Test?</h2>
+            <p className="text-xs font-bold text-emerald-100/70">This action is permanent and cannot be undone.</p>
             <div className="flex justify-center gap-3 pt-4">
-              <button onClick={() => setDeletingId(null)} className="px-4 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-700">Cancel</button>
-              <button onClick={handleDelete} className="px-4 py-2 rounded-xl text-xs font-bold bg-red-600 text-white shadow-md">Yes, Delete</button>
+              <button onClick={() => setDeletingId(null)} className="px-4 py-2 rounded-xl text-xs font-bold bg-[#060e0a] border border-[#10b981]/25 text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
+              <button onClick={handleDelete} className="px-4 py-2 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-500 text-white shadow-md">Yes, Delete</button>
             </div>
           </div>
         </div>

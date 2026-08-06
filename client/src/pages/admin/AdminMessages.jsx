@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaEnvelope, FaSearch, FaCheckCircle, FaTrash, FaReply, FaRegEnvelopeOpen, FaPhone, FaUser } from 'react-icons/fa'
+import { Mail, Search, CheckCircle, Trash2, Reply, MailOpen, Phone, User } from 'lucide-react'
 import messageService from '../../services/messageService'
 
 export default function AdminMessages() {
@@ -65,26 +65,28 @@ export default function AdminMessages() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaEnvelope size={12} /> Contact Inquiries Inbox
+          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <Mail size={12} /> Contact Inquiries Inbox
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Admission & Visitor Messages
           </h1>
-          <p className="text-xs text-[#3a4a40]">
+          <p className="text-xs text-emerald-100/70 font-semibold">
             Review, manage, and respond to incoming inquiry messages submitted through the website Contact form.
           </p>
         </div>
 
-        <div className="flex rounded-xl bg-[#F1ECE0] p-1 gap-1">
+        <div className="flex rounded-xl bg-[#060e0a] border border-[#10b981]/25 p-1 gap-1">
           <button
             onClick={() => setFilter('all')}
             className={`px-3 py-2 rounded-lg text-xs font-bold transition-all ${
-              filter === 'all' ? 'bg-[#0E4429] text-white shadow-xs' : 'text-[#3a4a40]'
+              filter === 'all'
+                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm'
+                : 'text-emerald-100/60 hover:text-emerald-300'
             }`}
           >
             All ({messages.length})
@@ -92,7 +94,9 @@ export default function AdminMessages() {
           <button
             onClick={() => setFilter('unread')}
             className={`px-3 py-2 rounded-lg text-xs font-bold transition-all ${
-              filter === 'unread' ? 'bg-amber-600 text-white shadow-xs' : 'text-[#3a4a40]'
+              filter === 'unread'
+                ? 'bg-amber-500/10 border border-amber-500/30 text-amber-400 shadow-sm'
+                : 'text-emerald-100/60 hover:text-emerald-300'
             }`}
           >
             Unread ({messages.filter((m) => m.status === 'unread').length})
@@ -100,7 +104,9 @@ export default function AdminMessages() {
           <button
             onClick={() => setFilter('replied')}
             className={`px-3 py-2 rounded-lg text-xs font-bold transition-all ${
-              filter === 'replied' ? 'bg-[#0E4429] text-white shadow-xs' : 'text-[#3a4a40]'
+              filter === 'replied'
+                ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm'
+                : 'text-emerald-100/60 hover:text-emerald-300'
             }`}
           >
             Replied
@@ -109,22 +115,22 @@ export default function AdminMessages() {
       </div>
 
       {notice && (
-        <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs flex items-center gap-2">
-          <FaCheckCircle size={14} className="text-emerald-700" />
+        <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-extrabold text-xs flex items-center gap-2">
+          <CheckCircle size={14} />
           <span>{notice}</span>
         </div>
       )}
 
       {/* Search */}
-      <div className="card !p-4">
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-2xl !p-4">
         <div className="relative">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#3a4a40]/60" size={14} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-100/40" size={14} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search inquiries by sender name, email, or subject..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-semibold focus:outline-none focus:border-[#147a4a]"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-semibold focus:outline-none focus:border-emerald-400"
           />
         </div>
       </div>
@@ -132,13 +138,13 @@ export default function AdminMessages() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : messages.length === 0 ? (
-        <div className="card !p-12 text-center space-y-3 border-2 border-dashed border-[#DCE8DD]">
-          <FaRegEnvelopeOpen size={40} className="mx-auto text-[#147a4a]/40" />
-          <h3 className="font-extrabold text-base text-[#0E4429]">No Messages Yet</h3>
-          <p className="text-xs text-[#3a4a40] max-w-sm mx-auto">Messages submitted through the Contact form will appear here.</p>
+        <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 !p-12 text-center space-y-3 border-dashed rounded-3xl">
+          <MailOpen size={40} className="mx-auto text-emerald-500/40" />
+          <h3 className="font-extrabold text-base text-white">No Messages Yet</h3>
+          <p className="text-xs text-emerald-100/60 font-semibold max-w-sm mx-auto">Messages submitted through the Contact form will appear here.</p>
         </div>
       ) : (
         /* Inbox Split View */
@@ -149,31 +155,31 @@ export default function AdminMessages() {
               <div
                 key={msg._id}
                 onClick={() => handleOpenMessage(msg)}
-                className={`card !p-5 cursor-pointer transition-all border-2 ${
+                className={`card-glass cursor-pointer transition-all rounded-3xl !p-5 border ${
                   selectedMsg?._id === msg._id
-                    ? 'border-[#147a4a] bg-emerald-50/40 shadow-md'
+                    ? 'border-emerald-400 bg-emerald-500/10 shadow-md'
                     : msg.status === 'unread'
-                    ? 'border-amber-400 bg-amber-50/20'
-                    : 'border-[#DCE8DD] hover:border-[#147a4a]/40 bg-white'
+                    ? 'border-amber-500/30 bg-amber-500/5'
+                    : 'border-[#10b981]/15 hover:border-emerald-400 bg-[#0a1b14]/30'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-2">
-                    <FaUser className="text-[#147a4a]" size={12} />
-                    <h3 className="font-extrabold text-sm text-[#0E4429]">{msg.senderName}</h3>
+                    <User className="text-emerald-400" size={12} />
+                    <h3 className="font-extrabold text-sm text-white">{msg.senderName}</h3>
                   </div>
                   {msg.status === 'unread' ? (
-                    <span className="badge badge-gold text-[9px] font-black uppercase">New Message</span>
+                    <span className="badge badge-gold text-[9px] font-black uppercase bg-amber-500/10 border border-amber-500/30 text-amber-400">New Message</span>
                   ) : msg.status === 'replied' ? (
-                    <span className="badge badge-emerald text-[9px] font-extrabold uppercase">Replied</span>
+                    <span className="badge badge-emerald text-[9px] font-extrabold uppercase bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Replied</span>
                   ) : (
-                    <span className="text-[10px] text-[#3a4a40] font-semibold">Read</span>
+                    <span className="text-[10px] text-emerald-100/50 font-semibold">Read</span>
                   )}
                 </div>
 
-                <p className="font-bold text-xs text-[#147a4a] truncate">{msg.subject}</p>
-                <p className="text-xs text-[#3a4a40] line-clamp-2 mt-1">{msg.message}</p>
-                <p className="text-[10px] text-gray-400 font-semibold text-right mt-2">
+                <p className="font-bold text-xs text-emerald-400 truncate">{msg.subject}</p>
+                <p className="text-xs text-emerald-100/70 line-clamp-2 mt-1">{msg.message}</p>
+                <p className="text-[10px] text-emerald-100/40 font-semibold text-right mt-2">
                   {new Date(msg.createdAt).toLocaleString()}
                 </p>
               </div>
@@ -183,13 +189,13 @@ export default function AdminMessages() {
           {/* Detail View */}
           <div className="lg:col-span-7">
             {selectedMsg ? (
-              <div className="card !p-8 space-y-6 bg-white border-2 border-[#147a4a]/30 shadow-lg sticky top-28">
-                <div className="flex items-start justify-between gap-4 border-b border-[#DCE8DD] pb-4">
+              <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/25 rounded-3xl !p-8 space-y-6 shadow-lg sticky top-28">
+                <div className="flex items-start justify-between gap-4 border-b border-[#10b981]/10 pb-4">
                   <div>
-                    <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <h2 className="text-xl font-black text-white leading-tight">
                       {selectedMsg.subject}
                     </h2>
-                    <p className="text-xs text-[#3a4a40] mt-1 font-semibold">
+                    <p className="text-xs text-emerald-100/50 mt-1 font-semibold">
                       Received: {new Date(selectedMsg.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -199,55 +205,55 @@ export default function AdminMessages() {
                       onClick={() => handleMarkReplied(selectedMsg._id)}
                       className="btn-gold text-xs !py-2 !px-3 shadow-xs flex items-center gap-1.5"
                     >
-                      <FaReply size={12} />
+                      <Reply size={12} />
                       <span>Mark Replied</span>
                     </button>
                     <button
                       onClick={() => handleDelete(selectedMsg._id)}
-                      className="p-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-bold"
+                      className="p-2.5 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 font-bold"
                     >
-                      <FaTrash size={13} />
+                      <Trash2 size={13} />
                     </button>
                   </div>
                 </div>
 
                 {/* Sender Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#F1ECE0] text-xs font-semibold text-[#0E4429]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#060e0a] border border-[#10b981]/15 text-xs font-semibold text-emerald-100">
                   <div>
-                    <span className="text-[#3a4a40] block font-extrabold uppercase text-[10px]">Sender Name</span>
-                    <span className="font-extrabold text-sm">{selectedMsg.senderName}</span>
+                    <span className="text-emerald-100/50 block font-extrabold uppercase text-[10px]">Sender Name</span>
+                    <span className="font-extrabold text-sm text-white">{selectedMsg.senderName}</span>
                   </div>
                   <div>
-                    <span className="text-[#3a4a40] block font-extrabold uppercase text-[10px]">Contact Email</span>
-                    <a href={`mailto:${selectedMsg.senderEmail}`} className="font-bold text-[#147a4a] underline">
+                    <span className="text-emerald-100/50 block font-extrabold uppercase text-[10px]">Contact Email</span>
+                    <a href={`mailto:${selectedMsg.senderEmail}`} className="font-bold text-emerald-400 underline">
                       {selectedMsg.senderEmail}
                     </a>
                   </div>
                   <div>
-                    <span className="text-[#3a4a40] block font-extrabold uppercase text-[10px]">Phone Number</span>
-                    <span className="font-bold text-[#0E4429] flex items-center gap-1.5 mt-0.5">
-                      <FaPhone size={11} className="text-[#147a4a]" /> {selectedMsg.senderPhone || 'Not provided'}
+                    <span className="text-emerald-100/50 block font-extrabold uppercase text-[10px]">Phone Number</span>
+                    <span className="font-bold text-white flex items-center gap-1.5 mt-0.5">
+                      <Phone size={11} className="text-emerald-400" /> {selectedMsg.senderPhone || 'Not provided'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#3a4a40] block font-extrabold uppercase text-[10px]">Status</span>
-                    <span className="badge badge-gold font-extrabold capitalize mt-0.5">{selectedMsg.status}</span>
+                    <span className="text-emerald-100/50 block font-extrabold uppercase text-[10px]">Status</span>
+                    <span className="badge badge-gold font-extrabold capitalize mt-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400">{selectedMsg.status}</span>
                   </div>
                 </div>
 
                 {/* Message Body */}
                 <div className="space-y-2">
-                  <h4 className="text-xs uppercase font-extrabold text-[#0E4429] tracking-wider">Inquiry Body Message</h4>
-                  <div className="p-5 rounded-2xl bg-[#FBF8F1] border border-[#DCE8DD] text-sm text-[#1C2620] leading-relaxed font-medium">
+                  <h4 className="text-xs uppercase font-extrabold text-white tracking-wider">Inquiry Body Message</h4>
+                  <div className="p-5 rounded-2xl bg-[#060e0a] border border-[#10b981]/15 text-sm text-emerald-100/90 leading-relaxed font-semibold">
                     {selectedMsg.message}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="card !p-12 text-center text-[#3a4a40] space-y-3 border-2 border-dashed border-[#DCE8DD]">
-                <FaRegEnvelopeOpen size={40} className="mx-auto text-[#147a4a]/40" />
-                <h3 className="font-extrabold text-base text-[#0E4429]">No Message Selected</h3>
-                <p className="text-xs max-w-xs mx-auto">Click any inquiry message from the left list to read details.</p>
+              <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-3xl !p-12 text-center space-y-3 border-dashed">
+                <MailOpen size={40} className="mx-auto text-emerald-500/40" />
+                <h3 className="font-extrabold text-base text-white">No Message Selected</h3>
+                <p className="text-xs max-w-xs mx-auto text-emerald-100/50">Click any inquiry message from the left list to read details.</p>
               </div>
             )}
           </div>

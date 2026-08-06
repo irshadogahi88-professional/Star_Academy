@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaVideo, FaPlus, FaTrashAlt, FaCheck, FaSearch, FaExternalLinkAlt, FaFilePdf } from 'react-icons/fa'
+import { Video, Plus, Trash2, Check, Search, ExternalLink } from 'lucide-react'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
@@ -80,40 +80,40 @@ export default function AdminLectures() {
   const filtered = lectures
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaVideo size={12} /> Resource Manager
+          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <Video size={12} /> Resource Manager
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Video Lectures
           </h1>
-          <p className="text-xs text-[#3a4a40]">Upload educational video links and notes for students.</p>
+          <p className="text-xs text-emerald-100/70 font-semibold">Upload educational video links and notes for students.</p>
         </div>
 
-        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-4 shadow-sm">
-          <FaPlus size={12} />
+        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-4 shadow-sm flex items-center gap-2">
+          <Plus size={12} />
           <span>Add New Lecture</span>
         </button>
       </div>
 
       {statusMsg && (
-        <div className="p-4 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs flex items-center gap-2">
-          <FaCheck size={14} className="text-emerald-700" />
+        <div className="p-4 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-extrabold text-xs flex items-center gap-2">
+          <Check size={14} />
           <span>{statusMsg}</span>
         </div>
       )}
 
-      <div className="card !p-4 flex items-center gap-4">
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-2xl !p-4 flex items-center gap-4">
         <div className="relative flex-1">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#3a4a40]/60" size={14} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-100/40" size={14} />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search lectures by title or subject..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-semibold focus:outline-none focus:border-[#147a4a]"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-semibold focus:outline-none focus:border-emerald-400"
           />
         </div>
       </div>
@@ -121,15 +121,15 @@ export default function AdminLectures() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="card !p-5 flex flex-col gap-4 animate-pulse bg-white/60">
+            <div key={i} className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 !p-5 flex flex-col gap-4 animate-pulse rounded-3xl">
               <div className="flex justify-between items-start">
-                <div className="h-5 bg-emerald-100 rounded-full w-20"></div>
-                <div className="h-6 w-6 bg-red-100 rounded-md"></div>
+                <div className="h-5 bg-emerald-500/10 rounded-full w-20 border border-emerald-500/20"></div>
+                <div className="h-6 w-6 bg-red-500/10 rounded-md"></div>
               </div>
-              <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-              <div className="mt-auto pt-4 border-t border-gray-100">
-                <div className="h-4 bg-emerald-100 rounded w-32"></div>
+              <div className="h-5 bg-[#060e0a] border border-[#10b981]/15 rounded w-3/4"></div>
+              <div className="h-4 bg-[#060e0a] border border-[#10b981]/15 rounded w-1/3"></div>
+              <div className="mt-auto pt-4 border-t border-[#10b981]/10">
+                <div className="h-4 bg-emerald-500/10 rounded w-32"></div>
               </div>
             </div>
           ))}
@@ -138,31 +138,31 @@ export default function AdminLectures() {
         <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((lecture) => (
             <StaggerItem key={lecture._id}>
-              <div className="card !p-5 flex flex-col gap-3">
+              <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400 transition-all rounded-3xl !p-5 flex flex-col gap-3 relative shadow-md">
                 <div className="flex justify-between items-start gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="badge badge-gold text-[10px]">{lecture.subject}</span>
+                    <span className="badge badge-gold text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-400">{lecture.subject}</span>
                     {lecture.isPublicPreview && (
-                      <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-100 text-emerald-700">Demo</span>
+                      <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Demo</span>
                     )}
                   </div>
-                  <button onClick={() => handleDelete(lecture._id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors">
-                    <FaTrashAlt size={12} />
+                  <button onClick={() => handleDelete(lecture._id)} className="text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors">
+                    <Trash2 size={12} />
                   </button>
                 </div>
-                <h3 className="font-bold text-[#0E4429] text-base leading-tight">{lecture.title}</h3>
-                <p className="text-xs text-[#3a4a40] font-semibold">Grade: {lecture.grade}</p>
+                <h3 className="font-extrabold text-white text-base leading-tight">{lecture.title}</h3>
+                <p className="text-xs text-emerald-100/70 font-semibold">Grade: {lecture.grade}</p>
                 
-                <div className="mt-auto pt-4 border-t border-[#DCE8DD]">
-                  <a href={lecture.mediaUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-[#147a4a] hover:underline flex items-center gap-1.5">
-                    <FaVideo size={12} /> View {lecture.mediaType === 'pdf' ? 'Notes' : 'Video'} Link
+                <div className="mt-auto pt-4 border-t border-[#10b981]/10">
+                  <a href={lecture.mediaUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-1.5">
+                    <Video size={12} /> View {lecture.mediaType === 'pdf' ? 'Notes' : 'Video'} Link
                   </a>
                 </div>
               </div>
             </StaggerItem>
           ))}
           {filtered.length === 0 && (
-            <div className="col-span-full text-center p-10 text-[#3a4a40] font-bold">No lectures found.</div>
+            <div className="col-span-full text-center p-10 text-emerald-100/50 font-bold">No lectures found.</div>
           )}
         </StaggerContainer>
       )}
@@ -173,7 +173,7 @@ export default function AdminLectures() {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-3 py-1.5 rounded-lg border border-[#DCE8DD] bg-white text-[#0E4429] font-bold text-xs disabled:opacity-50 hover:bg-emerald-50 transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-[#10b981]/25 bg-[#060e0a] text-emerald-100 font-bold text-xs disabled:opacity-30 hover:bg-[#0a1b14] transition-colors"
           >
             Prev
           </button>
@@ -188,8 +188,8 @@ export default function AdminLectures() {
                     onClick={() => setPage(p)}
                     className={`w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center transition-all ${
                       page === p
-                        ? 'bg-[#147a4a] text-white shadow-sm'
-                        : 'bg-white text-charcoal border border-[#DCE8DD] hover:bg-emerald-50'
+                        ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-sm'
+                        : 'bg-[#060e0a] text-emerald-100/60 border border-[#10b981]/25 hover:bg-[#0a1b14]'
                     }`}
                   >
                     {p}
@@ -197,7 +197,7 @@ export default function AdminLectures() {
                 )
               }
               if (p === page - 2 || p === page + 2) {
-                return <span key={p} className="text-charcoal-light font-bold px-1 text-xs">...</span>
+                return <span key={p} className="text-emerald-100/50 font-bold px-1 text-xs">...</span>
               }
               return null;
             })}
@@ -206,7 +206,7 @@ export default function AdminLectures() {
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-3 py-1.5 rounded-lg border border-[#DCE8DD] bg-white text-[#0E4429] font-bold text-xs disabled:opacity-50 hover:bg-emerald-50 transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-[#10b981]/25 bg-[#060e0a] text-emerald-100 font-bold text-xs disabled:opacity-30 hover:bg-[#0a1b14] transition-colors"
           >
             Next
           </button>
@@ -214,20 +214,20 @@ export default function AdminLectures() {
       )}
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-lg !p-6 sm:!p-8 space-y-5 bg-white">
-            <h2 className="text-2xl font-bold text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-lg !p-6 sm:!p-8 space-y-5 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-2xl font-black text-white">
               Upload Lecture
             </h2>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Title</label>
-                <input required type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]" placeholder="e.g. Intro to Vectors" />
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Title</label>
+                <input required type="text" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400" placeholder="e.g. Intro to Vectors" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Subject</label>
-                  <select value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:border-[#147a4a]">
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Subject</label>
+                  <select value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400">
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
                     <option value="Biology">Biology</option>
@@ -238,8 +238,8 @@ export default function AdminLectures() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Grade</label>
-                  <select value={formData.grade} onChange={(e) => setFormData({...formData, grade: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:border-[#147a4a]">
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Grade</label>
+                  <select value={formData.grade} onChange={(e) => setFormData({...formData, grade: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400">
                     <option value="IX">IX</option>
                     <option value="X">X</option>
                     <option value="XI">XI</option>
@@ -249,8 +249,8 @@ export default function AdminLectures() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Media Type</label>
-                  <select value={formData.mediaType} onChange={(e) => setFormData({...formData, mediaType: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:border-[#147a4a]">
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Media Type</label>
+                  <select value={formData.mediaType} onChange={(e) => setFormData({...formData, mediaType: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400">
                     <option value="youtube">YouTube Video</option>
                     <option value="gdrive">Google Drive Video</option>
                     <option value="pdf">PDF Notes</option>
@@ -258,25 +258,25 @@ export default function AdminLectures() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Media URL</label>
-                  <input required type="url" value={formData.mediaUrl} onChange={(e) => setFormData({...formData, mediaUrl: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]" placeholder="https://..." />
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Media URL</label>
+                  <input required type="url" value={formData.mediaUrl} onChange={(e) => setFormData({...formData, mediaUrl: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400" placeholder="https://..." />
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-cream-alt p-3 rounded-xl border border-[#DCE8DD]">
+              <div className="flex items-center gap-3 bg-[#060e0a] border border-[#10b981]/20 p-3 rounded-xl">
                 <input 
                   type="checkbox" 
                   id="demo-mode"
                   checked={formData.isPublicPreview} 
                   onChange={(e) => setFormData({...formData, isPublicPreview: e.target.checked})} 
-                  className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+                  className="w-4 h-4 text-emerald-500 border border-[#10b981]/25 rounded bg-[#060e0a] focus:ring-emerald-400"
                 />
-                <label htmlFor="demo-mode" className="text-xs font-bold text-[#0E4429] cursor-pointer select-none">
+                <label htmlFor="demo-mode" className="text-xs font-bold text-white cursor-pointer select-none">
                   Set as Public Demo
-                  <span className="block text-[10px] text-[#3a4a40] font-semibold mt-0.5">Allows non-registered students to view this lecture on the public website.</span>
+                  <span className="block text-[10px] text-emerald-100/50 font-semibold mt-0.5">Allows non-registered students to view this lecture on the public website.</span>
                 </label>
               </div>
               <div className="pt-3 flex justify-end gap-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-xl text-xs font-bold text-[#3a4a40] border border-[#DCE8DD]">Cancel</button>
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
                 <button type="submit" className="btn-primary text-xs !py-2 !px-5 shadow-sm">Save Lecture</button>
               </div>
             </form>

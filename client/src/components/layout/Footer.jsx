@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { FaWhatsapp, FaFacebookF, FaInstagram, FaTiktok, FaPhoneAlt, FaMapMarkerAlt, FaGraduationCap } from 'react-icons/fa'
-import { IoSchool } from 'react-icons/io5'
+import { GraduationCap, Phone, MapPin, ShieldAlert, Heart } from 'lucide-react'
+import { FaFacebookF, FaInstagram } from 'react-icons/fa'
 
 const quickLinks = [
   { name: 'Home', path: '/' },
@@ -23,17 +23,17 @@ const programLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#082d1b] text-white overflow-hidden relative">
+    <footer className="bg-[#060e0a] text-[#e2ede7] overflow-hidden relative border-t border-[#10b981]/15">
       {/* Session 2026 Announcement Banner */}
-      <div className="py-3.5 bg-gradient-to-r from-[#D4A64A] via-[#e6c36e] to-[#D4A64A] text-[#082d1b] border-b border-[#082d1b]/10">
+      <div className="py-3.5 bg-gradient-to-r from-amber-500/10 via-[#0a1e15] to-amber-500/10 text-amber-300 border-b border-[#10b981]/15">
         <div className="section-container flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
-          <p className="font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 text-[#082d1b]">
-            <FaGraduationCap size={18} />
+          <p className="font-extrabold text-sm sm:text-base flex items-center justify-center gap-2">
+            <GraduationCap size={18} className="text-amber-400" />
             <span>Session 2026 Admissions Open — Classes Commence 10-08-2026</span>
           </p>
           <Link
             to="/register"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-xs sm:text-sm font-black transition-transform hover:scale-105 shadow-md bg-[#082d1b] !text-[#D4A64A] border border-[#082d1b] shrink-0"
+            className="inline-flex items-center justify-center gap-1.5 px-4.5 py-1.5 rounded-xl text-xs sm:text-sm font-black transition-all hover:scale-105 shadow-md bg-amber-500 text-[#060e0a] hover:bg-amber-400 shrink-0"
           >
             <span>Apply Online</span>
             <span>→</span>
@@ -45,34 +45,34 @@ export default function Footer() {
       <div className="section-container py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Academy Info */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3.5">
               <img
                 src="/images/logo.png"
                 alt="Star Educational Academy Logo"
-                className="h-14 w-14 rounded-full object-cover border-2 border-[#D4A64A]"
+                className="h-14 w-14 rounded-full object-cover border-2 border-amber-500/80 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
               />
               <div>
-                <h3 className="text-lg font-black text-white leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                <h3 className="text-lg font-black text-white leading-tight">
                   Star Educational
                 </h3>
-                <p className="text-xs font-black tracking-wider uppercase text-[#D4A64A]">
+                <p className="text-xs font-black tracking-wider uppercase text-amber-500">
                   Academy, Ghotki
                 </p>
               </div>
             </div>
 
-            <p className="text-sm leading-relaxed text-white/90 font-medium">
+            <p className="text-sm leading-relaxed text-emerald-100/70 font-medium">
               Where hardworking boys and girls build a bright and successful future through dedication and excellence. Premier coaching for Grades IX–XII.
             </p>
 
-            {/* Official App Colored Social Icons */}
+            {/* Premium Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               <a
                 href="https://web.facebook.com/p/Star-Educational-Academy-Ghotki-100078502346228/?_rdc=1&_rdr#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-12 h-12 rounded-xl bg-[#1877F2] text-white hover:bg-[#166FE5] transition-all duration-300 hover:scale-110 shadow-md"
+                className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#08140f] border border-[#10b981]/20 text-[#e2ede7] hover:border-[#1877F2] hover:bg-[#1877F2]/10 hover:text-[#1877F2] transition-all duration-300 hover:-translate-y-1 shadow-md"
                 aria-label="Facebook"
               >
                 <FaFacebookF size={18} />
@@ -81,48 +81,39 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] text-white hover:opacity-90 transition-all duration-300 hover:scale-110 shadow-md"
+                className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#08140f] border border-[#10b981]/20 text-[#e2ede7] hover:border-[#bc1888] hover:bg-[#bc1888]/10 hover:text-[#bc1888] transition-all duration-300 hover:-translate-y-1 shadow-md"
                 aria-label="Instagram"
               >
-                <FaInstagram size={19} />
+                <FaInstagram size={18} />
               </a>
               <a
-                href="https://www.tiktok.com/@stareducationalacademyg1"
+                href="https://wa.me/923083309704"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-12 h-12 rounded-xl bg-black text-white hover:bg-black/80 transition-all duration-300 hover:scale-110 shadow-md"
-                aria-label="TikTok"
-              >
-                <FaTiktok size={18} />
-              </a>
-              <a
-                href="https://wa.me/92335847768"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-12 h-12 rounded-xl bg-[#25D366] text-white hover:bg-[#20BD5A] transition-all duration-300 hover:scale-110 shadow-md"
+                className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#08140f] border border-[#10b981]/20 text-[#e2ede7] hover:border-emerald-400 hover:bg-emerald-400/10 hover:text-emerald-400 transition-all duration-300 hover:-translate-y-1 shadow-md"
                 aria-label="WhatsApp"
               >
-                <FaWhatsapp size={20} />
+                <Phone size={18} />
               </a>
             </div>
           </div>
 
           {/* Quick Links Column */}
           <div>
-            <div className="flex items-center gap-2 mb-5 pb-2 border-b border-white/20">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#D4A64A]" />
-              <h4 className="text-base font-black uppercase tracking-wider text-[#D4A64A]">
+            <div className="flex items-center gap-2 mb-6 pb-2 border-b border-[#10b981]/15">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <h4 className="text-sm font-black uppercase tracking-wider text-amber-500">
                 Quick Links
               </h4>
             </div>
-            <ul className="space-y-4">
+            <ul className="space-y-3.5">
               {quickLinks.map((link) => (
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-base font-bold text-white/85 hover:text-[#D4A64A] transition-all duration-300 hover:translate-x-1.5 inline-flex items-center gap-2 py-1"
+                    className="text-sm font-semibold text-emerald-100/70 hover:text-amber-400 hover:translate-x-1.5 transition-all duration-300 inline-flex items-center gap-2"
                   >
-                    <span className="w-1 h-1 rounded-full bg-white/30" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]/30" />
                     {link.name}
                   </Link>
                 </li>
@@ -132,20 +123,20 @@ export default function Footer() {
 
           {/* Programs Column */}
           <div>
-            <div className="flex items-center gap-2 mb-5 pb-2 border-b border-white/20">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#D4A64A]" />
-              <h4 className="text-base font-black uppercase tracking-wider text-[#D4A64A]">
+            <div className="flex items-center gap-2 mb-6 pb-2 border-b border-[#10b981]/15">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <h4 className="text-sm font-black uppercase tracking-wider text-amber-500">
                 Our Programs
               </h4>
             </div>
-            <ul className="space-y-4">
+            <ul className="space-y-3.5">
               {programLinks.map((link, i) => (
                 <li key={i}>
                   <Link
                     to={link.path}
-                    className="text-base font-bold text-white/85 hover:text-[#D4A64A] transition-all duration-300 hover:translate-x-1.5 inline-flex items-center gap-2 py-1"
+                    className="text-sm font-semibold text-emerald-100/70 hover:text-amber-400 hover:translate-x-1.5 transition-all duration-300 inline-flex items-center gap-2"
                   >
-                    <span className="w-1 h-1 rounded-full bg-white/30" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]/30" />
                     {link.name}
                   </Link>
                 </li>
@@ -155,38 +146,38 @@ export default function Footer() {
 
           {/* Contact Details Column */}
           <div>
-            <div className="flex items-center gap-2 mb-5 pb-2 border-b border-white/20">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#D4A64A]" />
-              <h4 className="text-base font-black uppercase tracking-wider text-[#D4A64A]">
+            <div className="flex items-center gap-2 mb-6 pb-2 border-b border-[#10b981]/15">
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <h4 className="text-sm font-black uppercase tracking-wider text-amber-500">
                 Contact Info
               </h4>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <p className="text-[11px] font-black uppercase tracking-widest text-[#D4A64A]">Director</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Director</p>
                 <p className="text-sm text-white font-extrabold">Sir Irshad Ahmed Ogahi</p>
-                <a href="tel:03083309704" className="inline-flex items-center gap-2 text-xs mt-1 transition-colors hover:text-[#D4A64A] text-white/90 font-bold">
-                  <FaPhoneAlt size={11} className="text-[#D4A64A]" />
+                <a href="tel:03083309704" className="inline-flex items-center gap-2 text-xs mt-1 transition-colors hover:text-amber-400 text-emerald-100/70 font-semibold">
+                  <Phone size={11} className="text-amber-500" />
                   0308-3309704
                 </a>
               </div>
               <div>
-                <p className="text-[11px] font-black uppercase tracking-widest text-[#D4A64A]">Administrator</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Administrator</p>
                 <p className="text-sm text-white font-extrabold">Muhammad Jamil Arain</p>
-                <a href="tel:03063004887" className="inline-flex items-center gap-2 text-xs mt-1 transition-colors hover:text-[#D4A64A] text-white/90 font-bold">
-                  <FaPhoneAlt size={11} className="text-[#D4A64A]" />
+                <a href="tel:03063004887" className="inline-flex items-center gap-2 text-xs mt-1 transition-colors hover:text-amber-400 text-emerald-100/70 font-semibold">
+                  <Phone size={11} className="text-amber-500" />
                   0306-3004887
                 </a>
               </div>
-              <div className="pt-2 space-y-2 border-t border-white/20">
-                <div className="flex items-start gap-2 text-xs text-white/90 font-medium">
-                  <FaMapMarkerAlt size={13} className="mt-0.5 shrink-0 text-[#D4A64A]" />
-                  <a href="https://www.google.com/maps?sca_esv=1e85827d6e1fa685&rlz=1C1CHBF_en-GBPK1167PK1167&sxsrf=APpeQnuuhLdkxi-lNra0UfLpUygOmKsNbQ:1785878013017&biw=1249&bih=543&uact=5&gs_lp=Egxnd3Mtd2l6LXNlcnAiGGRhdiBwdWJsaWMgc2Nob29sIGdob3RraTIFECEYoAEyBRAhGKABSJU7UJcEWPYycAF4AJABAJgBugKgAe4tqgEGMi0yMi4yuAEDyAEA-AEBmAIZoAKVL6gCEMICBxAjGOoCGCfCAhAQIxjwBRieBhiiBxjqAhgnwgIXEAAYgAQYigUYkQIY5wYY6gIYtALYAQHCAiAQLhiABBiKBRiRAhjnBhjHARivARjIAxjqAhi0AtgBAcICBBAjGCfCAhEQLhiABBiKBRiRAhjHARjRA8ICERAuGIAEGIoFGJECGMcBGK8BwgIOEC4YgAQYsQMYxwEY0QPCAggQABiABBixA8ICChAuGIAEGIoFGEPCAgoQABiABBiKBRhDwgIQEAAYgAQYigUYQxixAxiDAcICExAuGIAEGIoFGEMYsQMYxwEY0QPCAgUQABiABMICBRAuGIAEwgIZEC4YgAQYigUYQxiXBRjcBBjeBBjfBNgBAcICChAuGEMYgAQYigXCAgwQLhiABBgKGAsYsQPCAgkQABiABBgKGAvCAg8QLhiABBgKGAsYxwEY0QPCAgYQABgWGB7CAgsQABiABBiKBRiGA8ICBxAhGAoYoAGYAwvxBTuJuq7UE54QugYGCAEQARgBkgcIMS4wLjIxLjOgB6fXAbIHBjItMjEuM7gHiS_CBwgwLjMuMTkuM8gHfYAIAQ&um=1&ie=UTF-8&fb=1&gl=pk&sa=X&geocode=KQO9HuRr7TY5MVBZArjJgw2O&daddr=2858%2BPJF,+Ghotki" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4A64A] transition-colors">
+              <div className="pt-4 space-y-2 border-t border-[#10b981]/15">
+                <div className="flex items-start gap-2 text-xs text-emerald-100/70 font-medium">
+                  <MapPin size={13} className="mt-0.5 shrink-0 text-amber-500" />
+                  <a href="https://www.google.com/maps?daddr=2858%2BPJF,+Ghotki" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">
                     D.A.V. School, Ladies Bazaar, Ghotki
                   </a>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-white/90 font-medium">
-                  <IoSchool size={13} className="shrink-0 text-[#D4A64A]" />
+                <div className="flex items-center gap-2 text-xs text-emerald-100/70 font-medium">
+                  <GraduationCap size={13} className="shrink-0 text-amber-500" />
                   <span>Class Timings: 3:15 PM – 7:00 PM</span>
                 </div>
               </div>
@@ -196,12 +187,14 @@ export default function Footer() {
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-white/10 py-8 bg-[#051f12]">
-        <div className="section-container flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <p className="text-xs font-bold text-white/80">
-            © {new Date().getFullYear()} Star Educational Academy, Ghotki. All rights reserved.
+      <div className="border-t border-[#10b981]/15 py-8 bg-[#050c08]">
+        <div className="section-container flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <p className="text-xs font-bold text-emerald-100/50 flex items-center justify-center gap-1.5">
+            <span>© {new Date().getFullYear()} Star Educational Academy. Made with</span>
+            <Heart size={10} className="text-amber-500 fill-amber-500" />
+            <span>in Ghotki.</span>
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-2 text-xs font-black text-[#D4A64A]">
+          <div className="flex flex-wrap justify-center items-center gap-2 text-xs font-black text-amber-500">
             <span>MDCAT 1st Position</span>
             <span className="opacity-40">•</span>
             <span>30+ MBBS/BDS Admissions</span>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaImage, FaPlus, FaTrash, FaCheckCircle, FaEdit } from 'react-icons/fa'
+import { Image, Plus, Trash2, CheckCircle, Edit2 } from 'lucide-react'
 import heroSlideService from '../../services/heroSlideService'
 
 export default function AdminHeroMedia() {
@@ -78,30 +78,30 @@ export default function AdminHeroMedia() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaImage size={12} /> Homepage Branding
+          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <Image size={12} /> Homepage Branding
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Hero Slider & Media Banner Manager
           </h1>
-          <p className="text-xs text-[#3a4a40]">
+          <p className="text-xs text-emerald-100/70 font-semibold">
             Update background banner images, titles, and admission announcement slides on the main landing page.
           </p>
         </div>
 
         <button onClick={handleOpenCreate} className="btn-gold text-xs !py-3 !px-5 shadow-md flex items-center gap-2">
-          <FaPlus size={12} />
+          <Plus size={12} />
           <span>Add Hero Banner Slide</span>
         </button>
       </div>
 
       {notice && (
-        <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs flex items-center gap-2">
-          <FaCheckCircle size={14} className="text-emerald-700" />
+        <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-extrabold text-xs flex items-center gap-2">
+          <CheckCircle size={14} />
           <span>{notice}</span>
         </div>
       )}
@@ -109,37 +109,37 @@ export default function AdminHeroMedia() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : slides.length === 0 ? (
-        <div className="card !p-12 text-center space-y-3 border-2 border-dashed border-[#DCE8DD]">
-          <FaImage size={40} className="mx-auto text-[#147a4a]/40" />
-          <h3 className="font-extrabold text-base text-[#0E4429]">No Hero Slides Yet</h3>
-          <p className="text-xs text-[#3a4a40] max-w-sm mx-auto">Click "Add Hero Banner Slide" to publish the first banner on the homepage.</p>
+        <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 !p-12 text-center space-y-3 border-dashed rounded-3xl">
+          <Image size={40} className="mx-auto text-emerald-500/40" />
+          <h3 className="font-extrabold text-base text-white">No Hero Slides Yet</h3>
+          <p className="text-xs text-emerald-100/60 font-semibold max-w-sm mx-auto">Click "Add Hero Banner Slide" to publish the first banner on the homepage.</p>
         </div>
       ) : (
         /* Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {slides.map((s) => (
-            <div key={s._id} className="card !p-6 space-y-4 border-2 border-[#147a4a]/20 shadow-md relative bg-white">
+            <div key={s._id} className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400 transition-all rounded-3xl !p-6 space-y-4 shadow-md relative">
               <div className="flex items-center justify-between">
                 <span className="badge badge-emerald text-[10px] font-extrabold">{s.badge || 'Banner Slide'}</span>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => handleOpenEdit(s)} className="p-1.5 rounded-lg text-[#147a4a] hover:bg-[#147a4a]/10">
-                    <FaEdit size={13} />
+                  <button onClick={() => handleOpenEdit(s)} className="p-1.5 rounded-lg text-emerald-400 hover:bg-[#10b981]/10">
+                    <Edit2 size={13} />
                   </button>
-                  <button onClick={() => handleDelete(s._id)} className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 font-bold text-xs">
-                    <FaTrash size={13} />
+                  <button onClick={() => handleDelete(s._id)} className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/10 font-bold text-xs">
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <h3 className="font-extrabold text-lg text-[#0E4429] leading-snug">{s.title}</h3>
-                <p className="text-xs text-[#3a4a40]">{s.subtitle}</p>
+                <h3 className="font-extrabold text-lg text-white leading-snug">{s.title}</h3>
+                <p className="text-xs text-emerald-100/70 font-semibold">{s.subtitle}</p>
               </div>
 
-              <div className="pt-2 border-t border-[#DCE8DD] text-[11px] font-bold text-[#147a4a] truncate">
+              <div className="pt-2 border-t border-[#10b981]/10 text-[11px] font-bold text-emerald-400 truncate">
                 Image Path: {s.imageUrl}
               </div>
             </div>
@@ -149,15 +149,15 @@ export default function AdminHeroMedia() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-lg !p-6 space-y-4 bg-white border-2 border-[#147a4a]/30 shadow-2xl">
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-lg !p-6 space-y-4 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-xl font-black text-white">
               {editingId ? 'Edit Hero Banner' : 'Add Homepage Hero Banner'}
             </h2>
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   Banner Headline Title
                 </label>
                 <input
@@ -166,12 +166,12 @@ export default function AdminHeroMedia() {
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   placeholder="e.g. Session 2026 Admissions Now Open"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   Subtitle Description
                 </label>
                 <input
@@ -180,13 +180,13 @@ export default function AdminHeroMedia() {
                   value={form.subtitle}
                   onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                   placeholder="e.g. Join the #1 Entry Test Academy in Ghotki District"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Badge Label
                   </label>
                   <input
@@ -194,12 +194,12 @@ export default function AdminHeroMedia() {
                     value={form.badge}
                     onChange={(e) => setForm({ ...form, badge: e.target.value })}
                     placeholder="e.g. MDCAT 2026"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Image File URL / Path
                   </label>
                   <input
@@ -207,7 +207,7 @@ export default function AdminHeroMedia() {
                     value={form.imageUrl}
                     onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
                     placeholder="/images/hero-bg.jpg"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function AdminHeroMedia() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#DCE8DD] font-bold text-[#3a4a40]"
+                  className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]"
                 >
                   Cancel
                 </button>

@@ -2,42 +2,45 @@ import { useState } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/useAuthStore'
 import { 
-  FaUserShield, 
-  FaUsers, 
-  FaReceipt, 
-  FaBullhorn, 
-  FaCog, 
-  FaSignOutAlt, 
-  FaBars, 
-  FaTimes,
-  FaCheckCircle,
-  FaHome,
-  FaUserGraduate,
-  FaImage,
-  FaHistory,
-  FaIdCard,
-  FaEnvelope
-} from 'react-icons/fa'
-
-import { FaVideo, FaTrophy, FaQuestionCircle, FaFileAlt, FaPlusCircle } from 'react-icons/fa'
+  ShieldAlert, 
+  Users, 
+  Receipt, 
+  Megaphone, 
+  Settings, 
+  LogOut, 
+  Menu, 
+  X, 
+  CheckCircle, 
+  Home, 
+  GraduationCap, 
+  Image, 
+  History, 
+  Shield, 
+  Mail, 
+  Video, 
+  Trophy, 
+  HelpCircle, 
+  FileText, 
+  PlusCircle 
+} from 'lucide-react'
 
 const navItems = [
-  { name: 'Executive Overview', path: '/admin', icon: <FaHome size={18} /> },
-  { name: 'Video Lectures', path: '/admin/lectures', icon: <FaVideo size={18} /> },
-  { name: 'MCQ Question Bank', path: '/admin/mcq', icon: <FaQuestionCircle size={18} /> },
-  { name: 'Manage Tests', path: '/admin/tests', icon: <FaFileAlt size={18} /> },
-  { name: 'Create Test', path: '/admin/tests/create', icon: <FaPlusCircle size={18} /> },
-  { name: 'Success Stories', path: '/admin/success-stories', icon: <FaTrophy size={18} /> },
-  { name: 'Contact Inquiries', path: '/admin/messages', icon: <FaEnvelope size={18} /> },
-  { name: 'Staff Accounts Governance', path: '/admin/staff-accounts', icon: <FaIdCard size={18} /> },
-  { name: 'Student Roster & Verification', path: '/admin/students', icon: <FaUsers size={18} /> },
-  { name: 'Fee Vouchers & Payments', path: '/admin/fees', icon: <FaReceipt size={18} /> },
-  { name: 'Faculty Members Directory', path: '/admin/faculty', icon: <FaUserGraduate size={18} /> },
-  { name: 'Gallery Management', path: '/admin/gallery', icon: <FaImage size={18} /> },
-  { name: 'Hero Media & Banners', path: '/admin/hero-media', icon: <FaImage size={18} /> },
-  { name: 'Marquee & Announcements', path: '/admin/announcements', icon: <FaBullhorn size={18} /> },
-  { name: 'Administrative Audit Log', path: '/admin/audit-log', icon: <FaHistory size={18} /> },
-  { name: 'System Settings', path: '/admin/settings', icon: <FaCog size={18} /> },
+  { name: 'Executive Overview', path: '/admin', icon: <Home size={18} /> },
+  { name: 'Video Lectures', path: '/admin/lectures', icon: <Video size={18} /> },
+  { name: 'MCQ Question Bank', path: '/admin/mcq', icon: <HelpCircle size={18} /> },
+  { name: 'Manage Tests', path: '/admin/tests', icon: <FileText size={18} /> },
+  { name: 'Create Test', path: '/admin/tests/create', icon: <PlusCircle size={18} /> },
+  { name: 'Success Stories', path: '/admin/success-stories', icon: <Trophy size={18} /> },
+  { name: 'Contact Inquiries', path: '/admin/messages', icon: <Mail size={18} /> },
+  { name: 'Staff Accounts Governance', path: '/admin/staff-accounts', icon: <Shield size={18} /> },
+  { name: 'Student Roster & Verification', path: '/admin/students', icon: <Users size={18} /> },
+  { name: 'Fee Vouchers & Payments', path: '/admin/fees', icon: <Receipt size={18} /> },
+  { name: 'Faculty Members Directory', path: '/admin/faculty', icon: <GraduationCap size={18} /> },
+  { name: 'Gallery Management', path: '/admin/gallery', icon: <Image size={18} /> },
+  { name: 'Hero Media & Banners', path: '/admin/hero-media', icon: <Image size={18} /> },
+  { name: 'Marquee & Announcements', path: '/admin/announcements', icon: <Megaphone size={18} /> },
+  { name: 'Administrative Audit Log', path: '/admin/audit-log', icon: <History size={18} /> },
+  { name: 'System Settings', path: '/admin/settings', icon: <Settings size={18} /> },
 ]
 
 export default function AdminLayout() {
@@ -58,40 +61,40 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen aurora-bg flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#060e0a] text-[#e2ede7] flex flex-col lg:flex-row relative">
       {/* Sidebar for Desktop */}
-      <aside className="hidden lg:flex flex-col w-[320px] sidebar-glass text-white flex-shrink-0 min-h-screen sticky top-0 z-50">
+      <aside className="hidden lg:flex flex-col w-[320px] bg-[#0a1b14]/60 border-r border-[#10b981]/15 text-white flex-shrink-0 min-h-screen sticky top-0 z-50 backdrop-blur-md">
         {/* Brand Header */}
-        <div className="p-6 border-b border-[#147a4a]/40 flex items-center gap-3">
-          <img src="/images/logo.png" alt="Star Academy Logo" className="h-10 w-10 rounded-full border-2 border-[#D4A64A]" />
+        <div className="p-6 border-b border-[#10b981]/15 flex items-center gap-3">
+          <img src="/images/logo.png" alt="Star Academy Logo" className="h-10 w-10 rounded-full border-2 border-amber-500/80 shadow-[0_0_15px_rgba(245,158,11,0.15)]" />
           <div>
-            <h2 className="font-black text-base leading-tight text-white" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="font-black text-base leading-tight text-white">
               Star Academy
             </h2>
-            <p className="text-[10px] font-extrabold tracking-widest text-[#D4A64A] uppercase mt-0.5">
+            <p className="text-[10px] font-extrabold tracking-widest text-amber-400 uppercase mt-0.5">
               Admin Portal
             </p>
           </div>
         </div>
 
         {/* Executive Profile Card */}
-        <div className="p-5 mx-5 my-5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md space-y-4 shadow-sm">
+        <div className="p-5 mx-5 my-5 rounded-2xl bg-[#060e0a]/50 border border-[#10b981]/15 space-y-4 shadow-sm">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-full bg-[#D4A64A] text-[#0E4429] font-black text-lg flex items-center justify-center shadow-xs flex-shrink-0">
+            <div className="w-11 h-11 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-black text-lg flex items-center justify-center shadow-xs flex-shrink-0">
               {adminUser.fullName.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-extrabold text-[15px] text-white truncate leading-tight">{adminUser.fullName}</p>
-              <p className="text-xs text-[#e6c36e] font-bold truncate capitalize mt-1">
+              <p className="text-xs text-amber-400/80 font-bold truncate capitalize mt-1">
                 {adminUser.role}
               </p>
             </div>
           </div>
 
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs">
-            <span className="text-white/80 text-[12px] font-bold">Access Level:</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-emerald-300 bg-emerald-900/80 px-2.5 py-1 rounded-full border border-emerald-400/40 shadow-sm">
-              <FaUserShield size={12} /> Super Admin
+          <div className="pt-3 border-t border-[#10b981]/10 flex items-center justify-between text-xs">
+            <span className="text-emerald-100/60 text-[12px] font-bold">Access Level:</span>
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/25 shadow-sm">
+              <ShieldAlert size={12} /> Super Admin
             </span>
           </div>
         </div>
@@ -106,11 +109,11 @@ export default function AdminLayout() {
                 to={item.path}
                 className={`flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-[14px] transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#147a4a] text-white shadow-md border border-white/20'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    ? 'bg-emerald-500/10 text-emerald-400 shadow-md border border-emerald-500/20'
+                    : 'text-emerald-100/70 hover:bg-emerald-500/5 hover:text-emerald-300'
                 }`}
               >
-                <span className={isActive ? 'text-[#D4A64A]' : 'text-white/70'}>{item.icon}</span>
+                <span className={isActive ? 'text-amber-400' : 'text-emerald-100/50'}>{item.icon}</span>
                 <span className="truncate">{item.name}</span>
               </Link>
             )
@@ -118,52 +121,52 @@ export default function AdminLayout() {
         </nav>
 
         {/* Footer / Logout */}
-        <div className="p-4 border-t border-[#147a4a]/40 space-y-2">
+        <div className="p-4 border-t border-[#10b981]/15 space-y-2">
           <Link
             to="/"
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/5 border border-[#10b981]/10 hover:bg-emerald-500/10 text-emerald-400 font-bold text-sm transition-all duration-200"
           >
-            <FaHome size={16} />
+            <Home size={16} />
             <span>Website Home</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-md transition-all duration-200"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 hover:bg-red-500/20 font-bold text-sm shadow-md transition-all duration-200"
           >
-            <FaSignOutAlt size={16} />
+            <LogOut size={16} />
             <span>Sign Out</span>
           </button>
         </div>
       </aside>
 
       {/* Mobile Header Bar */}
-      <header className="lg:hidden bg-[#082d1b] text-white p-4 flex items-center justify-between sticky top-0 z-40 shadow-md">
+      <header className="lg:hidden bg-[#0a1b14] text-white p-4 flex items-center justify-between sticky top-0 z-40 border-b border-[#10b981]/15 shadow-md">
         <Link to="/admin" className="flex items-center gap-2.5">
-          <img src="/images/logo.png" alt="Logo" className="h-8 w-8 rounded-full border border-gold" />
-          <span className="font-bold text-sm text-white" style={{ fontFamily: 'var(--font-heading)' }}>Admin Portal</span>
+          <img src="/images/logo.png" alt="Logo" className="h-8 w-8 rounded-full border border-amber-500/40" />
+          <span className="font-bold text-sm text-white">Admin Portal</span>
         </Link>
         <button
           onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-          className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20"
+          className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
         >
-          {mobileSidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </header>
 
       {/* Mobile Sidebar Overlay */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs" onClick={() => setMobileSidebarOpen(false)} />
-          <aside className="relative z-10 w-72 max-w-[80vw] bg-[#082d1b] text-white flex flex-col justify-between p-4 shadow-2xl">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setMobileSidebarOpen(false)} />
+          <aside className="relative z-10 w-72 max-w-[80vw] bg-[#0a1b14] text-white flex flex-col justify-between p-4 border-r border-[#10b981]/15 shadow-2xl">
             <div>
-              <div className="p-4 border-b border-[#147a4a]/40 flex items-center gap-3 mb-4">
-                <img src="/images/logo.png" alt="Star Logo" className="h-9 w-9 rounded-full border border-gold" />
+              <div className="p-4 border-b border-[#10b981]/15 flex items-center gap-3 mb-4">
+                <img src="/images/logo.png" alt="Star Logo" className="h-9 w-9 rounded-full border border-amber-500/40" />
                 <div>
                   <h3 className="font-bold text-sm text-white">Star Academy</h3>
-                  <p className="text-[10px] text-[#D4A64A] uppercase font-bold">Admin Portal</p>
+                  <p className="text-[10px] text-amber-400 uppercase font-bold">Admin Portal</p>
                 </div>
               </div>
-              <nav className="flex flex-col gap-1.5">
+              <nav className="flex flex-col gap-1.5 overflow-y-auto max-h-[60vh]">
                 {navItems.map((item) => {
                   const isActive = location.pathname === item.path
                   return (
@@ -172,7 +175,7 @@ export default function AdminLayout() {
                       to={item.path}
                       onClick={() => setMobileSidebarOpen(false)}
                       className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm ${
-                        isActive ? 'bg-[#147a4a] text-white' : 'text-white/80 hover:bg-white/10'
+                        isActive ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'text-emerald-100/70 hover:bg-emerald-500/5'
                       }`}
                     >
                       {item.icon}
@@ -186,16 +189,16 @@ export default function AdminLayout() {
               <Link
                 to="/"
                 onClick={() => setMobileSidebarOpen(false)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-bold text-sm transition-all duration-200"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/5 border border-[#10b981]/10 hover:bg-emerald-500/10 text-emerald-400 font-bold text-sm transition-all duration-200"
               >
-                <FaHome size={16} />
+                <Home size={16} />
                 <span>Website Home</span>
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm shadow-md transition-all duration-200"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 hover:bg-red-500/20 font-bold text-sm shadow-md transition-all duration-200"
               >
-                <FaSignOutAlt size={16} />
+                <LogOut size={16} />
                 <span>Sign Out</span>
               </button>
             </div>

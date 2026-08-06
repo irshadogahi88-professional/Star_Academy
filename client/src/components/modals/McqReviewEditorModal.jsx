@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaCheckCircle, FaTrash, FaPlus, FaSave, FaTimes, FaFileAlt, FaCheck, FaSpinner } from 'react-icons/fa'
+import { CheckCircle, Trash2, Plus, Save, X, FileText, Check, Loader2 } from 'lucide-react'
 import api from '../../services/api'
 
 export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcqs, sourceDoc, subject, classLevel, onCompleteSuccess }) {
@@ -79,30 +79,30 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-      <div className="card w-full max-w-4xl max-h-[90vh] flex flex-col !p-6 modal-glass shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+      <div className="card-glass w-full max-w-4xl max-h-[90vh] flex flex-col !p-6 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
         {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-[#DCE8DD] pb-4 flex-shrink-0">
+        <div className="flex items-center justify-between border-b border-[#10b981]/15 pb-4 flex-shrink-0">
           <div>
-            <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-              <FaFileAlt size={12} /> Source: {sourceDoc}
+            <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <FileText size={12} /> Source: {sourceDoc}
             </span>
-            <h2 className="text-xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-xl font-black text-white mt-1">
               Review & Fine-Tune Extracted MCQs ({mcqList.length} Items)
             </h2>
           </div>
 
-          <button onClick={onClose} className="p-2 rounded-xl text-[#3a4a40] hover:bg-[#F1ECE0]">
-            <FaTimes size={16} />
+          <button onClick={onClose} className="p-2 rounded-xl text-emerald-100/50 hover:bg-[#10b981]/10 hover:text-emerald-400 transition-all">
+            <X size={16} />
           </button>
         </div>
 
         {/* Scrollable MCQ Cards List */}
         <div className="overflow-y-auto flex-1 my-4 space-y-4 pr-2">
           {mcqList.map((mcq, qIdx) => (
-            <div key={mcq.tempId || qIdx} className="p-4 rounded-2xl border border-[#DCE8DD] bg-[#F1ECE0]/30 space-y-3">
+            <div key={mcq.tempId || qIdx} className="p-4 rounded-2xl border border-[#10b981]/15 bg-[#060e0a]/40 space-y-3">
               <div className="flex items-center justify-between gap-3">
-                <span className="w-7 h-7 rounded-full bg-[#0E4429] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
+                <span className="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-xs font-bold flex items-center justify-center flex-shrink-0">
                   {qIdx + 1}
                 </span>
 
@@ -110,16 +110,16 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
                   type="text"
                   value={mcq.questionText}
                   onChange={(e) => updateQuestionText(qIdx, e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-[#DCE8DD] text-xs font-bold text-[#0E4429] bg-white focus:outline-none focus:border-[#147a4a]"
+                  className="w-full px-3 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-white focus:outline-none focus:border-emerald-400"
                 />
 
                 <button
                   type="button"
                   onClick={() => deleteQuestion(qIdx)}
-                  className="p-2 rounded-xl text-red-600 hover:bg-red-50 flex-shrink-0"
+                  className="p-2 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 flex-shrink-0 transition-colors"
                   title="Remove Question"
                 >
-                  <FaTrash size={14} />
+                  <Trash2 size={14} />
                 </button>
               </div>
 
@@ -131,14 +131,14 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
                     <div
                       key={optIdx}
                       className={`flex items-center gap-2 p-2 rounded-xl border transition-all ${
-                        isCorrect ? 'bg-emerald-50 border-emerald-500' : 'bg-white border-[#DCE8DD]'
+                        isCorrect ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 font-bold' : 'bg-[#0a1b14] border-[#10b981]/10 text-emerald-100/80'
                       }`}
                     >
                       <button
                         type="button"
                         onClick={() => setCorrectOption(qIdx, optIdx)}
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black transition-all ${
-                          isCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-emerald-200'
+                          isCorrect ? 'bg-emerald-500 text-emerald-950' : 'bg-[#060e0a] text-emerald-100/60 hover:bg-[#10b981]/10'
                         }`}
                         title="Click to set as Correct Answer"
                       >
@@ -149,10 +149,10 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
                         type="text"
                         value={opt}
                         onChange={(e) => updateOptionText(qIdx, optIdx, e.target.value)}
-                        className="w-full text-xs font-semibold bg-transparent focus:outline-none"
+                        className="w-full text-xs font-semibold bg-transparent focus:outline-none text-emerald-100"
                       />
 
-                      {isCorrect && <FaCheck className="text-emerald-600 flex-shrink-0" size={12} />}
+                      {isCorrect && <Check className="text-emerald-400 flex-shrink-0" size={12} />}
                     </div>
                   )
                 })}
@@ -162,26 +162,26 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
         </div>
 
         {errorMsg && (
-          <div className="p-3 rounded-xl text-xs font-bold text-center bg-red-50 text-red-700 border border-red-200 flex-shrink-0">
+          <div className="p-3 rounded-xl text-xs font-bold text-center bg-red-500/10 text-red-400 border border-red-500/25 flex-shrink-0">
             {errorMsg}
           </div>
         )}
 
         {/* Modal Footer Actions */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#DCE8DD] flex-shrink-0">
+        <div className="flex items-center justify-between pt-3 border-t border-[#10b981]/15 flex-shrink-0">
           <button
             type="button"
             onClick={addNewQuestion}
-            className="px-3.5 py-2 rounded-xl bg-emerald-500/10 text-emerald-800 text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-500/20"
+            className="px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center gap-1.5 hover:bg-emerald-500/20 transition-all"
           >
-            <FaPlus size={11} /> Add Extra MCQ
+            <Plus size={12} /> Add Extra MCQ
           </button>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-[#DCE8DD] text-xs font-bold text-[#3a4a40]"
+              className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14] transition-colors"
             >
               Cancel
             </button>
@@ -194,12 +194,12 @@ export default function McqReviewEditorModal({ isOpen, onClose, mcqs: initialMcq
             >
               {loading ? (
                 <>
-                  <FaSpinner className="animate-spin" size={12} />
+                  <Loader2 className="animate-spin" size={12} />
                   <span>Saving to Bank...</span>
                 </>
               ) : (
                 <>
-                  <FaSave size={12} />
+                  <Save size={12} />
                   <span>Approve & Batch Save ({mcqList.length} MCQs)</span>
                 </>
               )}

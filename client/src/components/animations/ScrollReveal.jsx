@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const directionMap = {
   up: { y: 40, x: 0 },
@@ -11,21 +11,24 @@ export default function ScrollReveal({
   children,
   direction = 'up',
   delay = 0,
-  duration = 0.6,
+  duration = 0.5,
   className = '',
   once = true,
 }) {
-  const initial = directionMap[direction] || directionMap.up
+  const shouldReduceMotion = useReducedMotion()
+  const initialOffset = directionMap[direction] || directionMap.up
 
   return (
     <motion.div
-      initial={{ opacity: 0, ...initial }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once, amount: 0.2 }}
-      transition={{
-        duration,
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97, ...initialOffset }}
+      whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, x: 0, y: 0 }}
+      viewport={{ once, amount: 0.15 }}
+      transition={shouldReduceMotion ? { duration: 0.3 } : {
+        type: 'spring',
+        stiffness: 80,
+        damping: 16,
+        mass: 0.8,
         delay,
-        ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}
     >
@@ -34,12 +37,12 @@ export default function ScrollReveal({
   )
 }
 
-export function StaggerContainer({ children, className = '', staggerDelay = 0.1 }) {
+export function StaggerContainer({ children, className = '', staggerDelay = 0.08 }) {
   return (
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.15 }}
       variants={{
         hidden: {},
         visible: {
@@ -56,14 +59,24 @@ export function StaggerContainer({ children, className = '', staggerDelay = 0.1 
 }
 
 export function StaggerItem({ children, className = '' }) {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 30 },
+        hidden: shouldReduceMotion 
+          ? { opacity: 0 } 
+          : { opacity: 0, y: 25, scale: 0.98 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+          scale: 1,
+          transition: shouldReduceMotion ? { duration: 0.3 } : {
+            type: 'spring',
+            stiffness: 80,
+            damping: 16,
+            mass: 0.8,
+          },
         },
       }}
       className={className}

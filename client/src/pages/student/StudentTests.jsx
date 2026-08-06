@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaClipboardCheck, FaClock, FaQuestionCircle, FaStar, FaArrowRight } from 'react-icons/fa'
+import { ClipboardCheck, Clock, HelpCircle, Star, ArrowRight } from 'lucide-react'
 import testService from '../../services/testService'
 
 export default function StudentTests() {
@@ -42,24 +42,24 @@ export default function StudentTests() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-3xl font-black text-white">
           Online Practice & Timed Tests
         </h1>
-        <p className="text-sm text-[#3a4a40] mt-1">
+        <p className="text-sm text-emerald-100/70 font-semibold mt-1">
           Select a test mode below. Timed Tests contribute to your performance analytics and have blur/tab switch monitoring.
         </p>
       </div>
 
       {/* Mode Filters */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {[{ key: 'all', label: 'All Tests' }, { key: 'test', label: '⏱️ Timed Test Mode' }, { key: 'practice', label: '💡 Untimed Practice Mode' }].map((btn) => (
           <button
             key={btn.key}
             onClick={() => setFilterMode(btn.key)}
-            className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-extrabold transition-all border ${
               filterMode === btn.key
-                ? 'bg-[#147a4a] text-white shadow-xs'
-                : 'bg-white text-[#1C2620] border border-[#DCE8DD] hover:bg-[#147a4a]/10'
+                ? 'bg-emerald-500 text-emerald-950 border-emerald-400 shadow-sm'
+                : 'bg-[#0a1b14] text-emerald-100/70 border border-[#10b981]/15 hover:bg-[#10b981]/10 hover:text-emerald-400'
             }`}
           >
             {btn.label}
@@ -70,48 +70,48 @@ export default function StudentTests() {
       {/* Test Cards List */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map((test) => (
-          <div key={test.id} className="card !p-6 flex flex-col justify-between hover:border-[#147a4a]/40">
+          <div key={test.id} className="card-glass !p-6 flex flex-col justify-between bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400/30 transition-all rounded-2xl">
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
                 <span className={`badge ${test.mode === 'test' ? 'badge-emerald' : 'badge-gold'} text-xs`}>
                   {test.subject} • {test.mode === 'test' ? 'Timed Test' : 'Practice'}
                 </span>
-                <span className="text-xs font-extrabold text-[#b8893a]">{test.difficulty}</span>
+                <span className="text-xs font-extrabold text-amber-500">{test.difficulty}</span>
               </div>
 
-              <h3 className="font-extrabold text-xl text-[#0E4429] mb-1 leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h3 className="font-extrabold text-xl text-white mb-1 leading-snug">
                 {test.title}
               </h3>
               
               {test.endTime && (
-                <p className="text-[11px] font-bold text-red-600 mb-3 flex items-center gap-1">
-                  <FaClock /> Due: {new Date(test.endTime).toLocaleString()}
+                <p className="text-[11px] font-bold text-red-400 mb-3 flex items-center gap-1">
+                  <Clock size={12} /> Due: {new Date(test.endTime).toLocaleString()}
                 </p>
               )}
               {!test.endTime && <div className="mb-3"></div>}
 
-              <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-[#F1ECE0] text-xs font-semibold text-[#1C2620] mb-4">
+              <div className="grid grid-cols-3 gap-2 p-3 rounded-xl bg-[#08140f]/60 border border-[#10b981]/10 text-xs font-semibold text-emerald-100 mb-4">
                 <div className="text-center">
-                  <p className="text-[10px] text-[#3a4a40] uppercase">Questions</p>
-                  <p className="font-bold text-sm text-[#0E4429] mt-0.5">{test.questionsCount}</p>
+                  <p className="text-[10px] text-emerald-100/50 uppercase">Questions</p>
+                  <p className="font-bold text-sm text-white mt-0.5">{test.questionsCount}</p>
                 </div>
-                <div className="text-center border-x border-[#DCE8DD]">
-                  <p className="text-[10px] text-[#3a4a40] uppercase">Time</p>
-                  <p className="font-bold text-sm text-[#0E4429] mt-0.5">{test.mode === 'test' ? `${test.durationMinutes} m` : '∞'}</p>
+                <div className="text-center border-x border-[#10b981]/10">
+                  <p className="text-[10px] text-emerald-100/50 uppercase">Time</p>
+                  <p className="font-bold text-sm text-white mt-0.5">{test.mode === 'test' ? `${test.durationMinutes} m` : '∞'}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[10px] text-[#3a4a40] uppercase">Max Marks</p>
-                  <p className="font-bold text-sm text-[#0E4429] mt-0.5">{test.totalMarks}</p>
+                  <p className="text-[10px] text-emerald-100/50 uppercase">Max Marks</p>
+                  <p className="font-bold text-sm text-white mt-0.5">{test.totalMarks}</p>
                 </div>
               </div>
             </div>
 
             <Link
               to={`/dashboard/tests/${test.id}/attempt`}
-              className={`w-full ${test.mode === 'test' ? 'btn-primary' : 'btn-gold'} text-xs !py-3`}
+              className={`w-full justify-center ${test.mode === 'test' ? 'btn-primary' : 'btn-gold'} text-xs !py-3`}
             >
               <span>{test.mode === 'test' ? 'Start Timed Test' : 'Start Practice Quiz'}</span>
-              <FaArrowRight size={12} />
+              <ArrowRight size={12} />
             </Link>
           </div>
         ))}

@@ -71,7 +71,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       }
 
       const model = genAI.getGenerativeModel({ 
-        model: 'gemini-flash-latest',
+        model: 'gemini-3.5-flash',
         generationConfig: {
           responseMimeType: "application/json",
           responseSchema: mcqSchema
@@ -87,7 +87,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       4. MULTIPLE STATEMENTS (LR): If a question contains multiple Roman numeral statements (I, II, III, IV) in the body, include those statements inside the "questionText" field.
       5. EXTRACT EXACTLY 4 OPTIONS: Options may be formatted as (A, B, C, D), (a, b, c, d), or (i, ii, iii, iv). Some options might be combination statements (e.g., "A) I & III only", "B) All of these"). Ensure you extract exactly 4 distinct options. Remove the letter prefix (A, B) from the final option text.
       6. AVOID CORRUPTION: Double-check that no options are cut off, merged, or mismatched. If a question is severely corrupted, skip it.
-      7. FIND ANSWER: If the answer is indicated in the text (e.g., "Ans: A", "CORRECT ANSWER: quickly", "Correct Option: C"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.`;
+      7. FIND CORRECT INDEX: Look for the correct answer marked in the text. The answer might be indicated as an option letter (e.g., "Ans: C", "Correct Option: A") or as the actual statement text of one of the options (e.g., "Ans: 200 Nm-1" or "Correct: 175 Hz"). Match the answer to the options you extracted and return the correct 0-based index (0 for Option A, 1 for Option B, 2 for Option C, 3 for Option D). If no answer key is found, default to 0.`;
 
       // Try native PDF parsing first if it is a PDF
       const isPdf = fileBuffer && (filename.toLowerCase().endsWith('.pdf') || (mimeType && mimeType.toLowerCase().includes('pdf')));

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaExclamationTriangle, FaReceipt, FaPhoneAlt } from 'react-icons/fa'
+import { Mail, Lock, Eye, EyeOff, AlertTriangle, Receipt, Phone } from 'lucide-react'
 import { useAuthStore } from '../../store/useAuthStore'
 
 export default function Login() {
@@ -38,20 +38,20 @@ export default function Login() {
   }
 
   return (
-    <section className="min-h-[100dvh] flex flex-col justify-center items-center py-16 px-4 sm:px-8 lg:px-24 bg-transparent relative z-10">
+    <section className="min-h-[100dvh] flex flex-col justify-center items-center py-20 px-4 sm:px-8 lg:px-24 bg-transparent relative z-10">
       <div className="w-full max-w-md mx-auto">
         <div className="mb-10 text-center">
-          <img src="/images/logo.png" alt="SEA Logo" className="w-16 h-16 mx-auto mb-5 rounded-full border-2 border-gold shadow-md" />
-          <h1 className="text-3xl sm:text-4xl font-black text-[#0E4429] mb-2" style={{ fontFamily: 'var(--font-heading)' }}>Welcome Back</h1>
-          <p className="text-sm text-[#3a4a40] font-bold">Sign in to your Star Educational Academy portal</p>
+          <img src="/images/logo.png" alt="SEA Logo" className="w-16 h-16 mx-auto mb-5 rounded-full border-2 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]" />
+          <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">Welcome Back</h1>
+          <p className="text-sm text-emerald-100/60 font-semibold">Sign in to your Star Educational Academy portal</p>
         </div>
 
-        <div className="card !p-6 sm:!p-10 shadow-2xl border border-white/50 bg-white/95 backdrop-blur-md">
+        <div className="card-glass !p-6 sm:!p-10 shadow-2xl border border-[#10b981]/15 bg-[#0a1b14]/50 backdrop-blur-xl">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-2">Email Address</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-2">Email Address</label>
               <div className="relative">
-                <FaEnvelope size={14} className="input-icon" />
+                <Mail size={16} className="input-icon" />
                 <input
                   type="email"
                   value={form.email}
@@ -64,9 +64,9 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-2">Password</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-2">Password</label>
               <div className="relative">
-                <FaLock size={14} className="input-icon" />
+                <Lock size={16} className="input-icon" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={form.password}
@@ -75,44 +75,44 @@ export default function Login() {
                   placeholder="Enter your password"
                   className="input-field !pr-11 shadow-sm"
                 />
-                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#3a4a40] z-10 hover:text-emerald-primary transition-colors">
-                  {showPw ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-100/40 z-10 hover:text-emerald-400 transition-colors">
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
             <div className="flex items-center justify-between text-xs font-bold pt-1">
-              <label className="flex items-center gap-2 cursor-pointer text-[#3a4a40] hover:text-emerald-primary transition-colors">
-                <input type="checkbox" className="w-4 h-4 rounded text-[#147a4a] border-gray-300 focus:ring-emerald-primary" />
+              <label className="flex items-center gap-2 cursor-pointer text-emerald-100/60 hover:text-emerald-400 transition-colors">
+                <input type="checkbox" className="w-4 h-4 rounded bg-[#060e0a] text-emerald-500 border-[#10b981]/20 focus:ring-emerald-500 focus:ring-offset-[#0a1b14]" />
                 <span>Remember me</span>
               </label>
-              <Link to="/contact" className="text-[#147a4a] hover:underline">Need Help?</Link>
+              <Link to="/contact" className="text-emerald-400 hover:text-emerald-300 hover:underline">Need Help?</Link>
             </div>
 
             {/* Error or Pending Approval Banner */}
             {(localError || error) && (
               <div className={`p-4 rounded-xl text-xs font-bold leading-relaxed border ${
                 isPendingApproval
-                  ? 'bg-amber-50 border-amber-300 text-amber-900 shadow-sm'
-                  : 'bg-red-50 border-red-200 text-red-700 shadow-sm'
+                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-300 shadow-sm'
+                  : 'bg-red-500/10 border-red-500/20 text-red-400 shadow-sm'
               }`}>
                 {isPendingApproval ? (
                   <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-amber-800 font-black text-sm">
-                      <FaExclamationTriangle size={16} className="text-amber-600 flex-shrink-0" />
+                    <div className="flex items-center gap-2 text-amber-300 font-black text-sm">
+                      <AlertTriangle size={16} className="text-amber-500 flex-shrink-0 animate-pulse" />
                       <span>Approval Required</span>
                     </div>
-                    <p className="text-[12px] leading-relaxed font-semibold text-amber-800/90">
+                    <p className="text-[12px] leading-relaxed font-semibold text-emerald-100/80">
                       {localError || error}
                     </p>
-                    <div className="pt-3 border-t border-amber-200/60 flex flex-col gap-2 text-[12px] font-extrabold text-amber-900">
-                      <span className="flex items-center gap-2"><FaReceipt size={14} className="text-amber-700" /> Pay Admission Fee at Office</span>
-                      <span className="flex items-center gap-2"><FaPhoneAlt size={14} className="text-amber-700" /> 0308-3309704 / 0306-3004887</span>
+                    <div className="pt-3 border-t border-amber-500/20 flex flex-col gap-2 text-[12px] font-extrabold text-amber-400">
+                      <span className="flex items-center gap-2"><Receipt size={14} className="text-amber-500" /> Pay Admission Fee at Office</span>
+                      <span className="flex items-center gap-2"><Phone size={14} className="text-amber-500" /> 0308-3309704 / 0306-3004887</span>
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-start gap-2.5">
-                    <FaExclamationTriangle size={14} className="shrink-0 mt-0.5 text-red-600" />
+                    <AlertTriangle size={14} className="shrink-0 mt-0.5 text-red-500 animate-bounce" />
                     <p className="break-words font-semibold">{localError || error}</p>
                   </div>
                 )}
@@ -123,17 +123,17 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full justify-center !py-4 text-base font-extrabold shadow-lg disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-emerald-primary/30"
+                className="btn-primary w-full justify-center !py-4 text-base font-extrabold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-emerald-500/20"
               >
-                {loading ? <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> : 'Secure Sign In'}
+                {loading ? <span className="w-5 h-5 border-2 border-emerald-950 border-t-emerald-300 rounded-full animate-spin"></span> : 'Secure Sign In'}
               </button>
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-            <p className="text-sm text-[#3a4a40] font-bold">
+          <div className="mt-8 pt-6 border-t border-[#10b981]/15 text-center">
+            <p className="text-sm text-emerald-100/60 font-bold">
               Don't have an account?{' '}
-              <Link to="/register" className="font-black text-[#147a4a] hover:text-[#0E4429] hover:underline transition-colors">Register Now</Link>
+              <Link to="/register" className="font-black text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">Register Now</Link>
             </p>
           </div>
         </div>

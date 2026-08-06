@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaUserCog, FaLock, FaSave, FaKey, FaShieldAlt } from 'react-icons/fa'
+import { UserCog, Lock, Save, Key, Shield } from 'lucide-react'
 import { useAuthStore } from '../../store/useAuthStore'
 import api from '../../services/api'
 
@@ -87,36 +87,36 @@ export default function AdminSettings() {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-4xl mx-auto text-emerald-100">
       {/* Header */}
       <div>
-        <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-          <FaShieldAlt size={12} /> Account Governance
+        <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+          <Shield size={12} /> Account Governance
         </span>
-        <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+        <h1 className="text-3xl font-black text-white mt-1">
           Admin Account & Security Settings
         </h1>
-        <p className="text-xs text-[#3a4a40]">Manage administrative credentials, official email, and change system access password.</p>
+        <p className="text-xs text-emerald-100/70 font-semibold">Manage administrative credentials, official email, and change system access password.</p>
       </div>
 
       {/* Admin Profile Details */}
-      <div className="card !p-8 space-y-6 border border-[#DCE8DD]">
-        <div className="flex items-center gap-3 border-b border-[#DCE8DD] pb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center font-bold">
-            <FaUserCog size={18} />
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-3xl !p-8 space-y-6 shadow-md">
+        <div className="flex items-center gap-3 border-b border-[#10b981]/10 pb-4">
+          <div className="w-10 h-10 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-[#10b981] flex items-center justify-center font-bold">
+            <UserCog size={18} />
           </div>
           <div>
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-xl font-black text-white">
               Admin Profile Information
             </h2>
-            <p className="text-xs text-[#3a4a40]">Update your administrative name, contact email, and phone line.</p>
+            <p className="text-xs text-emerald-100/70 font-semibold">Update your administrative name, contact email, and phone line.</p>
           </div>
         </div>
 
         <form onSubmit={handleProfileSubmit} className="space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                 Full Name
               </label>
               <input
@@ -125,12 +125,12 @@ export default function AdminSettings() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Admin Full Name"
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                 Email Address
               </label>
               <input
@@ -139,13 +139,13 @@ export default function AdminSettings() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@staracademy.edu.pk"
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+            <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
               Contact Phone Number
             </label>
             <input
@@ -153,13 +153,13 @@ export default function AdminSettings() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="0308-3309704"
-              className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+              className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
             />
           </div>
 
           <div className="pt-2 flex items-center justify-end">
-            <button type="submit" disabled={profileSaving} className="btn-primary text-xs !py-3 !px-6 shadow-md">
-              <FaSave size={14} />
+            <button type="submit" disabled={profileSaving} className="btn-primary text-xs !py-3 !px-6 shadow-md flex items-center gap-2">
+              <Save size={14} />
               <span>{profileSaving ? 'Saving Profile...' : 'Save Account Details'}</span>
             </button>
           </div>
@@ -168,8 +168,8 @@ export default function AdminSettings() {
             <div
               className={`p-4 rounded-xl text-xs font-bold text-center border ${
                 profileStatus.type === 'success'
-                  ? 'bg-emerald-500/10 text-emerald-800 border-emerald-500/30'
-                  : 'bg-red-500/10 text-red-800 border-red-500/30'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                  : 'bg-red-500/10 text-red-400 border-red-500/25'
               }`}
             >
               {profileStatus.text}
@@ -179,22 +179,22 @@ export default function AdminSettings() {
       </div>
 
       {/* Change Password Card (Current + 2x New) */}
-      <div className="card !p-8 space-y-6 border border-[#DCE8DD]">
-        <div className="flex items-center gap-3 border-b border-[#DCE8DD] pb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#D4A64A]/15 text-[#D4A64A] flex items-center justify-center font-bold">
-            <FaLock size={18} />
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-3xl !p-8 space-y-6 shadow-md">
+        <div className="flex items-center gap-3 border-b border-[#10b981]/10 pb-4">
+          <div className="w-10 h-10 rounded-xl bg-[#060e0a] border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold">
+            <Lock size={18} />
           </div>
           <div>
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-xl font-black text-white">
               Change Password
             </h2>
-            <p className="text-xs text-[#3a4a40]">Enter your current password followed by your new password twice.</p>
+            <p className="text-xs text-emerald-100/70 font-semibold">Enter your current password followed by your new password twice.</p>
           </div>
         </div>
 
         <form onSubmit={handlePasswordSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+            <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
               Current Password
             </label>
             <input
@@ -203,13 +203,13 @@ export default function AdminSettings() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="Enter current password..."
-              className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+              className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                 New Password
               </label>
               <input
@@ -219,12 +219,12 @@ export default function AdminSettings() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password..."
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
               />
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                 Confirm New Password
               </label>
               <input
@@ -234,14 +234,14 @@ export default function AdminSettings() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter new password..."
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold text-[#1C2620] focus:outline-none focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
               />
             </div>
           </div>
 
           <div className="pt-2 flex items-center justify-end">
-            <button type="submit" disabled={passwordSaving} className="btn-gold text-xs !py-3 !px-6 shadow-md">
-              <FaKey size={14} />
+            <button type="submit" disabled={passwordSaving} className="btn-gold text-xs !py-3 !px-6 shadow-md flex items-center gap-2">
+              <Key size={14} />
               <span>{passwordSaving ? 'Updating Password...' : 'Update Admin Password'}</span>
             </button>
           </div>
@@ -250,8 +250,8 @@ export default function AdminSettings() {
             <div
               className={`p-4 rounded-xl text-xs font-bold text-center border ${
                 passwordStatus.type === 'success'
-                  ? 'bg-emerald-500/10 text-emerald-800 border-emerald-500/30'
-                  : 'bg-red-500/10 text-red-800 border-red-500/30'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
+                  : 'bg-red-500/10 text-red-400 border-red-500/25'
               }`}
             >
               {passwordStatus.text}

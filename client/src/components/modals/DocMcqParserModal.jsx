@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaFileUpload, FaFilePdf, FaFileWord, FaPaste, FaMagic, FaTimes, FaSpinner } from 'react-icons/fa'
+import { Upload, FileText, File, ClipboardList, Wand2, X, Loader2 } from 'lucide-react'
 import api from '../../services/api'
 
 export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) {
@@ -74,47 +74,47 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-      <div className="card w-full max-w-xl !p-6 space-y-5 modal-glass shadow-2xl">
-        <div className="flex items-center justify-between border-b border-[#DCE8DD] pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+      <div className="card-glass w-full max-w-xl !p-6 space-y-5 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#10b981]/15 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-[#147a4a]/10 text-[#147a4a] flex items-center justify-center font-bold">
-              <FaMagic size={18} />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold">
+              <Wand2 size={18} />
             </div>
             <div>
-              <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="text-xl font-black text-white">
                 Auto PDF / Word to MCQs Parser
               </h2>
-              <p className="text-xs text-[#3a4a40] font-medium">
+              <p className="text-xs text-emerald-100/60 font-semibold">
                 Upload test paper document to automatically extract MCQs for review & banking.
               </p>
             </div>
           </div>
 
-          <button onClick={onClose} className="p-2 rounded-xl text-[#3a4a40] hover:bg-[#F1ECE0]">
-            <FaTimes size={16} />
+          <button onClick={onClose} className="p-2 rounded-xl text-emerald-100/50 hover:bg-[#10b981]/10 hover:text-emerald-400 transition-all">
+            <X size={16} />
           </button>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex rounded-xl bg-[#F1ECE0] p-1.5 gap-2 mt-2">
+        <div className="flex rounded-xl bg-[#060e0a] border border-[#10b981]/15 p-1.5 gap-2 mt-2">
           <button
             type="button"
             onClick={() => setActiveTab('file')}
             className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-              activeTab === 'file' ? 'bg-[#147a4a] text-white shadow-md' : 'text-[#3a4a40] hover:bg-[#DCE8DD]'
+              activeTab === 'file' ? 'bg-emerald-500 text-emerald-950 font-extrabold shadow-sm' : 'text-emerald-100/50 hover:text-emerald-400'
             }`}
           >
-            <FaFileUpload size={14} /> Upload PDF / Word
+            <Upload size={14} /> Upload PDF / Word
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('paste')}
             className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 ${
-              activeTab === 'paste' ? 'bg-[#147a4a] text-white shadow-md' : 'text-[#3a4a40] hover:bg-[#DCE8DD]'
+              activeTab === 'paste' ? 'bg-emerald-500 text-emerald-950 font-extrabold shadow-sm' : 'text-emerald-100/50 hover:text-emerald-400'
             }`}
           >
-            <FaPaste size={14} /> Paste Raw Text
+            <ClipboardList size={14} /> Paste Raw Text
           </button>
         </div>
 
@@ -122,13 +122,13 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
           {/* Metadata Controls */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-2">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-2">
                 Target Subject
               </label>
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-bold text-[#0E4429] focus:outline-none focus:ring-2 focus:ring-[#147a4a]/20 focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/20 focus:border-emerald-400"
               >
                 <option value="Physics">Physics</option>
                 <option value="Chemistry">Chemistry</option>
@@ -141,13 +141,13 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
             </div>
 
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-2">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-2">
                 Grade / Track Level
               </label>
               <select
                 value={classLevel}
                 onChange={(e) => setClassLevel(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-bold text-[#0E4429] focus:outline-none focus:ring-2 focus:ring-[#147a4a]/20 focus:border-[#147a4a]"
+                className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-emerald-400/20 focus:border-emerald-400"
               >
                 <option value="9">Grade 9</option>
                 <option value="10">Grade 10</option>
@@ -161,12 +161,12 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
 
           {/* Tab Content */}
           {activeTab === 'file' ? (
-            <div className="border-2 border-dashed border-[#147a4a]/40 rounded-2xl p-10 text-center space-y-5 bg-[#F1ECE0]/40 transition-colors hover:bg-[#F1ECE0]/70">
-              <div className="flex justify-center gap-4 text-4xl text-[#147a4a]">
-                <FaFilePdf />
-                <FaFileWord />
+            <div className="border-2 border-dashed border-[#10b981]/20 rounded-2xl p-10 text-center space-y-5 bg-[#060e0a]/40 transition-colors hover:bg-[#060e0a]/60">
+              <div className="flex justify-center gap-4 text-4xl text-emerald-400">
+                <FileText size={42} />
+                <File size={42} />
               </div>
-              <p className="text-sm font-extrabold text-[#0E4429]">
+              <p className="text-sm font-extrabold text-white">
                 Choose or drag & drop `.pdf` or `.docx` test paper
               </p>
               <input
@@ -180,13 +180,13 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
                 htmlFor="doc-file-upload"
                 className="btn-gold text-sm !py-3 !px-6 inline-flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition-all"
               >
-                <FaFileUpload size={16} />
+                <Upload size={16} />
                 <span>{selectedFile ? selectedFile.name : 'Select Document File'}</span>
               </label>
             </div>
           ) : (
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-2">
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-2">
                 Paste Question Content
               </label>
               <textarea
@@ -194,22 +194,22 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
                 value={pastedText}
                 onChange={(e) => setPastedText(e.target.value)}
                 placeholder="Paste question text here (e.g. 1. What is acceleration? A) Speed B) Change of velocity...)"
-                className="w-full px-4 py-4 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#147a4a]/20 focus:border-[#147a4a] resize-none"
+                className="w-full px-4 py-4 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/20 focus:border-emerald-400 resize-none"
               />
             </div>
           )}
 
           {errorMsg && (
-            <div className="p-4 rounded-xl text-sm font-bold text-center bg-red-50 text-red-700 border border-red-200 shadow-sm mt-4">
+            <div className="p-4 rounded-xl text-sm font-bold text-center bg-red-500/10 text-red-400 border border-red-500/25 shadow-sm mt-4">
               {errorMsg}
             </div>
           )}
 
-          <div className="flex items-center justify-end gap-4 pt-6 mt-2 border-t border-[#DCE8DD]">
+          <div className="flex items-center justify-end gap-4 pt-6 mt-2 border-t border-[#10b981]/15">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 rounded-xl border-2 border-[#DCE8DD] text-sm font-bold text-[#3a4a40] hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-sm font-bold text-emerald-100/70 hover:bg-[#0a1b14] transition-colors"
             >
               Cancel
             </button>
@@ -220,12 +220,12 @@ export default function DocMcqParserModal({ isOpen, onClose, onParsedSuccess }) 
             >
               {loading ? (
                 <>
-                  <FaSpinner className="animate-spin" size={16} />
+                  <Loader2 className="animate-spin" size={16} />
                   <span>Parsing Document...</span>
                 </>
               ) : (
                 <>
-                  <FaMagic size={16} />
+                  <Wand2 size={16} />
                   <span>Extract & Review MCQs</span>
                 </>
               )}

@@ -2,25 +2,25 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import api from '../../services/api'
-import { FaStar, FaGraduationCap, FaTrophy, FaFlask, FaBookOpen, FaArrowRight, FaUserGraduate, FaChevronRight, FaMapMarkerAlt, FaClock, FaCalendarAlt, FaChalkboardTeacher, FaAward } from 'react-icons/fa'
-import { GiDna1, GiAtom } from 'react-icons/gi'
-import { TbMathSymbols } from 'react-icons/tb'
+import { 
+  Star, GraduationCap, Trophy, Beaker, BookOpen, ArrowRight, UserCheck, 
+  ChevronRight, MapPin, Clock, Calendar, ShieldCheck, Award, Atom, Dna 
+} from 'lucide-react'
 import CountUp from '../../components/animations/CountUp'
 import ScrollReveal from '../../components/animations/ScrollReveal'
 import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
-import ParticleStars from '../../components/animations/ParticleStars'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 import { getDirectImageUrl } from '../../utils/imageHelper'
 
 const subjectIcons = {
-  Physics: <GiAtom />,
-  Mathematics: <TbMathSymbols />,
-  Chemistry: <FaFlask />,
-  Biology: <GiDna1 />,
-  English: <FaBookOpen />,
-  'Computer Science': <FaBookOpen />,
-  General: <FaStar />,
+  Physics: <Atom size={18} />,
+  Mathematics: <BookOpen size={18} />,
+  Chemistry: <Beaker size={18} />,
+  Biology: <Dna size={18} />,
+  English: <BookOpen size={18} />,
+  'Computer Science': <BookOpen size={18} />,
+  General: <Star size={18} />,
 }
 
 export default function Home() {
@@ -99,11 +99,12 @@ export default function Home() {
   }, [isFacultyHovered, isSuccessHovered])
 
   const stats = [
-    { icon: <FaGraduationCap />, value: liveStats.students, suffix: '+', label: 'Enrolled Students', sub: 'Pre-Med & Pre-Eng' },
-    { icon: <FaChalkboardTeacher />, value: liveStats.faculty || facultyPreview.length, suffix: '+', label: 'Expert Faculty', sub: 'Dedicated Educators' },
-    { icon: <FaAward />, value: liveStats.lectures, suffix: '+', label: 'Video Lectures', sub: 'Structured Courses' },
-    { icon: <FaTrophy />, value: liveStats.tests, suffix: '+', label: 'Mock Tests', sub: 'Online Practice' },
+    { icon: <GraduationCap />, value: liveStats.students, suffix: '+', label: 'Enrolled Students', sub: 'Pre-Med & Pre-Eng' },
+    { icon: <UserCheck />, value: liveStats.faculty || facultyPreview.length, suffix: '+', label: 'Expert Faculty', sub: 'Dedicated Educators' },
+    { icon: <Award />, value: liveStats.lectures, suffix: '+', label: 'Video Lectures', sub: 'Structured Courses' },
+    { icon: <Trophy />, value: liveStats.tests, suffix: '+', label: 'Mock Tests', sub: 'Online Practice' },
   ]
+
   return (
     <PageTransition>
       {/* ========== HERO SECTION — Fullscreen Background Slideshow ========== */}
@@ -122,22 +123,22 @@ export default function Home() {
             />
           </div>
         )) : (
-          <div className="absolute inset-0">
-            <img src="/images/.png" alt="Star Educational Academy" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-[#060e0a]">
+            <div className="w-full h-full object-cover opacity-30 cosmic-emerald-bg" />
           </div>
         )}
 
         {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#082d1b]/80 via-[#082d1b]/70 to-[#082d1b]/85 z-[1]" />
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none mix-blend-overlay z-[2]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#060e0a]/90 via-[#060e0a]/80 to-[#08140f] z-[1]" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none mix-blend-overlay z-[2]" />
 
         {/* Centered Overlay Content */}
-        <div className="relative z-30 section-container flex flex-col items-center justify-center text-center gap-6 sm:gap-8 pt-32 pb-32 sm:pt-40 sm:pb-40">
+        <div className="relative z-10 section-container flex flex-col items-center justify-center text-center gap-6 sm:gap-8 pt-32 pb-32 sm:pt-40 sm:pb-40">
 
           {/* Badge */}
           <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <span className="inline-flex items-center gap-2.5 px-5 py-2.5 text-xs font-black rounded-full shadow-lg bg-[#082d1b]/80 border border-[#D4A64A] text-[#D4A64A] backdrop-blur-sm">
-              <FaStar size={14} />
+            <span className="inline-flex items-center gap-2.5 px-5 py-2.5 text-xs font-black rounded-full shadow-lg bg-[#060e0a]/80 border border-amber-500/80 text-amber-400 backdrop-blur-sm">
+              <Star size={14} className="fill-amber-400 animate-spin-slow" />
               <span>Session 2026 — Admissions Open</span>
             </span>
           </motion.div>
@@ -147,7 +148,7 @@ export default function Home() {
             <img
               src="/images/logo.png"
               alt="Star Educational Academy Logo"
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-[#D4A64A] shadow-2xl mx-auto"
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-amber-500 shadow-[0_0_25px_rgba(245,158,11,0.25)] mx-auto"
             />
           </motion.div>
 
@@ -157,7 +158,6 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
             className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.1] text-white tracking-tight"
-            style={{ fontFamily: 'var(--font-heading)' }}
           >
             Shape Your <span className="text-gradient-gold inline">Future</span>
             <br />
@@ -169,34 +169,34 @@ export default function Home() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="text-base sm:text-xl leading-relaxed font-medium text-white/90 max-w-2xl mx-auto"
+            className="text-base sm:text-xl leading-relaxed font-semibold text-emerald-100/85 max-w-2xl mx-auto"
           >
             Premier coaching for Grades IX–XII. Pre-Medical & Pre-Engineering
             tracks with expert faculty and proven results. ECAT & MCAT preparation
-            that delivers <strong className="font-extrabold text-[#e6c36e]">outstanding success</strong>.
+            that delivers <strong className="font-extrabold text-amber-400">outstanding success</strong>.
           </motion.p>
 
-          {/* CTA Buttons — Large & Spacious */}
+          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="flex flex-wrap items-center justify-center gap-5 sm:gap-6 pt-2"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-2 w-full max-w-sm sm:max-w-none mx-auto px-4 sm:px-0"
           >
             <Link
               to="/register"
-              className="h-16 px-12 rounded-2xl bg-gradient-to-r from-[#D4A64A] to-[#b8893a] text-[#082d1b] font-black text-lg sm:text-xl hover:scale-105 transition-all duration-300 shadow-2xl flex items-center justify-center gap-3 shrink-0"
+              className="btn-gold h-12 sm:h-14 px-6 sm:px-10 rounded-2xl text-sm sm:text-lg font-black shadow-lg flex items-center justify-center gap-2 w-full sm:w-auto"
             >
-              <FaGraduationCap size={26} />
+              <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6" />
               <span>Apply Now</span>
             </Link>
 
             <Link
               to="/about"
-              className="h-14 px-10 rounded-2xl bg-white/10 hover:bg-white text-white hover:text-[#0E4429] border-2 border-white/40 font-black text-base sm:text-lg transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-3 shrink-0 shadow-xl"
+              className="btn-outline h-12 sm:h-14 px-6 sm:px-10 rounded-2xl text-sm sm:text-lg font-black transition-all duration-300 flex items-center justify-center gap-2 w-full sm:w-auto"
             >
               <span>Explore Programs</span>
-              <FaArrowRight size={16} className="text-[#D4A64A]" />
+              <ArrowRight size={16} />
             </Link>
           </motion.div>
 
@@ -207,25 +207,25 @@ export default function Home() {
             transition={{ delay: 0.5 }}
             className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto w-full"
           >
-            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-black/40 border border-white/25 backdrop-blur-md text-white shadow-lg">
-              <FaCalendarAlt className="text-[#D4A64A] shrink-0" size={18} />
+            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-[#060e0a]/60 border border-[#10b981]/15 backdrop-blur-md text-white shadow-lg">
+              <Calendar className="text-amber-500 shrink-0" size={18} />
               <div className="text-left">
-                <span className="text-white/70 block text-[10px] uppercase font-bold tracking-wider">Commences</span>
-                <strong className="text-[#e6c36e] font-extrabold text-sm">10-08-2026</strong>
+                <span className="text-emerald-100/50 block text-[10px] uppercase font-bold tracking-wider">Commences</span>
+                <strong className="text-amber-400 font-extrabold text-sm">10-08-2026</strong>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-black/40 border border-white/25 backdrop-blur-md text-white shadow-lg">
-              <FaClock className="text-[#D4A64A] shrink-0" size={18} />
+            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-[#060e0a]/60 border border-[#10b981]/15 backdrop-blur-md text-white shadow-lg">
+              <Clock className="text-amber-500 shrink-0" size={18} />
               <div className="text-left">
-                <span className="text-white/70 block text-[10px] uppercase font-bold tracking-wider">Timings</span>
-                <strong className="text-white font-extrabold text-sm">3:15 – 7:00 PM</strong>
+                <span className="text-emerald-100/50 block text-[10px] uppercase font-bold tracking-wider">Timings</span>
+                <strong className="text-emerald-200 font-extrabold text-sm">3:15 – 7:00 PM</strong>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-black/40 border border-white/25 backdrop-blur-md text-white shadow-lg">
-              <FaMapMarkerAlt className="text-[#D4A64A] shrink-0" size={18} />
+            <div className="flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-[#060e0a]/60 border border-[#10b981]/15 backdrop-blur-md text-white shadow-lg">
+              <MapPin className="text-amber-500 shrink-0" size={18} />
               <div className="text-left">
-                <span className="text-white/70 block text-[10px] uppercase font-bold tracking-wider">Campus</span>
-                <strong className="text-white font-extrabold text-sm">D.A.V. School</strong>
+                <span className="text-emerald-100/50 block text-[10px] uppercase font-bold tracking-wider">Campus</span>
+                <strong className="text-emerald-200 font-extrabold text-sm">D.A.V. School</strong>
               </div>
             </div>
           </motion.div>
@@ -237,36 +237,29 @@ export default function Home() {
                 <button
                   key={idx}
                   onClick={() => setActiveSlide(idx)}
-                  className={`rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-8 h-3 bg-[#D4A64A]' : 'w-3 h-3 bg-white/40 hover:bg-white/60'}`}
+                  className={`rounded-full transition-all duration-300 ${idx === activeSlide ? 'w-8 h-3 bg-amber-500' : 'w-3 h-3 bg-white/40 hover:bg-white/60'}`}
                 />
               ))}
             </div>
           )}
         </div>
-
-        {/* Bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-20 translate-y-1">
-          <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 50L48 45C96 40 192 30 288 33C384 36 480 52 576 58C672 64 768 60 864 52C960 44 1056 32 1152 30C1248 28 1344 36 1392 40L1440 44V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="var(--color-cream)" />
-          </svg>
-        </div>
       </section>
 
       {/* ========== STATS SECTION ========== */}
-      <section className="section-padding relative overflow-hidden bg-cream">
+      <section className="section-padding relative overflow-hidden bg-[#08140f]">
         <div className="section-container">
           <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, i) => (
               <StaggerItem key={i}>
-                <SpotlightCard className="text-center group hover:border-emerald-primary/40 p-6! card">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-emerald-primary/10 text-emerald-primary flex items-center justify-center text-2xl transition-all duration-300 group-hover:scale-110 shadow-xs">
+                <SpotlightCard className="text-center group hover:border-[#10b981]/30 p-6 rounded-2xl bg-[#0a1b14]/50 border border-[#10b981]/15">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl transition-all duration-300 group-hover:scale-110 shadow-xs border border-[#10b981]/20">
                     {stat.icon}
                   </div>
-                  <p className="text-3xl sm:text-4xl font-black mb-1 text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <p className="text-3xl sm:text-4xl font-black mb-1 text-white">
                     <CountUp end={stat.value} suffix={stat.suffix} duration={2.5} />
                   </p>
-                  <p className="font-bold text-sm mb-0.5 text-charcoal">{stat.label}</p>
-                  <p className="text-xs font-semibold text-charcoal-light">{stat.sub}</p>
+                  <p className="font-extrabold text-sm mb-0.5 text-emerald-100/80">{stat.label}</p>
+                  <p className="text-xs font-semibold text-emerald-100/50">{stat.sub}</p>
                 </SpotlightCard>
               </StaggerItem>
             ))}
@@ -275,11 +268,11 @@ export default function Home() {
       </section>
 
       {/* ========== ABOUT PREVIEW ========== */}
-      <section className="section-padding relative overflow-hidden bg-cream-alt">
+      <section className="section-padding relative overflow-hidden bg-[#0a1b14]">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <ScrollReveal direction="left">
-              <div className="rounded-3xl overflow-hidden shadow-xl border-2 border-sage">
+              <div className="rounded-3xl overflow-hidden shadow-2xl border border-[#10b981]/20">
                 <img
                   src="/images/adv-2.png"
                   alt="Star Educational Academy"
@@ -288,22 +281,22 @@ export default function Home() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal direction="right" className="space-y-5">
+            <ScrollReveal direction="right" className="space-y-6">
               <span className="badge badge-emerald font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-                <FaBookOpen size={12} />
+                <BookOpen size={12} />
                 About Us
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold leading-[1.25] text-emerald-dark pt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+              <h2 className="text-3xl sm:text-4xl font-extrabold leading-[1.25] text-white pt-1">
                 Building Bright Futures Through{' '}
                 <span className="text-gradient-gold inline-block">Dedication & Excellence</span>
               </h2>
-              <p className="text-base leading-relaxed text-charcoal-light">
+              <p className="text-base leading-relaxed text-emerald-100/70">
                 Star Educational Academy is where hardworking boys and girls build a bright
                 and successful future through dedication and excellence. With separate classes
                 for Pre-Medical and Pre-Engineering tracks, we provide focused coaching for
                 Grades IX, X, XI & XII.
               </p>
-              <p className="text-base leading-relaxed text-charcoal-light">
+              <p className="text-base leading-relaxed text-emerald-100/70">
                 Our expert faculty, led by Sir Irshad Ahmed Ogahi, has consistently delivered
                 outstanding results — including the 1st Position in MDCAT across District Ghotki
                 and 30+ medical admissions in a single year.
@@ -316,21 +309,20 @@ export default function Home() {
                   { label: 'Grades Covered', value: 'IX to XII' },
                   { label: 'Track Record', value: '100% Success' },
                 ].map((item, i) => (
-                  <div key={i} className="p-3.5 rounded-xl border border-sage bg-white/80 shadow-xs">
-                    <p className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-primary">{item.label}</p>
-                    <p className="font-extrabold text-sm text-charcoal mt-0.5">{item.value}</p>
+                  <div key={i} className="p-3.5 rounded-xl border border-[#10b981]/15 bg-[#060e0a]/40 shadow-xs">
+                    <p className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400">{item.label}</p>
+                    <p className="font-extrabold text-sm text-emerald-100 mt-0.5">{item.value}</p>
                   </div>
                 ))}
               </div>
 
-              {/* 2nd image fix: Moved button down with mt-8 pt-4 and centered/aligned padding */}
               <div className="mt-8 pt-4 flex justify-center lg:justify-start">
                 <Link
                   to="/about"
-                  className="h-12 px-7 rounded-xl bg-[#147a4a] hover:bg-[#0E4429] text-white font-extrabold text-sm transition-all duration-300 shadow-lg flex items-center justify-center gap-2.5"
+                  className="btn-primary h-12 px-7 rounded-xl text-sm font-extrabold"
                 >
                   <span>Learn More About Us</span>
-                  <FaChevronRight size={13} className="text-[#D4A64A]" />
+                  <ChevronRight size={14} />
                 </Link>
               </div>
             </ScrollReveal>
@@ -339,23 +331,23 @@ export default function Home() {
       </section>
 
       {/* ========== FACULTY PREVIEW ========== */}
-      <section className="section-padding relative overflow-hidden bg-cream">
+      <section className="section-padding relative overflow-hidden bg-[#08140f]">
         <div className="section-container relative z-10">
           <ScrollReveal className="flex flex-col items-center justify-center text-center mb-12 space-y-3">
             <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-              <FaStar size={12} className="text-gold" />
+              <Star size={12} className="text-amber-400 fill-amber-400" />
               Our Team
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.25] text-center text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.25] text-center text-white">
               Meet Our <span className="text-gradient-gold inline-block">Distinguished</span> Faculty
             </h2>
-            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-charcoal-light">
+            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-emerald-100/60">
               Highly qualified and experienced educators committed to guiding every student towards their academic goals.
             </p>
           </ScrollReveal>
 
           <div
-            className="relative w-full max-w-full overflow-visible"
+            className="relative w-full max-w-full overflow-visible animate-scaleIn"
             onMouseEnter={() => setIsFacultyHovered(true)}
             onMouseLeave={() => setIsFacultyHovered(false)}
           >
@@ -368,7 +360,7 @@ export default function Home() {
               className="carousel-arrow carousel-arrow-left hidden md:flex"
               aria-label="Scroll left"
             >
-              <FaChevronRight size={16} className="rotate-180" />
+              <ChevronRight size={16} className="rotate-180" />
             </button>
             <button
               onClick={() => {
@@ -379,27 +371,27 @@ export default function Home() {
               className="carousel-arrow carousel-arrow-right hidden md:flex"
               aria-label="Scroll right"
             >
-              <FaChevronRight size={16} />
+              <ChevronRight size={16} />
             </button>
             <div ref={facultyRef} className="scroll-carousel">
               {facultyPreview.map((member, i) => (
                 <div key={member._id || i} className="w-[280px] sm:w-[320px]">
-                  <SpotlightCard className="card group text-center overflow-hidden h-full flex flex-col items-center justify-between p-6! space-y-4">
+                  <SpotlightCard className="card group text-center overflow-hidden h-full flex flex-col items-center justify-between p-6 bg-[#0a1b14]/50 border border-[#10b981]/15 space-y-4">
                     <div className="flex flex-col items-center text-center w-full">
-                      <div className="relative mx-auto w-28 h-28 mb-4 rounded-full overflow-hidden ring-4 ring-sage group-hover:ring-gold/60 transition-all duration-300 shadow-md bg-emerald-primary/10 flex items-center justify-center">
+                      <div className="relative mx-auto w-28 h-28 mb-4 rounded-full overflow-hidden ring-4 ring-[#10b981]/20 group-hover:ring-amber-500/60 transition-all duration-300 shadow-md bg-emerald-500/10 flex items-center justify-center">
                         {member.photoUrl ? (
-                          <img src={getDirectImageUrl(member.photoUrl)} alt={member.name} className="w-full h-full object-cover" />
+                          <img referrerPolicy="no-referrer" src={getDirectImageUrl(member.photoUrl)} alt={member.name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-4xl font-black text-emerald-primary">{member.name?.charAt(4) || member.name?.charAt(0)}</span>
+                          <span className="text-4xl font-black text-emerald-400">{member.name?.charAt(4) || member.name?.charAt(0)}</span>
                         )}
                       </div>
                       <div className="flex items-center justify-center gap-2 mb-1.5">
-                        <span className="text-lg text-emerald-primary">{subjectIcons[member.subject] || <FaStar />}</span>
-                        <span className="text-xs font-extrabold uppercase tracking-wider text-gold-dark">
+                        <span className="text-emerald-400">{subjectIcons[member.subject] || <Star size={14} />}</span>
+                        <span className="text-xs font-extrabold uppercase tracking-wider text-amber-500">
                           {member.subject}
                         </span>
                       </div>
-                      <h3 className="text-lg font-extrabold text-emerald-dark text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                      <h3 className="text-lg font-extrabold text-emerald-100 text-center">
                         {member.name}
                       </h3>
                     </div>
@@ -421,24 +413,24 @@ export default function Home() {
           <ScrollReveal className="text-center mt-12 sm:mt-16">
             <Link to="/faculty" className="btn-outline shadow-xs">
               <span>View All Faculty</span>
-              <FaArrowRight size={14} />
+              <ArrowRight size={14} />
             </Link>
           </ScrollReveal>
         </div>
       </section>
 
       {/* ========== SUCCESS STORIES ========== */}
-      <section className="section-padding relative overflow-hidden bg-gradient-to-r from-emerald-deepest via-emerald-dark to-emerald-primary">
+      <section className="section-padding relative overflow-hidden bg-[#0a1b14]">
         <div className="section-container relative z-10">
           <ScrollReveal className="flex flex-col items-center justify-center text-center mb-12 space-y-3">
             <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-              <FaTrophy size={12} className="text-gold" />
+              <Trophy size={12} className="text-amber-500 fill-amber-500" />
               Achievements
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.25] text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.25] text-center">
               Our Students <span className="text-gradient-gold inline">Shine Bright</span>
             </h2>
-            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-white/90">
+            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-emerald-100/60">
               Every year, our students achieve remarkable results in board exams, MDCAT, ECAT,
               and secure admissions in top universities across Pakistan.
             </p>
@@ -455,10 +447,10 @@ export default function Home() {
                   successRef.current.scrollBy({ left: -300, behavior: 'smooth' })
                 }
               }}
-              className="carousel-arrow carousel-arrow-left hidden md:flex !bg-emerald-dark !text-gold !border-gold/30 hover:!bg-gold hover:!text-emerald-dark"
+              className="carousel-arrow carousel-arrow-left hidden md:flex"
               aria-label="Scroll left"
             >
-              <FaChevronRight size={16} className="rotate-180" />
+              <ChevronRight size={16} className="rotate-180" />
             </button>
             <button
               onClick={() => {
@@ -466,52 +458,52 @@ export default function Home() {
                   successRef.current.scrollBy({ left: 300, behavior: 'smooth' })
                 }
               }}
-              className="carousel-arrow carousel-arrow-right hidden md:flex !bg-emerald-dark !text-gold !border-gold/30 hover:!bg-gold hover:!text-emerald-dark"
+              className="carousel-arrow carousel-arrow-right hidden md:flex"
               aria-label="Scroll right"
             >
-              <FaChevronRight size={16} />
+              <ChevronRight size={16} />
             </button>
 
             <div ref={successRef} className="scroll-carousel">
               {achievements.map((story, i) => (
                 <div key={story._id || i} className="w-[280px] sm:w-[320px]">
-                  <SpotlightCard className="card group relative overflow-hidden h-full flex flex-col p-6 shadow-xl hover:shadow-2xl hover:shadow-emerald-900/50 transition-all border-none bg-white">
+                  <SpotlightCard className="card group relative overflow-hidden h-full flex flex-col p-6 shadow-xl hover:shadow-2xl bg-[#08140f]/60 border border-[#10b981]/15 transition-all">
                     {/* Gold accent top */}
-                    <div className="absolute top-0 left-0 right-0 h-1.5 transition-all duration-500 bg-gradient-to-r from-gold to-gold-light" />
+                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 to-amber-400" />
 
                     <div className="space-y-4 flex-1">
                       <div className="flex flex-col items-center mb-2">
-                        <div className="w-24 h-24 rounded-full border-4 border-gold shadow-lg overflow-hidden mb-3 bg-cream-alt flex items-center justify-center">
+                        <div className="w-24 h-24 rounded-full border-2 border-amber-500 shadow-lg overflow-hidden mb-3 bg-[#0a1b14] flex items-center justify-center">
                           {story.imageUrl || story.image || story.photoUrl ? (
-                            <img src={getDirectImageUrl(story.imageUrl || story.image || story.photoUrl)} alt={story.studentName || story.name} className="w-full h-full object-cover" />
+                            <img referrerPolicy="no-referrer" src={getDirectImageUrl(story.imageUrl || story.image || story.photoUrl)} alt={story.studentName || story.name} className="w-full h-full object-cover" />
                           ) : (
-                            <span className="text-3xl font-black text-emerald-primary">{(story.studentName || story.name)?.charAt(0)}</span>
+                            <span className="text-3xl font-black text-emerald-400">{(story.studentName || story.name)?.charAt(0)}</span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 text-gold">
+                        <div className="flex items-center gap-1 text-amber-500">
                           {[...Array(5)].map((_, j) => (
-                            <FaStar key={j} size={14} className="drop-shadow-sm" />
+                            <Star key={j} size={14} className="fill-amber-500 drop-shadow-sm" />
                           ))}
                         </div>
                       </div>
 
                       <div className="text-center">
-                        <h3 className="text-xl font-extrabold text-emerald-dark leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
+                        <h3 className="text-lg font-extrabold text-white leading-snug">
                           {story.studentName || story.name}
                         </h3>
-                        <p className="text-sm leading-relaxed text-charcoal-light font-medium mt-2">
+                        <p className="text-sm leading-relaxed text-emerald-100/70 font-semibold mt-2">
                           {story.achievement}
                         </p>
                         {story.institute && (
-                          <p className="text-xs font-bold text-emerald-primary mt-2">
+                          <p className="text-xs font-bold text-emerald-400 mt-2">
                             {story.institute} {story.score ? `— ${story.score}` : ''}
                           </p>
                         )}
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-sage mt-6 flex items-center justify-between relative z-10">
-                      <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-black bg-gold/10 text-gold-dark border border-gold/30">
+                    <div className="pt-4 border-t border-[#10b981]/15 mt-6 flex items-center justify-between relative z-10">
+                      <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-[11px] font-black bg-amber-500/10 text-amber-400 border border-amber-500/30">
                         {story.year}
                       </span>
                       <span className="badge badge-emerald text-[10px] font-bold shadow-xs">
@@ -525,38 +517,38 @@ export default function Home() {
           </div>
 
           <ScrollReveal className="text-center mt-12 sm:mt-16">
-            <Link to="/success-stories" className="btn-outline-white text-base">
+            <Link to="/success-stories" className="btn-outline text-base">
               <span>View All Success Stories</span>
-              <FaArrowRight size={14} />
+              <ArrowRight size={14} />
             </Link>
           </ScrollReveal>
         </div>
       </section>
 
       {/* ========== CTA BANNER SECTION ========== */}
-      <section className="section-padding relative overflow-hidden bg-cream">
-        <div className="section-container">
+      <section className="section-padding relative overflow-hidden bg-[#08140f]">
+        <div className="section-container animate-fadeIn">
           <ScrollReveal>
-            <div className="relative overflow-hidden rounded-3xl p-8 sm:p-14 lg:p-20 text-center shadow-2xl max-w-4xl mx-auto bg-gradient-to-br from-[#0E4429] via-[#147a4a] to-[#082d1b] border-2 border-[#D4A64A]/40">
+            <div className="relative overflow-hidden rounded-3xl p-8 sm:p-14 lg:p-20 text-center shadow-2xl max-w-4xl mx-auto bg-gradient-to-br from-[#060e0a] via-[#0a1b14] to-[#08140f] border border-[#10b981]/25">
               <div className="relative z-10 flex flex-col items-center text-center gap-6 sm:gap-8">
 
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] text-center" style={{ fontFamily: 'var(--font-heading)' }}>
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] text-center">
                   Session 2026 is <span className="text-gradient-gold inline">Now Open</span>
                 </h2>
 
-                <p className="text-base sm:text-lg leading-relaxed text-white/95 text-center max-w-2xl font-medium">
-                  Admission forms & advance seat booking available from <strong className="text-[#e6c36e] font-extrabold">20-07-2026</strong>.
-                  Classes commence <strong className="text-[#e6c36e] font-extrabold">10-08-2026</strong>.
+                <p className="text-base sm:text-lg leading-relaxed text-emerald-100/90 text-center max-w-2xl font-semibold">
+                  Admission forms & advance seat booking available from <strong className="text-amber-400 font-extrabold">20-07-2026</strong>.
+                  Classes commence <strong className="text-amber-400 font-extrabold">10-08-2026</strong>.
                 </p>
 
-                <div className="inline-flex flex-wrap items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-black/40 border border-white/30 text-white text-xs sm:text-sm font-bold backdrop-blur-md shadow-md my-1">
-                  <span className="flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-[#D4A64A]" size={16} />
+                <div className="inline-flex flex-wrap items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-[#060e0a]/80 border border-[#10b981]/15 text-white text-xs sm:text-sm font-bold backdrop-blur-md shadow-md my-1">
+                  <span className="flex items-center gap-2 text-emerald-100">
+                    <MapPin className="text-amber-500" size={16} />
                     <span>D.A.V. School, Ladies Bazaar, Ghotki</span>
                   </span>
-                  <span className="hidden sm:inline opacity-40">|</span>
-                  <span className="flex items-center gap-2">
-                    <FaClock className="text-[#D4A64A]" size={16} />
+                  <span className="hidden sm:inline opacity-40 text-emerald-100/30">|</span>
+                  <span className="flex items-center gap-2 text-emerald-100">
+                    <Clock className="text-amber-500" size={16} />
                     <span>3:15 PM – 7:00 PM</span>
                   </span>
                 </div>
@@ -564,9 +556,9 @@ export default function Home() {
                 <div className="flex flex-wrap justify-center items-center gap-6 pt-4">
                   <Link
                     to="/register"
-                    className="py-4 px-10 rounded-2xl bg-[#D4A64A] text-[#082d1b] font-black text-lg hover:bg-[#e6c36e] transition-all duration-300 shadow-2xl flex items-center justify-center gap-3 shrink-0"
+                    className="btn-gold py-4 px-10 rounded-2xl text-lg font-black flex items-center justify-center gap-2"
                   >
-                    <FaGraduationCap size={22} />
+                    <GraduationCap size={22} />
                     <span>Apply Now</span>
                   </Link>
 
@@ -574,10 +566,10 @@ export default function Home() {
                     href="https://wa.me/923083309704?text=Hello! I'm interested in admissions for Session 2026."
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-4 px-10 rounded-2xl bg-white/15 hover:bg-white/25 border-2 border-white/40 !text-white font-black text-lg transition-all duration-300 backdrop-blur-md flex items-center justify-center gap-3 shrink-0 shadow-xl"
+                    className="btn-outline py-4 px-10 rounded-2xl text-lg font-black flex items-center justify-center gap-2"
                   >
-                    <span className="!text-white">Contact Us</span>
-                    <FaArrowRight size={18} className="text-[#D4A64A]" />
+                    <span>Contact Us</span>
+                    <ArrowRight size={18} />
                   </a>
                 </div>
 

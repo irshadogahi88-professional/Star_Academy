@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaVideo, FaPlus, FaTrashAlt, FaCheck, FaFilePdf, FaBookOpen, FaExternalLinkAlt } from 'react-icons/fa'
+import { Video, Plus, Trash2, Check, FileText, BookOpen, ExternalLink } from 'lucide-react'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
@@ -79,21 +79,21 @@ export default function TeacherLectures() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaVideo size={12} /> Lecture Portal
+          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <Video size={12} /> Lecture Portal
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Class Lectures & Study Notes
           </h1>
-          <p className="text-xs text-[#3a4a40]">Publish video lecture links and PDF notes for enrolled students.</p>
+          <p className="text-xs text-emerald-100/70 font-semibold">Publish video lecture links and PDF notes for enrolled students.</p>
         </div>
 
-        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-5 self-start sm:self-center">
-          <FaPlus size={12} />
+        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-5 self-start sm:self-center flex items-center gap-1.5">
+          <Plus size={14} />
           <span>Add New Lecture</span>
         </button>
       </div>
@@ -101,41 +101,43 @@ export default function TeacherLectures() {
       {/* Lecture List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="flex justify-center p-10"><span className="w-8 h-8 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin"></span></div>
+          <div className="flex justify-center p-10">
+            <span className="w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin"></span>
+          </div>
         ) : lectures.length === 0 ? (
-          <p className="text-center text-sm text-[#3a4a40] py-10 font-bold">No lectures published yet.</p>
+          <p className="text-center text-sm text-emerald-100/50 py-10 font-bold bg-[#0a1b14]/30 border border-[#10b981]/15 rounded-3xl">No lectures published yet.</p>
         ) : (
           <StaggerContainer className="space-y-4">
             {lectures.map((lecture) => (
               <StaggerItem key={lecture._id || lecture.id}>
-                <div className="card !p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 border-l-4 border-l-[#147a4a]">
+                <div className="card-glass !p-6 bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400/30 transition-all rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-5 border-l-4 border-l-emerald-500">
                   <div className="space-y-2 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="badge badge-emerald text-[11px] font-extrabold">{lecture.subject} • Grade {lecture.class || lecture.classLevel}</span>
-                      <span className="text-xs text-[#3a4a40] font-medium">{lecture.chapter}</span>
+                      <span className="text-xs text-emerald-100/60 font-semibold">{lecture.chapter}</span>
                     </div>
-                    <h3 className="font-bold text-lg text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+                    <h3 className="font-extrabold text-lg text-white">
                       {lecture.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-[#3a4a40] font-semibold pt-1">
-                      <a href={lecture.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-blue-600 hover:underline">
-                        <FaVideo /> Video Stream Link <FaExternalLinkAlt size={10} />
+                    <div className="flex flex-wrap items-center gap-4 text-xs font-semibold pt-1">
+                      <a href={lecture.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-blue-400 hover:text-blue-300 hover:underline">
+                        <Video size={12} /> Video Stream Link <ExternalLink size={10} />
                       </a>
                       {lecture.pdfUrl && (
-                        <a href={lecture.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-red-600 hover:underline">
-                          <FaFilePdf /> Download Notes PDF <FaExternalLinkAlt size={10} />
+                        <a href={lecture.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-red-400 hover:text-red-300 hover:underline">
+                          <FileText size={12} /> Download Notes PDF <ExternalLink size={10} />
                         </a>
                       )}
-                      <span className="text-white/60">• Published {new Date(lecture.createdAt || lecture.dateAdded).toLocaleDateString()}</span>
+                      <span className="text-emerald-100/40">• Published {new Date(lecture.createdAt || lecture.dateAdded).toLocaleDateString()}</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleDelete(lecture._id || lecture.id)}
-                    className="p-2.5 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-500/20 self-start md:self-center transition-colors"
+                    className="p-2.5 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 self-start md:self-center transition-colors"
                     title="Delete Lecture"
                   >
-                    <FaTrashAlt size={14} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </StaggerItem>
@@ -146,32 +148,32 @@ export default function TeacherLectures() {
 
       {/* Add Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-xl !p-6 sm:!p-8 space-y-5 bg-white">
-            <h2 className="text-2xl font-bold text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-xl !p-6 sm:!p-8 space-y-5 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-2xl font-bold text-white">
               Publish Class Lecture
             </h2>
 
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Lecture Title</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Lecture Title</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g. Kinematics & Motion Equations"
-                  className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400/20"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Subject</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Subject</label>
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:border-[#147a4a]"
+                    className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
                   >
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
@@ -184,11 +186,11 @@ export default function TeacherLectures() {
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Grade Level</label>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Grade Level</label>
                   <select
                     value={formData.classLevel}
                     onChange={(e) => setFormData({ ...formData, classLevel: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm font-semibold focus:outline-none focus:border-[#147a4a]"
+                    className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm font-semibold focus:outline-none focus:border-emerald-400"
                   >
                     <option value="9">Grade 9</option>
                     <option value="10">Grade 10</option>
@@ -201,45 +203,45 @@ export default function TeacherLectures() {
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Chapter / Topic</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Chapter / Topic</label>
                 <input
                   type="text"
                   value={formData.chapter}
                   onChange={(e) => setFormData({ ...formData, chapter: e.target.value })}
                   placeholder="e.g. Chapter 2: Vectors & Equilibrium"
-                  className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">YouTube / Video Stream URL</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">YouTube / Video Stream URL</label>
                 <input
                   type="url"
                   required
                   value={formData.videoUrl}
                   onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
                   placeholder="https://www.youtube.com/watch?v=..."
-                  className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">PDF Study Notes Link (Optional)</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">PDF Study Notes Link (Optional)</label>
                 <input
                   type="url"
                   value={formData.pdfUrl}
                   onChange={(e) => setFormData({ ...formData, pdfUrl: e.target.value })}
                   placeholder="https://example.com/notes.pdf"
-                  className="w-full px-4 py-3 rounded-xl border border-[#DCE8DD] text-sm focus:outline-none focus:border-[#147a4a]"
+                  className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-bold text-[#3a4a40]">
+                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary text-xs !py-2.5 !px-5">
-                  <FaCheck size={12} />
+                <button type="submit" className="btn-primary text-xs !py-2.5 !px-5 flex items-center gap-1">
+                  <Check size={14} />
                   <span>Publish Lecture</span>
                 </button>
               </div>

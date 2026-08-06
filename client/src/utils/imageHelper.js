@@ -1,4 +1,4 @@
-export const getDirectImageUrl = (url) => {
+export const getDirectImageUrl = (url, suffix = '') => {
   if (!url) return '';
   
   let id = '';
@@ -11,7 +11,7 @@ export const getDirectImageUrl = (url) => {
   }
 
   if (id) {
-    return `https://lh3.googleusercontent.com/d/${id}`;
+    return `https://lh3.googleusercontent.com/d/${id}${suffix}`;
   }
   
   return url;

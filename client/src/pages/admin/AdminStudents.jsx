@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaUsers, FaSearch, FaCheckCircle, FaExclamationTriangle, FaKey, FaTrashAlt, FaPhoneAlt, FaEnvelope, FaDownload, FaSyncAlt } from 'react-icons/fa'
+import { Users, Search, CheckCircle, AlertTriangle, Key, Trash2, Phone, Mail, Download, RefreshCw } from 'lucide-react'
 import api from '../../services/api'
 import { adminService } from '../../services/adminService'
 
@@ -159,42 +159,42 @@ export default function AdminStudents() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header with Export CSV Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaUsers size={12} /> Student Governance
+          <span className="badge badge-emerald text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <Users size={12} /> Student Governance
           </span>
-          <h1 className="text-3xl font-black text-emerald-dark mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Student Roster & Verification
           </h1>
-          <p className="text-xs text-charcoal-light">Manage student enrollments, approve portal logins, and export student rosters.</p>
+          <p className="text-xs text-emerald-100/70 font-semibold">Manage student enrollments, approve portal logins, and export student rosters.</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={fetchStudents} className="p-2.5 rounded-xl border border-sage hover:bg-cream-alt text-emerald-dark text-xs font-bold flex items-center gap-1.5" title="Refresh List">
-            <FaSyncAlt size={12} className={loading ? 'animate-spin' : ''} />
+          <button onClick={fetchStudents} className="p-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 hover:bg-[#0a1b14] text-emerald-400 text-xs font-bold flex items-center gap-1.5" title="Refresh List">
+            <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
           
-          <button onClick={handleExportCSV} className="btn-gold text-xs !py-2.5 !px-5 shadow-md">
-            <FaDownload size={13} />
+          <button onClick={handleExportCSV} className="btn-gold text-xs !py-2.5 !px-5 shadow-md flex items-center gap-2">
+            <Download size={13} />
             <span>Download CSV</span>
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="card p-4! flex flex-col md:flex-row items-center gap-4">
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-2xl !p-4 flex flex-col md:flex-row items-center gap-4">
         <div className="relative flex-1 w-full">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-charcoal-light/60" size={14} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-100/40" size={14} />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by student name, email, or phone..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-sage text-xs font-semibold focus:outline-none focus:border-emerald-primary bg-white text-charcoal"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-semibold focus:outline-none focus:border-emerald-400"
           />
         </div>
 
@@ -202,7 +202,7 @@ export default function AdminStudents() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3.5 py-2.5 rounded-xl border border-sage text-xs font-bold text-emerald-dark focus:outline-none bg-white"
+            className="px-3.5 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
           >
             <option value="All">All Statuses</option>
             <option value="approved">Approved</option>
@@ -212,7 +212,7 @@ export default function AdminStudents() {
           <select
             value={classFilter}
             onChange={(e) => setClassFilter(e.target.value)}
-            className="px-3.5 py-2.5 rounded-xl border border-sage text-xs font-bold text-emerald-dark focus:outline-none bg-white"
+            className="px-3.5 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
           >
             <option value="All">All Grades</option>
             <option value="9">Grade IX</option>
@@ -224,25 +224,25 @@ export default function AdminStudents() {
       </div>
 
       {/* Student Roster Table */}
-      <div className="card p-0! overflow-hidden border border-sage">
+      <div className="card-glass !p-0 overflow-hidden border border-[#10b981]/15 bg-[#0a1b14]/50 rounded-3xl shadow-2xl">
         {loading ? (
           <div className="flex items-center justify-center py-16">
-            <div className="w-8 h-8 border-4 border-emerald-primary border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="p-8 text-center space-y-3">
-            <p className="text-sm font-bold text-red-600">❌ {error}</p>
+            <p className="text-sm font-bold text-red-400">❌ {error}</p>
             <button onClick={fetchStudents} className="btn-primary text-xs !py-2 !px-4">Try Again</button>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-xs font-bold text-charcoal-light">
+          <div className="p-12 text-center text-xs font-bold text-emerald-100/50">
             No student records matching your filter criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-emerald-deepest text-white text-xs font-extrabold uppercase tracking-wider">
+                <tr className="bg-[#060e0a] text-white font-extrabold border-b border-[#10b981]/15 uppercase tracking-wider">
                   <th className="p-4">Student Info</th>
                   <th className="p-4">Grade & Stream</th>
                   <th className="p-4">Contact</th>
@@ -250,7 +250,7 @@ export default function AdminStudents() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-sage text-xs font-semibold">
+              <tbody className="divide-y divide-[#10b981]/10 text-emerald-100">
                 {filtered.map((student) => {
                   const id = student._id || student.id
                   const isApproved = student.isApproved
@@ -259,38 +259,38 @@ export default function AdminStudents() {
                   const dateStr = student.createdAt ? new Date(student.createdAt).toLocaleDateString() : 'Recent'
 
                   return (
-                    <tr key={id} className="hover:bg-cream-alt/40 transition-colors">
+                    <tr key={id} className="hover:bg-emerald-500/5 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gold text-emerald-dark font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
+                          <div className="w-9 h-9 rounded-full bg-[#060e0a] border border-amber-500/30 text-amber-400 font-black text-sm flex items-center justify-center shrink-0 shadow-xs">
                             {student.fullName?.charAt(0) || 'S'}
                           </div>
                           <div>
-                            <p className="font-bold text-sm text-emerald-dark">{student.fullName}</p>
-                            <p className="text-[11px] text-charcoal-light flex items-center gap-1">
-                              <FaEnvelope size={10} /> {student.email}
+                            <p className="font-extrabold text-sm text-white">{student.fullName}</p>
+                            <p className="text-[11px] text-emerald-100/50 flex items-center gap-1 mt-0.5">
+                              <Mail size={10} /> {student.email}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="font-extrabold text-emerald-dark">Grade {grade}</span>
-                        <p className="text-[11px] text-charcoal-light capitalize">{stream}</p>
+                        <span className="font-extrabold text-white">Grade {grade}</span>
+                        <p className="text-[11px] text-emerald-400 capitalize mt-0.5">{stream}</p>
                       </td>
                       <td className="p-4">
-                        <p className="text-emerald-dark flex items-center gap-1">
-                          <FaPhoneAlt size={10} className="text-emerald-primary" /> {student.phone || 'N/A'}
+                        <p className="text-white flex items-center gap-1 font-bold">
+                          <Phone size={10} className="text-emerald-400" /> {student.phone || 'N/A'}
                         </p>
-                        <p className="text-[10px] text-charcoal-light">Joined {dateStr}</p>
+                        <p className="text-[10px] text-emerald-100/50 mt-0.5">Joined {dateStr}</p>
                       </td>
                       <td className="p-4">
                         {isApproved ? (
                           <div className="flex flex-col gap-2">
-                            <span className="inline-flex items-center gap-1 font-extrabold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full text-[11px] w-fit">
-                              <FaCheckCircle size={10} /> Approved
+                            <span className="inline-flex items-center gap-1 font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full text-[11px] w-fit border border-emerald-500/25">
+                              <CheckCircle size={10} /> Approved
                             </span>
                             <select 
-                              className="text-[10px] bg-white border border-sage rounded px-1 py-0.5 text-charcoal outline-none cursor-pointer w-fit"
+                              className="text-[10px] bg-[#060e0a] border border-[#10b981]/25 text-emerald-100 rounded px-1.5 py-0.5 outline-none cursor-pointer w-fit"
                               onChange={(e) => handleAssignRole(id, e.target.value)}
                               value="student"
                             >
@@ -301,8 +301,8 @@ export default function AdminStudents() {
                             </select>
                           </div>
                         ) : (
-                          <span className="inline-flex items-center gap-1 font-extrabold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full text-[11px]">
-                            <FaExclamationTriangle size={10} /> Pending Approval
+                          <span className="inline-flex items-center gap-1 font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full text-[11px] border border-amber-500/25">
+                            <AlertTriangle size={10} /> Pending Approval
                           </span>
                         )}
                       </td>
@@ -312,8 +312,8 @@ export default function AdminStudents() {
                             onClick={() => handleToggleApproval(student)}
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                               isApproved
-                                ? 'bg-amber-500/10 text-amber-700 hover:bg-amber-500/20'
-                                : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-xs'
+                                ? 'bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20'
+                                : 'bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-extrabold shadow-sm'
                             }`}
                           >
                             {isApproved ? 'Revoke' : 'Approve'}
@@ -321,18 +321,18 @@ export default function AdminStudents() {
 
                           <button
                             onClick={() => setResetModalUser(student)}
-                            className="p-2 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 text-xs font-bold"
+                            className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 text-xs font-bold"
                             title="Reset Password"
                           >
-                            <FaKey size={12} />
+                            <Key size={12} />
                           </button>
 
                           <button
                             onClick={() => handleDeleteStudent(id)}
-                            className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 text-xs font-bold"
+                            className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 text-xs font-bold"
                             title="Remove Student"
                           >
-                            <FaTrashAlt size={12} />
+                            <Trash2 size={12} />
                           </button>
                         </div>
                       </td>
@@ -347,18 +347,18 @@ export default function AdminStudents() {
 
       {/* Password Reset Modal */}
       {resetModalUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-md p-6! space-y-4 bg-white">
-            <h2 className="text-xl font-bold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-md !p-6 space-y-4 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-xl font-black text-white">
               Reset Account Password
             </h2>
-            <p className="text-xs text-charcoal-light">
-              Administrative password override for student <strong className="text-emerald-dark">{resetModalUser.fullName}</strong> ({resetModalUser.email}).
+            <p className="text-xs text-emerald-100/70 font-semibold">
+              Administrative password override for student <strong className="text-emerald-400">{resetModalUser.fullName}</strong> ({resetModalUser.email}).
             </p>
 
             <form onSubmit={handlePasswordReset} className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-dark mb-1.5">
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   New Password
                 </label>
                 <input
@@ -368,7 +368,7 @@ export default function AdminStudents() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password..."
-                  className="w-full px-4 py-3 rounded-xl border border-sage text-sm focus:outline-none focus:border-emerald-primary"
+                  className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
@@ -376,22 +376,22 @@ export default function AdminStudents() {
                 <button
                   type="button"
                   onClick={() => setResetModalUser(null)}
-                  className="px-4 py-2 rounded-xl border border-sage text-xs font-bold text-charcoal-light"
+                  className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]"
                 >
                   Cancel
                 </button>
-                <button type="submit" disabled={resetSubmitting} className="btn-primary text-xs py-2! px-4!">
+                <button type="submit" disabled={resetSubmitting} className="btn-primary text-xs !py-2 !px-5 shadow-sm">
                   <span>{resetSubmitting ? 'Updating...' : 'Update Password'}</span>
                 </button>
               </div>
 
               {resetSuccess && (
-                <div className="p-3 rounded-xl text-xs font-bold text-center bg-emerald-500/10 text-emerald-800 border border-emerald-500/30">
+                <div className="p-3 rounded-xl text-xs font-bold text-center bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
                   ✅ Password successfully updated!
                 </div>
               )}
               {resetError && (
-                <div className="p-3 rounded-xl text-xs font-bold text-center bg-red-500/10 text-red-800 border border-red-500/30">
+                <div className="p-3 rounded-xl text-xs font-bold text-center bg-red-500/10 text-red-400 border border-red-500/25">
                   ❌ {resetError}
                 </div>
               )}

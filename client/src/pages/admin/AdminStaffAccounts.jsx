@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaUserShield, FaPlus, FaChalkboardTeacher, FaIdCard, FaLock, FaTrash, FaCheckCircle, FaSearch } from 'react-icons/fa'
+import { Shield, Plus, BookOpen, Contact, Lock, Trash2, CheckCircle, Search } from 'lucide-react'
 import api from '../../services/api'
 
 export default function AdminStaffAccounts() {
@@ -85,44 +85,44 @@ export default function AdminStaffAccounts() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaUserShield size={12} /> Staff Governance
+          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <Shield size={12} /> Staff Governance
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Staff Accounts & Access Management
           </h1>
-          <p className="text-xs text-[#3a4a40]">
+          <p className="text-xs text-emerald-100/70 font-semibold">
             Create, issue, and manage login credentials for Teachers and Front Office Clerks.
           </p>
         </div>
 
         <button onClick={() => setShowModal(true)} className="btn-gold text-xs !py-3 !px-5 shadow-md flex items-center gap-2">
-          <FaPlus size={12} />
+          <Plus size={12} />
           <span>Create New Staff Login</span>
         </button>
       </div>
 
       {notice && (
-        <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs flex items-center gap-2">
-          <FaCheckCircle size={14} className="text-emerald-700" />
+        <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-extrabold text-xs flex items-center gap-2">
+          <CheckCircle size={14} />
           <span>{notice}</span>
         </div>
       )}
 
       {/* Search */}
-      <div className="card !p-4">
+      <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-2xl !p-4">
         <div className="relative">
-          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#3a4a40]/60" size={14} />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-100/40" size={14} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search staff by name, email, or role (teacher / clerk / admin)..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#DCE8DD] text-xs font-semibold focus:outline-none focus:border-[#147a4a]"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-semibold focus:outline-none focus:border-emerald-400"
           />
         </div>
       </div>
@@ -130,21 +130,21 @@ export default function AdminStaffAccounts() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="card !p-12 text-center space-y-3 border-2 border-dashed border-[#DCE8DD]">
-          <FaUserShield size={40} className="mx-auto text-[#147a4a]/40" />
-          <h3 className="font-extrabold text-base text-[#0E4429]">No Staff Accounts Found</h3>
-          <p className="text-xs text-[#3a4a40]">Create a new staff login to get started.</p>
+        <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 !p-12 text-center space-y-3 border-dashed rounded-3xl">
+          <Shield size={40} className="mx-auto text-emerald-500/40" />
+          <h3 className="font-extrabold text-base text-white">No Staff Accounts Found</h3>
+          <p className="text-xs text-emerald-100/60 font-semibold">Create a new staff login to get started.</p>
         </div>
       ) : (
         /* Table */
-        <div className="card !p-0 overflow-hidden border-2 border-[#DCE8DD]">
+        <div className="card-glass !p-0 overflow-hidden border border-[#10b981]/15 bg-[#0a1b14]/50 rounded-3xl shadow-2xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-[#0E4429] text-white font-extrabold border-b border-[#DCE8DD]">
+                <tr className="bg-[#060e0a] text-white font-extrabold border-b border-[#10b981]/15 uppercase tracking-wider">
                   <th className="p-4">Staff Member</th>
                   <th className="p-4">Email Credentials</th>
                   <th className="p-4">Assigned Role</th>
@@ -152,48 +152,50 @@ export default function AdminStaffAccounts() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#DCE8DD]">
+              <tbody className="divide-y divide-[#10b981]/10 text-emerald-100">
                 {filtered.map((s) => (
-                  <tr key={s._id} className="hover:bg-[#F1ECE0]/40 transition-colors">
-                    <td className="p-4 font-bold text-[#0E4429]">
+                  <tr key={s._id} className="hover:bg-emerald-500/5 transition-colors">
+                    <td className="p-4 font-bold text-white">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-[#D4A64A] text-[#0E4429] flex items-center justify-center font-black">
+                        <div className="w-9 h-9 rounded-full bg-[#060e0a] border border-amber-500/30 text-amber-400 flex items-center justify-center font-black">
                           {(s.fullName || '?').charAt(0)}
                         </div>
                         <div>
-                          <p className="font-extrabold text-sm">{s.fullName}</p>
-                          <p className="text-[10px] text-[#3a4a40]">Joined: {new Date(s.createdAt).toLocaleDateString()}</p>
+                          <p className="font-extrabold text-sm text-white">{s.fullName}</p>
+                          <p className="text-[10px] text-emerald-100/50 mt-0.5">Joined: {new Date(s.createdAt).toLocaleDateString()}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="p-4 font-bold text-[#3a4a40]">{s.email}</td>
+                    <td className="p-4 font-bold text-emerald-100/70">{s.email}</td>
                     <td className="p-4">
                       {s.role === 'admin' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-900 bg-emerald-100 px-2.5 py-1 rounded-full border border-emerald-300">
-                          <FaUserShield size={10} /> Super Admin
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
+                          <Shield size={10} /> Super Admin
                         </span>
                       ) : s.role === 'teacher' ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-blue-900 bg-blue-100 px-2.5 py-1 rounded-full border border-blue-300">
-                          <FaChalkboardTeacher size={10} /> Faculty Teacher
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/30">
+                          <BookOpen size={10} /> Faculty Teacher
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-900 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
-                          <FaIdCard size={10} /> Front Office Clerk
+                        <span className="inline-flex items-center gap-1 text-[10px] font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">
+                          <Contact size={10} /> Front Office Clerk
                         </span>
                       )}
                     </td>
-                    <td className="p-4 font-semibold text-[#0E4429]">{s.teacherDetails?.subject || s.role === 'clerk' ? 'Front Office' : '—'}</td>
+                    <td className="p-4 font-semibold text-emerald-100">
+                      {s.teacherDetails?.subject || (s.role === 'clerk' ? 'Front Office' : '—')}
+                    </td>
                     <td className="p-4 text-right">
                       {s.role === 'admin' ? (
-                        <span className="text-[10px] font-bold text-gray-400 flex items-center justify-end gap-1">
-                          <FaLock size={9} /> System Root
+                        <span className="text-[10px] font-bold text-emerald-100/40 flex items-center justify-end gap-1">
+                          <Lock size={9} /> System Root
                         </span>
                       ) : (
                         <button
                           onClick={() => handleDelete(s._id, s.fullName, s.role)}
-                          className="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs flex items-center gap-1.5 ml-auto"
+                          className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 font-bold text-xs flex items-center gap-1.5 ml-auto"
                         >
-                          <FaTrash size={11} /> Revoke Account
+                          <Trash2 size={11} /> Revoke Account
                         </button>
                       )}
                     </td>
@@ -207,44 +209,44 @@ export default function AdminStaffAccounts() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-lg !p-6 space-y-4 bg-white border-2 border-[#147a4a]/30 shadow-2xl">
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-lg !p-6 space-y-4 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-xl font-black text-white">
               Issue Staff Access Account
             </h2>
 
             <form onSubmit={handleCreateStaff} className="space-y-4 text-xs">
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Full Name</label>
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   required
                   value={form.fullName}
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                   placeholder="e.g. Sir Aslam Physics"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Official Email (Login Identifier)</label>
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Official Email (Login Identifier)</label>
                 <input
                   type="email"
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="e.g. aslam.physics@staracademy.edu.pk"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Account Role</label>
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Account Role</label>
                   <select
                     value={form.role}
                     onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   >
                     <option value="teacher">Faculty Teacher</option>
                     <option value="clerk">Front Office Clerk</option>
@@ -252,26 +254,26 @@ export default function AdminStaffAccounts() {
                 </div>
 
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Initial Password</label>
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Initial Password</label>
                   <input
                     type="password"
                     required
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                     placeholder="••••••••"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Subject / Department Note</label>
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Subject / Department Note</label>
                 <input
                   type="text"
                   value={form.subject}
                   onChange={(e) => setForm({ ...form, subject: e.target.value })}
                   placeholder="e.g. Senior Physics Lecturer / Accounts Desk"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
@@ -279,7 +281,7 @@ export default function AdminStaffAccounts() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#DCE8DD] font-bold text-[#3a4a40]"
+                  className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]"
                 >
                   Cancel
                 </button>

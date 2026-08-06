@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPhoneAlt, FaGraduationCap, FaCheckCircle, FaReceipt, FaMapMarkerAlt } from 'react-icons/fa'
+import { User, Mail, Lock, Eye, EyeOff, Phone, GraduationCap, CheckCircle, Receipt, MapPin } from 'lucide-react'
 import { useAuthStore } from '../../store/useAuthStore'
 
 export default function Register() {
@@ -54,31 +54,31 @@ export default function Register() {
 
   if (successMsg) {
     return (
-      <section className="min-h-[calc(100vh-var(--nav-height))] flex items-center justify-center py-12 px-4 bg-[#F1ECE0]/50">
-        <div className="card max-w-lg text-center !p-8 space-y-5 border-2 border-emerald-500/30">
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 mx-auto flex items-center justify-center">
-            <FaCheckCircle size={36} />
+      <section className="min-h-[calc(100vh-var(--nav-height))] flex items-center justify-center py-20 px-4 bg-transparent">
+        <div className="card-glass max-w-lg text-center !p-8 space-y-6 border border-[#10b981]/25 bg-[#0a1b14]/50 backdrop-blur-xl">
+          <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 mx-auto flex items-center justify-center border border-emerald-500/30">
+            <CheckCircle size={36} />
           </div>
-          <h2 className="text-2xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h2 className="text-2xl font-black text-white">
             Registration Submitted!
           </h2>
-          <p className="text-xs text-[#3a4a40] leading-relaxed font-semibold">
+          <p className="text-sm text-emerald-100/70 leading-relaxed font-semibold">
             {successMsg}
           </p>
 
-          <div className="p-4 rounded-2xl bg-[#0E4429] text-white text-left space-y-2 text-xs">
-            <p className="font-bold text-[#D4A64A] flex items-center gap-1.5 text-xs">
-              <FaReceipt size={14} /> Next Step to Activate Your Account:
+          <div className="p-5 rounded-2xl bg-[#060e0a]/80 text-[#e2ede7] text-left space-y-3 text-xs border border-[#10b981]/15">
+            <p className="font-extrabold text-amber-500 flex items-center gap-1.5 text-xs">
+              <Receipt size={14} /> Next Step to Activate Your Account:
             </p>
-            <p className="text-white/90 leading-relaxed text-[11px]">
+            <p className="text-emerald-100/80 leading-relaxed text-[12px] font-medium">
               Visit Star Educational Academy office with your student registration details, pay your one-time admission fee, and our administrator/clerk will approve your account.
             </p>
-            <p className="text-[10px] text-white/70 flex items-center gap-1 pt-1 border-t border-white/10">
-              <FaMapMarkerAlt size={10} className="text-[#D4A64A]" /> Location: D.A.V. School, Ladies Bazaar, Ghotki
+            <p className="text-[11px] text-emerald-100/50 flex items-center gap-1.5 pt-2 border-t border-[#10b981]/10">
+              <MapPin size={12} className="text-amber-500" /> Location: D.A.V. School, Ladies Bazaar, Ghotki
             </p>
           </div>
 
-          <Link to="/login" className="btn-gold w-full text-xs font-extrabold !py-3">
+          <Link to="/login" className="btn-gold w-full text-sm font-extrabold !py-3">
             <span>Proceed to Sign In</span>
           </Link>
         </div>
@@ -87,60 +87,60 @@ export default function Register() {
   }
 
   return (
-    <section className="min-h-[calc(100vh-var(--nav-height))] flex items-center justify-center py-12 px-4 bg-[#F1ECE0]/50">
+    <section className="min-h-[calc(100vh-var(--nav-height))] flex items-center justify-center py-20 px-4 bg-transparent">
       <div className="w-full max-w-lg">
         <div className="text-center mb-8">
-          <img src="/images/logo.png" alt="SEA Logo" className="w-16 h-16 mx-auto mb-3 rounded-full border-2 border-gold shadow-sm" />
-          <h1 className="text-3xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>Create Student Account</h1>
-          <p className="text-xs text-[#3a4a40] font-semibold mt-1">Register for Star Educational Academy — Session 2026</p>
+          <img src="/images/logo.png" alt="SEA Logo" className="w-16 h-16 mx-auto mb-3 rounded-full border-2 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.2)]" />
+          <h1 className="text-3xl font-black text-white">Create Student Account</h1>
+          <p className="text-xs text-emerald-100/60 font-semibold mt-1">Register for Star Educational Academy — Session 2026</p>
         </div>
 
-        <div className="card !p-8 sm:!p-10">
+        <div className="card-glass !p-8 sm:!p-10 bg-[#0a1b14]/50 backdrop-blur-xl border border-[#10b981]/15">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name */}
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Full Name</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Full Name</label>
               <div className="relative">
-                <FaUser size={14} className="input-icon" />
+                <User size={16} className="input-icon" />
                 <input
                   type="text"
                   value={form.fullName}
                   onChange={(e) => update('fullName', e.target.value)}
                   required
-                  placeholder=" Khan"
-                  className="input-field"
+                  placeholder="Khan"
+                  className="input-field shadow-sm"
                 />
               </div>
             </div>
 
             {/* Phone */}
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Phone Number</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Phone Number</label>
               <div className="relative">
-                <FaPhoneAlt size={14} className="input-icon" />
+                <Phone size={16} className="input-icon" />
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={(e) => update('phone', e.target.value)}
                   required
                   placeholder="0308-3309704"
-                  className="input-field"
+                  className="input-field shadow-sm"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Email Address</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Email Address</label>
               <div className="relative">
-                <FaEnvelope size={14} className="input-icon" />
+                <Mail size={16} className="input-icon" />
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => update('email', e.target.value)}
                   required
                   placeholder="khan@gmail.com"
-                  className="input-field"
+                  className="input-field shadow-sm"
                 />
               </div>
             </div>
@@ -148,73 +148,73 @@ export default function Register() {
             {/* Class & Stream */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Class</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Class</label>
                 <select
                   value={form.class}
                   onChange={(e) => update('class', e.target.value)}
                   required
-                  className="w-full px-4 py-3 min-h-[46px] rounded-xl border border-[#DCE8DD] text-xs font-bold text-[#0E4429] focus:outline-none focus:border-[#147a4a] bg-white cursor-pointer"
+                  className="w-full px-4 py-3 min-h-[46px] rounded-xl border border-[#10b981]/25 text-xs font-bold text-emerald-100 bg-[#060e0a] focus:outline-none focus:border-emerald-400 cursor-pointer"
                 >
-                  <option value="">Select Class</option>
-                  <option value="9">Grade IX (Matric)</option>
-                  <option value="10">Grade X (Matric)</option>
-                  <option value="11">Grade XI (F.Sc)</option>
-                  <option value="12">Grade XII (F.Sc)</option>
+                  <option value="" className="bg-[#0a1b14]">Select Class</option>
+                  <option value="9" className="bg-[#0a1b14]">Grade IX (Matric)</option>
+                  <option value="10" className="bg-[#0a1b14]">Grade X (Matric)</option>
+                  <option value="11" className="bg-[#0a1b14]">Grade XI (F.Sc)</option>
+                  <option value="12" className="bg-[#0a1b14]">Grade XII (F.Sc)</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Stream / Group</label>
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Stream / Group</label>
                 <select
                   value={form.stream}
                   onChange={(e) => update('stream', e.target.value)}
                   required
-                  className="w-full px-4 py-3 min-h-[46px] rounded-xl border border-[#DCE8DD] text-xs font-bold text-[#0E4429] focus:outline-none focus:border-[#147a4a] bg-white cursor-pointer"
+                  className="w-full px-4 py-3 min-h-[46px] rounded-xl border border-[#10b981]/25 text-xs font-bold text-emerald-100 bg-[#060e0a] focus:outline-none focus:border-emerald-400 cursor-pointer"
                 >
-                  <option value="">Select Stream</option>
-                  <option value="general">Matric / General Science (Grade 9-10)</option>
-                  <option value="pre-medical">Pre-Medical (Grade 11-12)</option>
-                  <option value="pre-engineering">Pre-Engineering (Grade 11-12)</option>
+                  <option value="" className="bg-[#0a1b14]">Select Stream</option>
+                  <option value="general" className="bg-[#0a1b14]">Matric / General Science (9-10)</option>
+                  <option value="pre-medical" className="bg-[#0a1b14]">Pre-Medical (11-12)</option>
+                  <option value="pre-engineering" className="bg-[#0a1b14]">Pre-Engineering (11-12)</option>
                 </select>
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Password</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Password</label>
               <div className="relative">
-                <FaLock size={14} className="input-icon" />
+                <Lock size={16} className="input-icon" />
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={form.password}
                   onChange={(e) => update('password', e.target.value)}
                   required
                   placeholder="Min. 6 characters"
-                  className="input-field !pr-11"
+                  className="input-field !pr-11 shadow-sm"
                 />
-                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#3a4a40] z-10">
-                  {showPw ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-100/40 z-10 hover:text-emerald-400 transition-colors">
+                  {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-xs uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">Confirm Password</label>
+              <label className="block text-xs uppercase tracking-wider font-extrabold text-amber-500/80 mb-1.5">Confirm Password</label>
               <div className="relative">
-                <FaLock size={14} className="input-icon" />
+                <Lock size={16} className="input-icon" />
                 <input
                   type="password"
                   value={form.confirmPassword}
                   onChange={(e) => update('confirmPassword', e.target.value)}
                   required
                   placeholder="Re-enter your password"
-                  className="input-field"
+                  className="input-field shadow-sm"
                 />
               </div>
             </div>
 
             {(localError || error) && (
-              <div className="p-3 rounded-xl text-xs text-center font-bold bg-red-50 text-red-700 border border-red-200">
+              <div className="p-3 rounded-xl text-xs text-center font-bold bg-red-500/10 text-red-400 border border-red-500/20">
                 {localError || error}
               </div>
             )}
@@ -222,16 +222,16 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full justify-center !py-3.5 sm:!py-4 text-sm font-extrabold shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                className="btn-primary w-full justify-center !py-3.5 sm:!py-4 text-sm font-extrabold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-emerald-500/20"
               >
-                {loading ? <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> : 'Submit Registration'}
+                {loading ? <span className="w-5 h-5 border-2 border-emerald-950 border-t-emerald-300 rounded-full animate-spin"></span> : 'Submit Registration'}
               </button>
             </div>
           </form>
 
-          <div className="mt-5 text-center text-xs font-semibold text-[#3a4a40]">
+          <div className="mt-6 text-center text-xs font-semibold text-emerald-100/60">
             Already have an account?{' '}
-            <Link to="/login" className="font-extrabold text-[#147a4a] hover:underline">Sign In</Link>
+            <Link to="/login" className="font-extrabold text-emerald-400 hover:text-emerald-300 hover:underline">Sign In</Link>
           </div>
         </div>
       </div>

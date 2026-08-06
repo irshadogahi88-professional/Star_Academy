@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaUserGraduate, FaPlus, FaEdit, FaTrash, FaStar } from 'react-icons/fa'
+import { GraduationCap, Plus, Edit2, Trash2, Star } from 'lucide-react'
 import { getDirectImageUrl } from '../../utils/imageHelper'
 import facultyService from '../../services/facultyService'
 
@@ -84,30 +84,30 @@ export default function AdminFaculty() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-emerald-100">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1">
-            <FaUserGraduate size={12} /> Academic Leadership
+          <span className="badge badge-gold text-xs font-bold inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <GraduationCap size={12} /> Academic Leadership
           </span>
-          <h1 className="text-3xl font-black text-[#0E4429] mt-1" style={{ fontFamily: 'var(--font-heading)' }}>
+          <h1 className="text-3xl font-black text-white mt-1">
             Faculty Members Directory
           </h1>
-          <p className="text-xs text-[#3a4a40]">
+          <p className="text-xs text-emerald-100/70 font-semibold">
             Update public website faculty profiles, designations, qualifications, and display order.
           </p>
         </div>
 
         <button onClick={handleOpenCreate} className="btn-gold text-xs !py-3 !px-5 shadow-md flex items-center gap-2">
-          <FaPlus size={12} />
+          <Plus size={12} />
           <span>Add Faculty Member</span>
         </button>
       </div>
 
       {notice && (
-        <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-extrabold text-xs flex items-center gap-2">
-          <FaStar size={14} className="text-emerald-700" />
+        <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-extrabold text-xs flex items-center gap-2">
+          <Star size={14} />
           <span>{notice}</span>
         </div>
       )}
@@ -115,49 +115,49 @@ export default function AdminFaculty() {
       {/* Loading */}
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="w-8 h-8 border-4 border-[#147a4a] border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : faculty.length === 0 ? (
-        <div className="card !p-12 text-center space-y-3 border-2 border-dashed border-[#DCE8DD]">
-          <FaUserGraduate size={40} className="mx-auto text-[#147a4a]/40" />
-          <h3 className="font-extrabold text-base text-[#0E4429]">No Faculty Members Yet</h3>
-          <p className="text-xs text-[#3a4a40] max-w-sm mx-auto">Click "Add Faculty Member" to create the first profile for the public website directory.</p>
+        <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 !p-12 text-center space-y-3 border-dashed rounded-3xl">
+          <GraduationCap size={40} className="mx-auto text-emerald-500/40" />
+          <h3 className="font-extrabold text-base text-white">No Faculty Members Yet</h3>
+          <p className="text-xs text-emerald-100/60 font-semibold max-w-sm mx-auto">Click "Add Faculty Member" to create the first profile for the public website directory.</p>
         </div>
       ) : (
         /* Grid */
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {faculty.map((f) => (
-            <div key={f._id} className="card !p-6 space-y-4 border-2 border-[#147a4a]/20 shadow-md relative">
+            <div key={f._id} className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400 transition-all rounded-3xl !p-6 space-y-4 shadow-md relative">
               <div className="flex items-center justify-between">
-                <span className="badge badge-gold text-[10px] font-extrabold">Order #{f.order}</span>
+                <span className="badge badge-gold text-[10px] font-extrabold bg-amber-500/10 border border-amber-500/30 text-amber-400">Order #{f.order || 0}</span>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => handleOpenEdit(f)} className="p-1.5 rounded-lg text-[#147a4a] hover:bg-[#147a4a]/10">
-                    <FaEdit size={13} />
+                  <button onClick={() => handleOpenEdit(f)} className="p-1.5 rounded-lg text-emerald-400 hover:bg-[#10b981]/10">
+                    <Edit2 size={13} />
                   </button>
-                  <button onClick={() => handleDelete(f._id, f.name)} className="p-1.5 rounded-lg text-red-600 hover:bg-red-50">
-                    <FaTrash size={13} />
+                  <button onClick={() => handleDelete(f._id, f.name)} className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/10">
+                    <Trash2 size={13} />
                   </button>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 {f.photoUrl ? (
-                  <img src={getDirectImageUrl(f.photoUrl)} alt={f.name} className="w-14 h-14 rounded-2xl object-cover border-2 border-[#D4A64A]" />
+                  <img referrerPolicy="no-referrer" src={getDirectImageUrl(f.photoUrl)} alt={f.name} className="w-14 h-14 rounded-2xl object-cover border-2 border-amber-500" />
                 ) : (
-                  <div className="w-14 h-14 rounded-2xl bg-[#0E4429] text-white font-black text-xl flex items-center justify-center border-2 border-[#D4A64A]">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-black text-xl flex items-center justify-center">
                     {f.name.charAt(4) || f.name.charAt(0)}
                   </div>
                 )}
                 <div>
-                  <h3 className="font-extrabold text-base text-[#0E4429] leading-tight">{f.name}</h3>
-                  <p className="text-xs text-[#147a4a] font-bold mt-0.5">{f.designation}</p>
+                  <h3 className="font-extrabold text-base text-white leading-tight">{f.name}</h3>
+                  <p className="text-xs text-emerald-400 font-bold mt-0.5">{f.designation}</p>
                 </div>
               </div>
 
-              <div className="space-y-1.5 pt-3 border-t border-[#DCE8DD] text-xs">
-                <p className="text-[#3a4a40] font-semibold"><span className="font-extrabold">Degree:</span> {f.qualification || '—'}</p>
-                <p className="text-[#3a4a40] font-semibold"><span className="font-extrabold">Experience:</span> {f.experience || '—'}</p>
-                <p className="text-amber-700 font-extrabold"><span className="font-extrabold text-[#3a4a40]">Subject:</span> {f.subject}</p>
+              <div className="space-y-1.5 pt-3 border-t border-[#10b981]/10 text-xs">
+                <p className="text-emerald-100/70 font-semibold"><span className="font-extrabold text-white">Degree:</span> {f.qualification || '—'}</p>
+                <p className="text-emerald-100/70 font-semibold"><span className="font-extrabold text-white">Experience:</span> {f.experience || '—'}</p>
+                <p className="text-amber-400 font-extrabold"><span className="font-extrabold text-white">Subject:</span> {f.subject}</p>
               </div>
             </div>
           ))}
@@ -166,15 +166,15 @@ export default function AdminFaculty() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="card w-full max-w-lg !p-6 space-y-4 bg-white border-2 border-[#147a4a]/30 shadow-2xl">
-            <h2 className="text-xl font-black text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="card-glass w-full max-w-lg !p-6 space-y-4 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
+            <h2 className="text-xl font-black text-white">
               {editingId ? 'Edit Faculty Profile' : 'Add New Faculty Member'}
             </h2>
 
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   Full Name & Title
                 </label>
                 <input
@@ -183,12 +183,12 @@ export default function AdminFaculty() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="e.g. Sir Irshad Ahmed Ogahi"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   Designation / Role
                 </label>
                 <input
@@ -197,13 +197,13 @@ export default function AdminFaculty() {
                   value={form.designation}
                   onChange={(e) => setForm({ ...form, designation: e.target.value })}
                   placeholder="e.g. Director & Chemistry Specialist"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Qualification
                   </label>
                   <input
@@ -211,12 +211,12 @@ export default function AdminFaculty() {
                     value={form.qualification}
                     onChange={(e) => setForm({ ...form, qualification: e.target.value })}
                     placeholder="e.g. M.Sc Chemistry (Gold Medalist)"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
 
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Teaching Experience
                   </label>
                   <input
@@ -224,20 +224,20 @@ export default function AdminFaculty() {
                     value={form.experience}
                     onChange={(e) => setForm({ ...form, experience: e.target.value })}
                     placeholder="e.g. 18+ Years"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Subject
                   </label>
                   <select
                     value={form.subject}
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   >
                     <option value="Physics">Physics</option>
                     <option value="Chemistry">Chemistry</option>
@@ -252,7 +252,7 @@ export default function AdminFaculty() {
                 </div>
 
                 <div>
-                  <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                  <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                     Phone (Optional)
                   </label>
                   <input
@@ -260,13 +260,13 @@ export default function AdminFaculty() {
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
                     placeholder="e.g. 0300-1234567"
-                    className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block uppercase tracking-wider font-extrabold text-[#0E4429] mb-1.5">
+                <label className="block uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">
                   Photo URL (Optional)
                 </label>
                 <input
@@ -274,7 +274,7 @@ export default function AdminFaculty() {
                   value={form.photoUrl}
                   onChange={(e) => setForm({ ...form, photoUrl: e.target.value })}
                   placeholder="e.g. /images/faculty/irshad.jpg"
-                  className="w-full px-3 py-2.5 rounded-xl border border-[#DCE8DD] font-bold focus:outline-none"
+                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
 
@@ -282,7 +282,7 @@ export default function AdminFaculty() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#DCE8DD] font-bold text-[#3a4a40]"
+                  className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]"
                 >
                   Cancel
                 </button>

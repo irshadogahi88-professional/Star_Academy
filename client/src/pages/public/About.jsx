@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaStar, FaTrophy, FaGraduationCap, FaBookOpen, FaUsers, FaMapMarkerAlt, FaClock, FaQuestionCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa'
-import { GiDna1, GiAtom } from 'react-icons/gi'
+import { 
+  Star, Trophy, GraduationCap, BookOpen, Users, MapPin, Clock, 
+  HelpCircle, ChevronDown, ChevronUp, Dna, Atom 
+} from 'lucide-react'
 import CountUp from '../../components/animations/CountUp'
 import ScrollReveal from '../../components/animations/ScrollReveal'
 import PageTransition from '../../components/animations/PageTransition'
@@ -9,19 +11,17 @@ import { StaggerContainer, StaggerItem } from '../../components/animations/Scrol
 import milestoneService from '../../services/milestoneService'
 
 const values = [
-  { icon: <FaTrophy size={24} />, title: 'Excellence', desc: 'We set the highest standards in academic coaching and test preparation.' },
-  { icon: <FaUsers size={24} />, title: 'Dedication', desc: 'Our faculty is committed to every student\'s individual growth and success.' },
-  { icon: <FaBookOpen size={24} />, title: 'Innovation', desc: 'Modern teaching methods, online resources, and AI-powered test preparation.' },
-  { icon: <FaStar size={24} />, title: 'Results', desc: 'Proven track record with top positions in MDCAT, ECAT, and board exams.' },
+  { icon: <Trophy size={24} />, title: 'Excellence', desc: 'We set the highest standards in academic coaching and test preparation.' },
+  { icon: <Users size={24} />, title: 'Dedication', desc: 'Our faculty is committed to every student\'s individual growth and success.' },
+  { icon: <BookOpen size={24} />, title: 'Innovation', desc: 'Modern teaching methods, online resources, and AI-powered test preparation.' },
+  { icon: <Star size={24} />, title: 'Results', desc: 'Proven track record with top positions in MDCAT, ECAT, and board exams.' },
 ]
-
-
 
 const programs = [
   {
     title: 'Pre-Medical Track',
     subtitle: 'MDCAT Preparation',
-    icon: <GiDna1 size={28} />,
+    icon: <Dna size={28} />,
     subjects: ['Physics', 'Chemistry', 'Biology', 'English'],
     grades: 'Grade IX – XII',
     color: 'var(--color-emerald-primary)',
@@ -29,7 +29,7 @@ const programs = [
   {
     title: 'Pre-Engineering Track',
     subtitle: 'ECAT Preparation',
-    icon: <GiAtom size={28} />,
+    icon: <Atom size={28} />,
     subjects: ['Physics', 'Chemistry', 'Mathematics', 'English'],
     grades: 'Grade IX – XII',
     color: 'var(--color-gold-dark)',
@@ -78,21 +78,21 @@ export default function About() {
   return (
     <PageTransition>
       {/* Page Header */}
-      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
+      <section className="relative pt-32 pb-24 sm:pt-40 sm:pb-32 overflow-hidden bg-gradient-to-br from-[#060e0a] to-[#08140f]">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay"></div>
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-10 right-20 w-72 h-72 rounded-full blur-3xl bg-gold" />
+          <div className="absolute top-10 right-20 w-72 h-72 rounded-full blur-3xl bg-amber-500/10" />
         </div>
         <div className="section-container relative z-10">
           <div className="flex flex-col items-center justify-center text-center w-full max-w-5xl mx-auto space-y-5 pt-4 sm:pt-6">
             <span className="badge badge-gold font-extrabold inline-flex items-center gap-2 px-4 py-1.5 text-xs rounded-full shadow-xs mx-auto">
-              <FaBookOpen size={12} className="text-[#D4A64A]" />
+              <BookOpen size={12} className="text-amber-500" />
               <span>About Us</span>
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-white leading-tight text-center tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-white leading-tight text-center tracking-tight">
               About <span className="text-gradient-gold inline">Star Educational</span> Academy
             </h1>
-            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-white/90 font-medium">
+            <p className="text-base sm:text-lg max-w-2xl mx-auto text-center leading-relaxed text-emerald-100/70 font-semibold">
               Building bright futures through dedication, expert guidance, and a relentless commitment to academic excellence in Ghotki.
             </p>
           </div>
@@ -100,42 +100,42 @@ export default function About() {
       </section>
 
       {/* Mission & Vision */}
-      <section className="section-padding bg-cream">
+      <section className="section-padding bg-[#08140f]">
         <div className="section-container">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <ScrollReveal direction="left">
               <div className="relative">
-                <div className="rounded-3xl overflow-hidden shadow-xl border border-sage">
+                <div className="rounded-3xl overflow-hidden shadow-2xl border border-[#10b981]/20">
                   <img src="/images/about.png" alt="Star Educational Academy" className="w-full" />
                 </div>
-                <div className="absolute -bottom-6 -right-6 p-5 rounded-2xl shadow-xl bg-white border border-sage">
-                  <p className="text-3xl font-black text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+                <div className="absolute -bottom-6 -right-6 p-5 rounded-2xl shadow-xl bg-[#0a1b14] border border-[#10b981]/25">
+                  <p className="text-3xl font-black text-emerald-400">
                     <CountUp end={100} suffix="%" />
                   </p>
-                  <p className="text-xs font-bold text-charcoal-light">Success Rate</p>
+                  <p className="text-xs font-bold text-emerald-100/50">Success Rate</p>
                 </div>
               </div>
             </ScrollReveal>
 
-            <ScrollReveal direction="right">
-              <h2 className="text-3xl sm:text-4xl font-extrabold mb-5 text-emerald-dark leading-[1.25]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <ScrollReveal direction="right" className="space-y-6">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-[1.25]">
                 Our Mission & Vision
               </h2>
-              <p className="text-base leading-relaxed mb-5 text-charcoal-light">
+              <p className="text-base leading-relaxed text-emerald-100/70">
                 Star Educational Academy is where hardworking boys and girls build a bright and successful
                 future through dedication and excellence. We provide separate Mathematics and English classes
                 for Pre-Engineering boys and girls, taught by highly qualified teachers.
               </p>
-              <p className="text-base leading-relaxed mb-7 text-charcoal-light">
+              <p className="text-base leading-relaxed text-emerald-100/70">
                 Our vision is to become the leading educational coaching academy in Sindh, producing top
                 scorers in MDCAT, ECAT, and board examinations year after year. We believe every student
                 has the potential for greatness — they just need the right guidance.
               </p>
-              <div className="p-5 rounded-2xl border-l-4 border-l-gold bg-cream-alt/60">
-                <p className="text-sm italic font-semibold text-charcoal">
+              <div className="p-5 rounded-2xl border-l-4 border-l-amber-500 bg-[#0a1b14]/50">
+                <p className="text-sm italic font-semibold text-emerald-100/80">
                   "Education is the most powerful weapon which you can use to change the world."
                 </p>
-                <p className="text-xs mt-2 font-extrabold text-emerald-primary">
+                <p className="text-xs mt-2 font-extrabold text-amber-500">
                   — Our guiding philosophy
                 </p>
               </div>
@@ -145,22 +145,22 @@ export default function About() {
       </section>
 
       {/* Core Values */}
-      <section className="section-padding bg-cream-alt/50">
+      <section className="section-padding bg-[#0a1b14]">
         <div className="section-container">
           <ScrollReveal className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
               Our Core <span className="text-gradient-gold">Values</span>
             </h2>
           </ScrollReveal>
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((v, i) => (
               <StaggerItem key={i}>
-                <div className="card text-center group h-full">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 bg-emerald-primary/10 text-emerald-primary">
+                <div className="card-glass text-center group h-full bg-[#08140f]/50 border border-[#10b981]/15">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 bg-[#10b981]/10 text-emerald-400 border border-[#10b981]/15">
                     {v.icon}
                   </div>
-                  <h3 className="text-lg font-bold mb-2 text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>{v.title}</h3>
-                  <p className="text-xs text-charcoal-light leading-relaxed">{v.desc}</p>
+                  <h3 className="text-lg font-bold mb-2 text-white">{v.title}</h3>
+                  <p className="text-xs text-emerald-100/60 leading-relaxed">{v.desc}</p>
                 </div>
               </StaggerItem>
             ))}
@@ -169,41 +169,41 @@ export default function About() {
       </section>
 
       {/* Programs */}
-      <section className="section-padding bg-cream">
+      <section className="section-padding bg-[#08140f]">
         <div className="section-container">
           <ScrollReveal className="text-center mb-12 space-y-3">
             <span className="badge badge-emerald font-bold inline-flex items-center gap-1.5 px-3.5 py-1 text-xs">
-              <FaGraduationCap size={12} />
+              <GraduationCap size={12} />
               Programs
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
               Academic <span className="text-gradient-gold">Programs</span>
             </h2>
           </ScrollReveal>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {programs.map((prog, i) => (
               <ScrollReveal key={i} delay={i * 0.15}>
-                <div className="card group h-full flex flex-col justify-between">
+                <div className="card-glass group h-full flex flex-col justify-between bg-[#0a1b14]/50 border border-[#10b981]/15">
                   <div>
                     <div className="flex items-center gap-4 mb-5">
-                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 bg-emerald-primary/10 text-emerald-primary">
+                      <div className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 bg-emerald-500/10 text-emerald-400 border border-[#10b981]/15">
                         {prog.icon}
                       </div>
                       <div>
-                        <h3 className="text-xl font-extrabold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>{prog.title}</h3>
-                        <p className="text-xs font-bold text-gold-dark">{prog.subtitle}</p>
+                        <h3 className="text-xl font-extrabold text-white">{prog.title}</h3>
+                        <p className="text-xs font-bold text-amber-500">{prog.subtitle}</p>
                       </div>
                     </div>
-                    <p className="text-xs text-charcoal-light leading-relaxed mb-4">
+                    <p className="text-xs text-emerald-100/60 leading-relaxed mb-4">
                       Comprehensive coaching covering all subjects with focus on competitive exam preparation.
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {prog.subjects.map((s) => (
-                        <span key={s} className="text-xs px-3 py-1 rounded-full font-bold bg-cream-alt text-emerald-dark border border-sage">{s}</span>
+                        <span key={s} className="text-xs px-3 py-1 rounded-full font-bold bg-[#060e0a] text-emerald-300 border border-[#10b981]/15">{s}</span>
                       ))}
                     </div>
                   </div>
-                  <p className="text-xs font-extrabold text-gold">{prog.grades}</p>
+                  <p className="text-xs font-extrabold text-amber-500">{prog.grades}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -212,29 +212,29 @@ export default function About() {
       </section>
 
       {/* Milestones Timeline */}
-      <section className="section-padding bg-gradient-to-br from-emerald-dark to-emerald-deepest">
+      <section className="section-padding bg-[#0a1b14] border-t border-[#10b981]/15">
         <div className="section-container">
           <ScrollReveal className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-[1.25]" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-[1.25]">
               Achievements & <span className="text-gradient-gold">Milestones</span>
             </h2>
           </ScrollReveal>
           <div className="max-w-2xl mx-auto space-y-5">
             {milestones.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-white/60 text-sm font-semibold">Milestone achievements will appear here.</p>
+                <p className="text-emerald-100/50 text-sm font-semibold">Milestone achievements will appear here.</p>
               </div>
             ) : (
               milestones.map((m, i) => (
                 <ScrollReveal key={m._id || i} delay={i * 0.1}>
-                  <div className="flex gap-4 items-start p-5 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md">
-                    <div className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-gold/20 text-gold">
-                      <FaTrophy size={18} />
+                  <div className="flex gap-4 items-start p-5 rounded-2xl bg-[#08140f]/60 border border-[#10b981]/15 backdrop-blur-md">
+                    <div className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <Trophy size={18} />
                     </div>
                     <div>
-                      <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-gold/20 text-gold-light">{m.year}</span>
+                      <span className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">{m.year}</span>
                       <p className="text-white font-bold text-sm mt-1.5">{m.title || m.achievement}</p>
-                      {m.description && <p className="text-white/60 text-xs mt-1">{m.description}</p>}
+                      {m.description && <p className="text-emerald-100/50 text-xs mt-1">{m.description}</p>}
                     </div>
                   </div>
                 </ScrollReveal>
@@ -245,17 +245,17 @@ export default function About() {
       </section>
 
       {/* Session Info & Map Location */}
-      <section className="section-padding bg-cream">
+      <section className="section-padding bg-[#08140f]">
         <div className="section-container">
           <ScrollReveal>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="card p-8! flex flex-col justify-between">
+              <div className="card-glass p-8! flex flex-col justify-between bg-[#0a1b14]/50 border border-[#10b981]/15">
                 <div>
                   <div className="flex items-center gap-3 mb-4">
-                    <FaClock size={20} className="text-emerald-primary" />
-                    <h3 className="text-xl font-bold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>Session 2026</h3>
+                    <Clock size={20} className="text-emerald-400" />
+                    <h3 className="text-xl font-bold text-white">Session 2026</h3>
                   </div>
-                  <div className="space-y-3 text-xs font-medium text-charcoal-light">
+                  <div className="space-y-3 text-xs font-semibold text-emerald-100/70">
                     <p><strong>Admission Forms:</strong> Available Now</p>
                     <p><strong>Classes Commence:</strong> 10-08-2026</p>
                     <p><strong>Timings:</strong> 3:15 PM – 7:00 PM</p>
@@ -263,20 +263,20 @@ export default function About() {
                   </div>
                 </div>
                 <Link to="/register" className="btn-gold mt-6 w-full justify-center text-xs font-extrabold">
-                  <FaGraduationCap size={16} />
+                  <GraduationCap size={16} />
                   <span>Apply Online</span>
                 </Link>
               </div>
 
-              <div className="card p-8!">
+              <div className="card-glass p-8! bg-[#0a1b14]/50 border border-[#10b981]/15">
                 <div className="flex items-center gap-3 mb-4">
-                  <FaMapMarkerAlt size={20} className="text-emerald-primary" />
-                  <h3 className="text-xl font-bold text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>Our Location</h3>
+                  <MapPin size={20} className="text-emerald-400" />
+                  <h3 className="text-xl font-bold text-white">Our Location</h3>
                 </div>
-                <a href="https://www.google.com/maps?sca_esv=1e85827d6e1fa685&rlz=1C1CHBF_en-GBPK1167PK1167&sxsrf=APpeQnuuhLdkxi-lNra0UfLpUygOmKsNbQ:1785878013017&biw=1249&bih=543&uact=5&gs_lp=Egxnd3Mtd2l6LXNlcnAiGGRhdiBwdWJsaWMgc2Nob29sIGdob3RraTIFECEYoAEyBRAhGKABSJU7UJcEWPYycAF4AJABAJgBugKgAe4tqgEGMi0yMi4yuAEDyAEA-AEBmAIZoAKVL6gCEMICBxAjGOoCGCfCAhAQIxjwBRieBhiiBxjqAhgnwgIXEAAYgAQYigUYkQIY5wYY6gIYtALYAQHCAiAQLhiABBiKBRiRAhjnBhjHARivARjIAxjqAhi0AtgBAcICBBAjGCfCAhEQLhiABBiKBRiRAhjHARjRA8ICERAuGIAEGIoFGJECGMcBGK8BwgIOEC4YgAQYsQMYxwEY0QPCAggQABiABBixA8ICChAuGIAEGIoFGEPCAgoQABiABBiKBRhDwgIQEAAYgAQYigUYQxixAxiDAcICExAuGIAEGIoFGEMYsQMYxwEY0QPCAgUQABiABMICBRAuGIAEwgIZEC4YgAQYigUYQxiXBRjcBBjeBBjfBNgBAcICChAuGEMYgAQYigXCAgwQLhiABBgKGAsYsQPCAgkQABiABBgKGAvCAg8QLhiABBgKGAsYxwEY0QPCAgYQABgWGB7CAgsQABiABBiKBRiGA8ICBxAhGAoYoAGYAwvxBTuJuq7UE54QugYGCAEQARgBkgcIMS4wLjIxLjOgB6fXAbIHBjItMjEuM7gHiS_CBwgwLjMuMTkuM8gHfYAIAQ&um=1&ie=UTF-8&fb=1&gl=pk&sa=X&geocode=KQO9HuRr7TY5MVBZArjJgw2O&daddr=2858%2BPJF,+Ghotki" target="_blank" rel="noopener noreferrer" className="block text-xs text-charcoal-light mb-4 font-bold hover:text-emerald-primary hover:underline transition-colors">
+                <a href="https://www.google.com/maps?daddr=2858%2BPJF,+Ghotki" target="_blank" rel="noopener noreferrer" className="block text-xs text-emerald-100/70 mb-4 font-bold hover:text-emerald-400 hover:underline transition-colors">
                   D.A.V. School, Ladies Bazaar, Ghotki, Sindh, Pakistan
                 </a>
-                <div className="rounded-2xl overflow-hidden h-44 border border-sage">
+                <div className="rounded-2xl overflow-hidden h-44 border border-[#10b981]/15">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14136.927364!2d69.315!3d27.965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393d9e9e9e9e9e9f%3A0x9e9e9e9e9e9e9e9e!2sGhotki%2C+Sindh%2C+Pakistan!5e0!3m2!1sen!2s!4v1"
                     width="100%"
@@ -293,18 +293,18 @@ export default function About() {
         </div>
       </section>
 
-      {/* NEW: Interactive Accordion FAQs Section */}
-      <section className="section-padding bg-cream-alt/60 border-t border-sage">
+      {/* Interactive Accordion FAQs Section */}
+      <section className="section-padding bg-[#0a1b14] border-t border-[#10b981]/15">
         <div className="section-container max-w-4xl mx-auto">
           <ScrollReveal className="text-center mb-12 space-y-3">
             <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-              <FaQuestionCircle size={12} className="text-gold" />
+              <HelpCircle size={12} className="text-amber-500" />
               Got Questions?
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-3xl sm:text-4xl font-black text-white">
               Frequently Asked <span className="text-gradient-gold">Questions</span>
             </h2>
-            <p className="text-xs sm:text-sm text-charcoal-light font-medium max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-emerald-100/60 font-semibold max-w-xl mx-auto">
               Find instant answers regarding admissions, one-time fee payment, account approvals, and class schedules.
             </p>
           </ScrollReveal>
@@ -315,24 +315,27 @@ export default function About() {
               return (
                 <ScrollReveal key={index} delay={index * 0.08}>
                   <div
-                    className={`card p-5! sm:p-6! transition-all duration-300 cursor-pointer border ${isOpen ? 'border-emerald-primary bg-white shadow-md' : 'hover:border-emerald-primary/40'
-                      }`}
+                    className={`card-glass p-5! sm:p-6! transition-all duration-300 cursor-pointer border ${
+                      isOpen 
+                        ? 'border-emerald-400/40 bg-[#08140f] shadow-lg shadow-emerald-500/5' 
+                        : 'hover:border-[#10b981]/30 bg-[#08140f]/40'
+                    }`}
                     onClick={() => toggleFaq(index)}
                   >
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-extrabold text-sm sm:text-base text-emerald-dark flex items-center gap-3">
-                        <span className="w-7 h-7 rounded-full bg-emerald-primary/10 text-emerald-primary text-xs font-black flex items-center justify-center shrink-0">
+                      <h3 className="font-extrabold text-sm sm:text-base text-white flex items-center gap-3">
+                        <span className="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-black flex items-center justify-center shrink-0 border border-emerald-500/20">
                           Q{index + 1}
                         </span>
                         <span>{faq.question}</span>
                       </h3>
-                      <button className="p-2 rounded-xl bg-cream-alt text-emerald-primary shrink-0">
-                        {isOpen ? <FaChevronUp size={14} /> : <FaChevronDown size={14} />}
+                      <button className="p-2 rounded-xl bg-[#060e0a] text-emerald-400 border border-[#10b981]/15 shrink-0">
+                        {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                       </button>
                     </div>
 
                     {isOpen && (
-                      <div className="mt-4 pt-4 border-t border-sage text-xs sm:text-sm text-charcoal-light font-medium leading-relaxed">
+                      <div className="mt-4 pt-4 border-t border-[#10b981]/15 text-xs sm:text-sm text-emerald-100/70 font-semibold leading-relaxed">
                         {faq.answer}
                       </div>
                     )}
