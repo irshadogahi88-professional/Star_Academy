@@ -5,7 +5,7 @@ import { useAuthStore } from '../../store/useAuthStore'
 import { FaWhatsapp, FaSignInAlt } from 'react-icons/fa'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import { IoSchool } from 'react-icons/io5'
-import axios from 'axios'
+import api from '../../services/api'
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -25,7 +25,7 @@ export default function Navbar() {
   const [marquee, setMarquee] = useState('')
 
   useEffect(() => {
-    axios.get('/api/settings').then(res => {
+    api.get('/settings').then(res => {
       if (res.data?.success && res.data?.data?.marqueeText) {
         setMarquee(res.data.data.marqueeText)
       }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { FaImage, FaPlus, FaTrash, FaCheckCircle, FaEdit } from 'react-icons/fa'
-import axios from 'axios'
+import api from '../../services/api'
 
 export default function AdminGallery() {
   const [images, setImages] = useState([])
@@ -13,7 +13,7 @@ export default function AdminGallery() {
   const fetchGallery = async () => {
     setLoading(true)
     try {
-      const res = await axios.get('/api/gallery/all')
+      const res = await api.get('/gallery/all')
       if (res.data?.success) {
         setImages(res.data.data)
       }
@@ -65,12 +65,12 @@ export default function AdminGallery() {
 
     try {
       if (editingId) {
-        const res = await axios.patch(`/api/gallery/${editingId}`, form)
+        const res = await api.patch(`/gallery/${editingId}`, form)
         if (res.data?.success) {
           setNotice('Gallery image updated successfully!')
         }
       } else {
-        const res = await axios.post('/api/gallery', form)
+        const res = await api.post('/gallery', form)
         if (res.data?.success) {
           setNotice('Image published to gallery!')
         }
@@ -86,7 +86,7 @@ export default function AdminGallery() {
   const handleDelete = async (id) => {
     if (window.confirm('Delete this image from the gallery?')) {
       try {
-        const res = await axios.delete(`/api/gallery/${id}`)
+        const res = await api.delete(`/gallery/${id}`)
         if (res.data?.success) {
           setNotice('Image deleted.')
           fetchGallery()

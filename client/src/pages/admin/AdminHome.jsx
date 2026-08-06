@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../services/api'
 import { useAuthStore } from '../../store/useAuthStore'
 import { 
   FaUserShield, 
@@ -47,9 +47,7 @@ export default function AdminHome() {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await axios.get('/api/admin/metrics', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const res = await api.get('/admin/metrics')
         if (res.data?.success && res.data?.metrics) {
           setMetrics(res.data.metrics)
         }
