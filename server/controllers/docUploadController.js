@@ -59,19 +59,14 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
             },
             correctIndex: {
               type: SchemaType.INTEGER,
-              description: "The index (0 to 3) of the correct option if the answer is indicated in the document. Set to 0 if unknown."
+              description: "The 0-based index (0 to 3) of the correct option if the answer is indicated in the document. Set to 0 if unknown."
             },
             explanation: {
               type: SchemaType.STRING,
               description: "Any explanation or hint provided in the text. Empty string if none."
-            },
-            subject: { type: SchemaType.STRING, description: "Subject of the question" },
-            class: { type: SchemaType.STRING, description: "Grade/Class level" },
-            chapter: { type: SchemaType.STRING, description: "Chapter or Topic heading" },
-            difficulty: { type: SchemaType.STRING, description: "Difficulty level (Easy, Medium, Hard)" },
-            sourceDoc: { type: SchemaType.STRING, description: "Source document filename" }
+            }
           },
-          required: ["questionText", "options", "correctIndex", "explanation", "subject", "class", "chapter", "difficulty", "sourceDoc"]
+          required: ["questionText", "options", "correctIndex", "explanation"]
         }
       }
 
@@ -86,13 +81,13 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       const prompt = `You are an expert educational AI specialized in parsing complex MDCAT, ECAT, Physics, Mathematics, and Logical Reasoning (LR) test papers. Extract all Multiple Choice Questions (MCQs) from this document for subject "${subject}" (Grade/Level: "${classLevel}"). 
 
       CRITICAL EXTRACTION RULES:
-      1. IGNORE ALL HEADER/FOOTER METADATA: Strictly ignore Test Titles, Institute Names, Student Name, Father Name, Roll No, Time Limit, Marks, Signatures, and Page Numbers.
+      1. IGNORE ALL HEADER/FOOTER METADATA: Strictly ignore Test Titles, Institute Names, Student Name, Father Name, Roll No, Time Limit, Marks, Signatures, and Page Numbers. Do NOT treat these as questions.
       2. IDENTIFY QUESTIONS: True questions ALWAYS start with a numbering format (e.g., "1.", "2.", "Q1", "Q.1)", etc.).
       3. PRESERVE COMPLEX FORMATS: For Physics, Maths, and LR, questions often include complex equations, symbols, or long paragraphs. Preserve them exactly. 
       4. MULTIPLE STATEMENTS (LR): If a question contains multiple Roman numeral statements (I, II, III, IV) in the body, include those statements inside the "questionText" field.
       5. EXTRACT EXACTLY 4 OPTIONS: Options may be formatted as (A, B, C, D), (a, b, c, d), or (i, ii, iii, iv). Some options might be combination statements (e.g., "A) I & III only", "B) All of these"). Ensure you extract exactly 4 distinct options. Remove the letter prefix (A, B) from the final option text.
       6. AVOID CORRUPTION: Double-check that no options are cut off, merged, or mismatched. If a question is severely corrupted, skip it.
-      7. CHAPTER & ANSWER: Assign a relevant chapter based on nearest heading. If the answer is indicated in the text (e.g., "Ans: A"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.
+      7. FIND ANSWER: If the answer is indicated in the text (e.g., "Ans: A", "CORRECT ANSWER: quickly"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.
 
       
       // No JSON array example needed in prompt since we use responseSchema
@@ -113,7 +108,7 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
           }
         };
 
-        const result = await model.generateContent([prompt, filePart]);
+        const result = await model.generateContent([filePart, prompt]);
         const responseText = result.response.text();
         
         const jsonMatch = responseText.match(/\[[\s\S]*\]/);
@@ -121,7 +116,14 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
           try {
             const parsedArray = JSON.parse(jsonMatch[0]);
             if (Array.isArray(parsedArray)) {
-              allMcqs = parsedArray;
+              allMcqs = parsedArray.map(mcq => ({
+                ...mcq,
+                subject,
+                class: classLevel,
+                chapter: 'Imported Chapter',
+                difficulty: 'Medium',
+                sourceDoc: filename
+              }));
             }
           } catch (parseErr) {
             console.warn('Failed to parse Gemini file JSON.');
@@ -139,7 +141,14 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
             try {
               const parsedArray = JSON.parse(jsonMatch[0]);
               if (Array.isArray(parsedArray)) {
-                allMcqs = allMcqs.concat(parsedArray);
+                allMcqs = allMcqs.concat(parsedArray.map(mcq => ({
+                  ...mcq,
+                  subject,
+                  class: classLevel,
+                  chapter: 'Imported Chapter',
+                  difficulty: 'Medium',
+                  sourceDoc: filename
+                })));
               }
             } catch (parseErr) {
               console.warn('Failed to parse chunk JSON.');
