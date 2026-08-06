@@ -164,7 +164,7 @@ export default function AdminLectures() {
           {filtered.length === 0 && (
             <div className="col-span-full text-center p-10 text-[#3a4a40] font-bold">No lectures found.</div>
           )}
-        </div>
+        </StaggerContainer>
       )}
 
       {/* Pagination Controls */}
