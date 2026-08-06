@@ -174,6 +174,8 @@ export default function TeacherLectures() {
                     <option value="Biology">Biology</option>
                     <option value="Mathematics">Mathematics</option>
                     <option value="English">English</option>
+                    <option value="LR">LR</option>
+                    <option value="All">All</option>
                   </select>
                 </div>
 

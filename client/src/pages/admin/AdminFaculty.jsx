@@ -245,6 +245,8 @@ export default function AdminFaculty() {
                     <option value="Mathematics">Mathematics</option>
                     <option value="English">English</option>
                     <option value="Computer Science">Computer Science</option>
+                    <option value="LR">LR</option>
+                    <option value="All">All</option>
                     <option value="General">General</option>
                   </select>
                 </div>

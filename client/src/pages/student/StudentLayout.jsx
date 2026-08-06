@@ -12,7 +12,8 @@ import {
   FaBars, 
   FaTimes, 
   FaCheckCircle,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaHome
 } from 'react-icons/fa'
 
 const navItems = [

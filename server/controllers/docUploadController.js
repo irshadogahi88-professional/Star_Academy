@@ -4,7 +4,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai')
 const MCQ = require('../models/MCQ')
 const Test = require('../models/Test')
 
-// Helper function: Sanitize text to remove headers, footers, watermarks, and normalize columns
+// Helper function: Sanitize text to remove headers, footers, watermarks
 const sanitizeDocumentText = (text) => {
   let lines = text.split('\n').map(l => l.trim()).filter(Boolean)
   
@@ -16,24 +16,12 @@ const sanitizeDocumentText = (text) => {
     return !isWatermark && !isStandaloneNumber
   })
 
-  // 2. Normalize multi-column merging (heuristic: join short adjacent lines that don't look like new questions/options)
-  let normalizedText = ''
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i]
-    const isQuestionStart = /^\d+[\.\)]/.test(line) || /^Q\d+/.test(line) || /^[A-D][\.\)]/.test(line) || /^[a-d][\.\)]/.test(line)
-    
-    if (isQuestionStart) {
-      normalizedText += '\n\n' + line + ' '
-    } else {
-      normalizedText += line + ' '
-    }
-  }
-
-  return normalizedText.trim()
+  // 2. Preserve paragraphs by using double newlines
+  return lines.join('\n\n')
 }
 
 // Helper function: Parse raw text into structured MCQs using Gemini AI with chunking or robust Regex fallback
-const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'XI', filename = 'Document_Import') => {
+const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'XI', filename = 'Document_Import', fileBuffer = null, mimeType = null) => {
   const apiKey = process.env.GEMINI_API_KEY
   const sanitizedText = sanitizeDocumentText(rawText)
   
@@ -50,50 +38,81 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
   if (apiKey && apiKey !== 'your_gemini_api_key_here') {
     try {
       const genAI = new GoogleGenerativeAI(apiKey)
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
 
-      for (const chunk of chunks) {
-        const prompt = `You are an expert MCQ extraction system. Extract all Multiple Choice Questions (MCQs) from the following text chunk for subject "${subject}" (Grade/Level: "${classLevel}"). 
-        RULES:
-        - IGNORE all page headers, footers, watermarks, page numbers, and document titles.
-        - IGNORE any decorative text or column separators.
-        - Each MCQ MUST have exactly 4 distinct options. If a question is corrupted or merged from column overflow, skip it.
-        - Assign an accurate "chapter" name based on the nearest heading in the text, do NOT just output "General".
-        - If the answer is indicated in the text (e.g. "Ans: A"), calculate the correctIndex (0 for A, 1 for B, 2 for C, 3 for D). Otherwise, set correctIndex to 0.
+      const prompt = `You are an expert MCQ extraction system. Extract all Multiple Choice Questions (MCQs) from this document/text for subject "${subject}" (Grade/Level: "${classLevel}"). 
+      RULES:
+      - Read the document natively or via the provided text chunk.
+      - IGNORE all page headers, footers, watermarks, page numbers, and document titles.
+      - Each MCQ MUST have exactly 4 distinct options. If a question is corrupted, skip it.
+      - Assign an accurate "chapter" name based on the nearest heading in the text, do NOT just output "General".
+      - If the answer is indicated (e.g. "Ans: A" or bolded), calculate the correctIndex (0 for A, 1 for B, 2 for C, 3 for D). Otherwise, set correctIndex to 0.
+      
+      Return ONLY a valid JSON array of question objects matching this structure (no markdown code fences, no extra text):
+      [
+        {
+          "questionText": "Full question statement",
+          "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
+          "correctIndex": 0,
+          "explanation": "Brief explanation if present",
+          "subject": "${subject}",
+          "class": "${classLevel}",
+          "chapter": "Chapter Heading",
+          "difficulty": "Medium",
+          "sourceDoc": "${filename}"
+        }
+      ]`;
+
+      if (fileBuffer) {
+        // Native Gemini File Parsing (Supports PDF, Word, etc.)
+        console.log('Using native Gemini document parsing...');
         
-        Text Chunk:
-        """${chunk}"""
-
-        Return ONLY a valid JSON array of question objects matching this structure (no markdown code fences, no extra text):
-        [
-          {
-            "questionText": "Full question statement",
-            "options": ["Option A text", "Option B text", "Option C text", "Option D text"],
-            "correctIndex": 0,
-            "explanation": "Brief explanation if present",
-            "subject": "${subject}",
-            "class": "${classLevel}",
-            "chapter": "Chapter Heading",
-            "difficulty": "Medium",
-            "sourceDoc": "${filename}"
-          }
-        ]`
-
-        const result = await model.generateContent(prompt)
-        const responseText = result.response.text().trim().replace(/^```(?:json)?/, '').replace(/```$/, '').trim()
+        let fileMime = mimeType || 'application/pdf';
+        if (filename.endsWith('.docx')) fileMime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
         
-        try {
-          const parsedArray = JSON.parse(responseText)
-          if (Array.isArray(parsedArray)) {
-            allMcqs = allMcqs.concat(parsedArray)
+        const filePart = {
+          inlineData: {
+            data: fileBuffer.toString('base64'),
+            mimeType: fileMime
           }
-        } catch (parseErr) {
-          console.warn('Failed to parse chunk JSON, skipping chunk.')
+        };
+
+        const result = await model.generateContent([prompt, filePart]);
+        const responseText = result.response.text();
+        
+        const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          try {
+            const parsedArray = JSON.parse(jsonMatch[0]);
+            if (Array.isArray(parsedArray)) {
+              allMcqs = parsedArray;
+            }
+          } catch (parseErr) {
+            console.warn('Failed to parse Gemini file JSON.');
+          }
+        }
+      } else {
+        // Fallback to text chunks
+        for (const chunk of chunks) {
+          const chunkPrompt = prompt + `\n\nText Chunk:\n"""${chunk}"""`;
+          const result = await model.generateContent(chunkPrompt)
+          const responseText = result.response.text();
+          
+          const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
+            try {
+              const parsedArray = JSON.parse(jsonMatch[0]);
+              if (Array.isArray(parsedArray)) {
+                allMcqs = allMcqs.concat(parsedArray);
+              }
+            } catch (parseErr) {
+              console.warn('Failed to parse chunk JSON.');
+            }
+          }
         }
       }
       
       if (allMcqs.length > 0) {
-        // Deduplicate by question text
         const uniqueMcqs = []
         const seen = new Set()
         for (const mcq of allMcqs) {
@@ -111,54 +130,69 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
     }
   }
 
-  // Regex Fallback Parser for structured text (Improved)
-  const questionBlocks = sanitizedText.split(/(?=\bQ\d+[\.\)]|\b\d+[\.\)]\s+)/gi)
+  // Regex Fallback Parser for structured text (Improved to handle unnumbered docs)
+  const blocks = sanitizedText.split(/\n\s*\n/).map(b => b.trim()).filter(Boolean)
 
-  for (const block of questionBlocks) {
-    if (!block.trim()) continue
+  let i = 0
+  while (i < blocks.length) {
+    const block = blocks[i]
 
-    // Attempt to split options by A) B) C) D) or (a) (b) (c) (d)
-    const optionsMatch = block.match(/([a-d])[\.\)]\s*(.*?)(?=(?:[a-d][\.\)]|$))/gi)
-    const qTextMatch = block.split(/(?=[a-d][\.\)])/i)[0]
-
-    let qTextLine = qTextMatch ? qTextMatch.replace(/^(?:Q\d+|\d+)[\.\)]\s*/i, '').trim() : ''
-    if (!qTextLine) continue
-
-    const options = []
-    let correctIndex = 0
-
-    if (optionsMatch) {
-      optionsMatch.forEach((optStr, idx) => {
-        const cleaned = optStr.replace(/^[a-d][\.\)]\s*/i, '').trim()
-        if (cleaned) options.push(cleaned)
-      })
+    // Determine if this block is a numbered question e.g., "1. What is..." or "Q1) What is..."
+    const isNumberedQuestion = /^(?:Q\d+|\d+)[\.\)]\s*/i.test(block)
+    
+    // Scenario 1: Numbered question block containing options inline
+    if (isNumberedQuestion && block.match(/([a-d])[\.\)]/i)) {
+      const optionsMatch = block.match(/([a-d])[\.\)]\s*(.*?)(?=(?:[a-d][\.\)]|$))/gi)
+      const qTextMatch = block.split(/(?=[a-d][\.\)])/i)[0]
+      let qTextLine = qTextMatch ? qTextMatch.replace(/^(?:Q\d+|\d+)[\.\)]\s*/i, '').trim() : ''
+      
+      const options = []
+      if (optionsMatch) {
+        optionsMatch.forEach(optStr => {
+          const cleaned = optStr.replace(/^[a-d][\.\)]\s*/i, '').trim()
+          if (cleaned) options.push(cleaned)
+        })
+      }
+      
+      if (options.length > 1) {
+        while (options.length < 4) options.push('Option ' + String.fromCharCode(65 + options.length))
+        allMcqs.push({
+          questionText: qTextLine || block,
+          options: options.slice(0, 4),
+          correctIndex: 0,
+          explanation: `Parsed from document ${filename}`,
+          subject, class: classLevel, chapter: 'Imported Chapter', difficulty: 'Medium', sourceDoc: filename
+        })
+      }
+      i++
+      continue
     }
 
-    // Look for Answer marker
-    const ansMatch = block.match(/(?:Ans|Answer|Key|Correct)\s*[:=\-]?\s*([a-d])/i)
-    if (ansMatch) {
-      const letter = ansMatch[1].toLowerCase()
-      if (letter === 'b') correctIndex = 1
-      else if (letter === 'c') correctIndex = 2
-      else if (letter === 'd') correctIndex = 3
+    // Scenario 2: Unnumbered (or numbered) question followed by 4 separate option blocks
+    let j = i + 1
+    const potentialOptions = []
+    
+    while (j < blocks.length && j < i + 5) {
+      // Clean option prefix if it exists like "A) "
+      const cleanedOpt = blocks[j].replace(/^[a-d][\.\)]\s*/i, '').trim()
+      potentialOptions.push(cleanedOpt)
+      j++
     }
-
-    if (options.length > 1) {
-      // Ensure exactly 4 options by padding or trimming
-      while (options.length < 4) options.push('Option ' + String.fromCharCode(65 + options.length))
-      const finalOptions = options.slice(0, 4)
-
+    
+    if (potentialOptions.length === 4) {
+      // Looks like a valid 4-option unnumbered question format
+      const qTextLine = block.replace(/^(?:Q\d+|\d+)[\.\)]\s*/i, '').trim()
       allMcqs.push({
         questionText: qTextLine,
-        options: finalOptions,
-        correctIndex: correctIndex,
+        options: potentialOptions,
+        correctIndex: 0,
         explanation: `Parsed from document ${filename}`,
-        subject: subject,
-        class: classLevel,
-        chapter: 'Imported Chapter',
-        difficulty: 'Medium',
-        sourceDoc: filename,
+        subject, class: classLevel, chapter: 'Imported Chapter', difficulty: 'Medium', sourceDoc: filename
       })
+      i = j // Skip over the options
+    } else {
+      // Not 4 options, just move forward
+      i++
     }
   }
 
@@ -215,7 +249,9 @@ exports.parseDocument = async (req, res) => {
       extractedText,
       subject,
       classLevel,
-      req.file ? req.file.originalname : filename
+      req.file ? req.file.originalname : filename,
+      req.file ? req.file.buffer : null,
+      req.file ? req.file.mimetype : null
     )
 
     res.status(200).json({
