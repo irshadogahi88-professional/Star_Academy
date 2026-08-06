@@ -105,7 +105,7 @@ export default function About() {
             <ScrollReveal direction="left">
               <div className="relative">
                 <div className="rounded-3xl overflow-hidden shadow-xl border border-sage">
-                  <img src="/images/adv-1.png" alt="Star Educational Academy" className="w-full" />
+                  <img src="/images/about.png" alt="Star Educational Academy" className="w-full" />
                 </div>
                 <div className="absolute -bottom-6 -right-6 p-5 rounded-2xl shadow-xl bg-white border border-sage">
                   <p className="text-3xl font-black text-emerald-dark" style={{ fontFamily: 'var(--font-heading)' }}>
@@ -121,13 +121,13 @@ export default function About() {
                 Our Mission & Vision
               </h2>
               <p className="text-base leading-relaxed mb-5 text-charcoal-light">
-                Star Educational Academy is where hardworking boys and girls build a bright and successful 
-                future through dedication and excellence. We provide separate Mathematics and English classes 
+                Star Educational Academy is where hardworking boys and girls build a bright and successful
+                future through dedication and excellence. We provide separate Mathematics and English classes
                 for Pre-Engineering boys and girls, taught by highly qualified teachers.
               </p>
               <p className="text-base leading-relaxed mb-7 text-charcoal-light">
-                Our vision is to become the leading educational coaching academy in Sindh, producing top 
-                scorers in MDCAT, ECAT, and board examinations year after year. We believe every student 
+                Our vision is to become the leading educational coaching academy in Sindh, producing top
+                scorers in MDCAT, ECAT, and board examinations year after year. We believe every student
                 has the potential for greatness — they just need the right guidance.
               </p>
               <div className="p-5 rounded-2xl border-l-4 border-l-gold bg-cream-alt/60">
@@ -314,9 +314,8 @@ export default function About() {
               return (
                 <ScrollReveal key={index} delay={index * 0.08}>
                   <div
-                    className={`card p-5! sm:p-6! transition-all duration-300 cursor-pointer border ${
-                      isOpen ? 'border-emerald-primary bg-white shadow-md' : 'hover:border-emerald-primary/40'
-                    }`}
+                    className={`card p-5! sm:p-6! transition-all duration-300 cursor-pointer border ${isOpen ? 'border-emerald-primary bg-white shadow-md' : 'hover:border-emerald-primary/40'
+                      }`}
                     onClick={() => toggleFaq(index)}
                   >
                     <div className="flex items-center justify-between gap-4">

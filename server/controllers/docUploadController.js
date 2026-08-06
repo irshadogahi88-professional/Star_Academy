@@ -40,13 +40,17 @@ const extractMCQsFromText = async (rawText, subject = 'Physics', classLevel = 'X
       const genAI = new GoogleGenerativeAI(apiKey)
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' })
 
-      const prompt = `You are an expert MCQ extraction system. Extract all Multiple Choice Questions (MCQs) from this document/text for subject "${subject}" (Grade/Level: "${classLevel}"). 
-      RULES:
-      - Read the document natively or via the provided text chunk.
-      - IGNORE all page headers, footers, watermarks, page numbers, and document titles.
-      - Each MCQ MUST have exactly 4 distinct options. If a question is corrupted, skip it.
-      - Assign an accurate "chapter" name based on the nearest heading in the text, do NOT just output "General".
-      - If the answer is indicated (e.g. "Ans: A" or bolded), calculate the correctIndex (0 for A, 1 for B, 2 for C, 3 for D). Otherwise, set correctIndex to 0.
+      const prompt = `You are an expert educational AI specialized in parsing complex MDCAT, ECAT, Physics, Mathematics, and Logical Reasoning (LR) test papers. Extract all Multiple Choice Questions (MCQs) from this document for subject "${subject}" (Grade/Level: "${classLevel}"). 
+
+      CRITICAL EXTRACTION RULES:
+      1. IGNORE ALL HEADER/FOOTER METADATA: Strictly ignore Test Titles, Institute Names, Student Name, Father Name, Roll No, Time Limit, Marks, Signatures, and Page Numbers.
+      2. IDENTIFY QUESTIONS: True questions ALWAYS start with a numbering format (e.g., "1.", "2.", "Q1", "Q.1)", etc.).
+      3. PRESERVE COMPLEX FORMATS: For Physics, Maths, and LR, questions often include complex equations, symbols, or long paragraphs. Preserve them exactly. 
+      4. MULTIPLE STATEMENTS (LR): If a question contains multiple Roman numeral statements (I, II, III, IV) in the body, include those statements inside the "questionText" field.
+      5. EXTRACT EXACTLY 4 OPTIONS: Options may be formatted as (A, B, C, D), (a, b, c, d), or (i, ii, iii, iv). Some options might be combination statements (e.g., "A) I & III only", "B) All of these"). Ensure you extract exactly 4 distinct options. Remove the letter prefix (A, B) from the final option text.
+      6. AVOID CORRUPTION: Double-check that no options are cut off, merged, or mismatched. If a question is severely corrupted, skip it.
+      7. CHAPTER & ANSWER: Assign a relevant chapter based on nearest heading. If the answer is indicated in the text (e.g., "Ans: A"), calculate "correctIndex" (0=A, 1=B, 2=C, 3=D). Otherwise, set correctIndex to 0.
+
       
       Return ONLY a valid JSON array of question objects matching this structure (no markdown code fences, no extra text):
       [

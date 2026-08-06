@@ -11,7 +11,8 @@ import {
   FaBars, 
   FaTimes,
   FaUserShield,
-  FaFileAlt
+  FaFileAlt,
+  FaHome
 } from 'react-icons/fa'
 
 const navItems = [
