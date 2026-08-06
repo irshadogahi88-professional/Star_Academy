@@ -5,6 +5,7 @@ import { GiAtom, GiDna1 } from 'react-icons/gi'
 import { FaFlask } from 'react-icons/fa'
 import { TbMathSymbols } from 'react-icons/tb'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 import api from '../../services/api'
@@ -76,7 +77,7 @@ export default function Lectures() {
   }, [activeSubject, search])
 
   return (
-    <>
+    <PageTransition>
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-10 left-20 w-72 h-72 rounded-full blur-3xl bg-gold" />
@@ -309,6 +310,6 @@ export default function Lectures() {
           </ScrollReveal>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

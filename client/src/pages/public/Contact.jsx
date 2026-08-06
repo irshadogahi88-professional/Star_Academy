@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FaPhoneAlt, FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaClock, FaPaperPlane } from 'react-icons/fa'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 import messageService from '../../services/messageService'
 
@@ -33,7 +34,7 @@ export default function Contact() {
   }
 
   return (
-    <>
+    <PageTransition>
       {/* Page Header */}
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -248,6 +249,6 @@ export default function Contact() {
           </ScrollReveal>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

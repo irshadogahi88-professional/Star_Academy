@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FaImage, FaTimes, FaChevronRight } from 'react-icons/fa'
 import api from '../../services/api'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 import TiltCard from '../../components/animations/TiltCard'
 
@@ -69,7 +70,7 @@ export default function Gallery() {
   }
 
   return (
-    <>
+    <PageTransition>
       {/* Page Header */}
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -220,6 +221,6 @@ export default function Gallery() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </PageTransition>
   )
 }

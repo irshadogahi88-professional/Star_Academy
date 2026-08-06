@@ -7,8 +7,8 @@ import { GiDna1, GiAtom } from 'react-icons/gi'
 import { TbMathSymbols } from 'react-icons/tb'
 import CountUp from '../../components/animations/CountUp'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
-import TiltCard from '../../components/animations/TiltCard'
 import ParticleStars from '../../components/animations/ParticleStars'
 import SpotlightCard from '../../components/ui/SpotlightCard'
 import { getDirectImageUrl } from '../../utils/imageHelper'
@@ -105,7 +105,7 @@ export default function Home() {
     { icon: <FaTrophy />, value: liveStats.tests, suffix: '+', label: 'Mock Tests', sub: 'Online Practice' },
   ]
   return (
-    <>
+    <PageTransition>
       {/* ========== HERO SECTION — Fullscreen Background Slideshow ========== */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         {/* Background Slideshow Images */}
@@ -586,6 +586,6 @@ export default function Home() {
           </ScrollReveal>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

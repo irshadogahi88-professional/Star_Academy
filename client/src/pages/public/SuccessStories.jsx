@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { FaStar, FaTrophy, FaGraduationCap } from 'react-icons/fa'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import successStoryService from '../../services/successStoryService'
 import SpotlightCard from '../../components/ui/SpotlightCard'
@@ -23,7 +24,7 @@ export default function SuccessStories() {
   }, [])
 
   return (
-    <>
+    <PageTransition>
       {/* Page Header */}
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay"></div>
@@ -129,6 +130,6 @@ export default function SuccessStories() {
           </ScrollReveal>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

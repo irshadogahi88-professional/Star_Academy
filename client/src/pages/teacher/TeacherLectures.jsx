@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { FaVideo, FaPlus, FaTrashAlt, FaCheck, FaFilePdf, FaBookOpen, FaExternalLinkAlt } from 'react-icons/fa'
-
+import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
 export default function TeacherLectures() {
@@ -105,38 +105,42 @@ export default function TeacherLectures() {
         ) : lectures.length === 0 ? (
           <p className="text-center text-sm text-[#3a4a40] py-10 font-bold">No lectures published yet.</p>
         ) : (
-          lectures.map((lecture) => (
-            <div key={lecture._id || lecture.id} className="card !p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 border-l-4 border-l-[#147a4a]">
-              <div className="space-y-2 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="badge badge-emerald text-[11px] font-extrabold">{lecture.subject} • Grade {lecture.class || lecture.classLevel}</span>
-                  <span className="text-xs text-[#3a4a40] font-medium">{lecture.chapter}</span>
-                </div>
-                <h3 className="font-bold text-lg text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
-                  {lecture.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-4 text-xs text-[#3a4a40] font-semibold pt-1">
-                  <a href={lecture.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-blue-600 hover:underline">
-                    <FaVideo /> Video Stream Link <FaExternalLinkAlt size={10} />
-                  </a>
-                  {lecture.pdfUrl && (
-                    <a href={lecture.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-red-600 hover:underline">
-                      <FaFilePdf /> Download Notes PDF <FaExternalLinkAlt size={10} />
-                    </a>
-                  )}
-                  <span className="text-white/60">• Published {new Date(lecture.createdAt || lecture.dateAdded).toLocaleDateString()}</span>
-                </div>
-              </div>
+          <StaggerContainer className="space-y-4">
+            {lectures.map((lecture) => (
+              <StaggerItem key={lecture._id || lecture.id}>
+                <div className="card !p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 border-l-4 border-l-[#147a4a]">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="badge badge-emerald text-[11px] font-extrabold">{lecture.subject} • Grade {lecture.class || lecture.classLevel}</span>
+                      <span className="text-xs text-[#3a4a40] font-medium">{lecture.chapter}</span>
+                    </div>
+                    <h3 className="font-bold text-lg text-[#0E4429]" style={{ fontFamily: 'var(--font-heading)' }}>
+                      {lecture.title}
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-[#3a4a40] font-semibold pt-1">
+                      <a href={lecture.videoUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-blue-600 hover:underline">
+                        <FaVideo /> Video Stream Link <FaExternalLinkAlt size={10} />
+                      </a>
+                      {lecture.pdfUrl && (
+                        <a href={lecture.pdfUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-red-600 hover:underline">
+                          <FaFilePdf /> Download Notes PDF <FaExternalLinkAlt size={10} />
+                        </a>
+                      )}
+                      <span className="text-white/60">• Published {new Date(lecture.createdAt || lecture.dateAdded).toLocaleDateString()}</span>
+                    </div>
+                  </div>
 
-              <button
-                onClick={() => handleDelete(lecture._id || lecture.id)}
-                className="p-2.5 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-500/20 self-start md:self-center transition-colors"
-                title="Delete Lecture"
-              >
-                <FaTrashAlt size={14} />
-              </button>
-            </div>
-          ))
+                  <button
+                    onClick={() => handleDelete(lecture._id || lecture.id)}
+                    className="p-2.5 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-500/20 self-start md:self-center transition-colors"
+                    title="Delete Lecture"
+                  >
+                    <FaTrashAlt size={14} />
+                  </button>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
         )}
       </div>
 

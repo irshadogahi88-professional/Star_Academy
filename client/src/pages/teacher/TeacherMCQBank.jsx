@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa'
 import DocMcqParserModal from '../../components/modals/DocMcqParserModal'
 import McqReviewEditorModal from '../../components/modals/McqReviewEditorModal'
+import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
 const sampleMCQs = [
@@ -362,57 +363,61 @@ export default function TeacherMCQBank() {
             ) : mcqs.length === 0 ? (
               <div className="text-center p-10 text-gray-500 font-bold">No MCQs found matching your criteria.</div>
             ) : (
-              mcqs.map((mcq, idx) => (
-                <div key={mcq._id || mcq.id} className="card !p-6 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE8DD] pb-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-black text-[#147a4a]">#{(currentPage - 1) * itemsPerPage + idx + 1}</span>
-                      <span className="badge badge-emerald text-[10px] font-extrabold">{mcq.subject} • Grade {mcq.classLevel || mcq.class}</span>
-                      <span className="text-xs text-[#3a4a40] font-medium">{mcq.chapter}</span>
-                      {mcq.sourceDoc && (
-                        <span className="text-[10px] font-bold text-[#b8893a] bg-[#F1ECE0] px-2 py-0.5 rounded-md border border-[#DCE8DD]">
-                          Source: {mcq.sourceDoc}
-                        </span>
-                      )}
-                    </div>
+              <StaggerContainer className="space-y-4">
+                {mcqs.map((mcq, idx) => (
+                  <StaggerItem key={mcq._id || mcq.id}>
+                    <div className="card !p-6 space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#DCE8DD] pb-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-xs font-black text-[#147a4a]">#{(currentPage - 1) * itemsPerPage + idx + 1}</span>
+                          <span className="badge badge-emerald text-[10px] font-extrabold">{mcq.subject} • Grade {mcq.classLevel || mcq.class}</span>
+                          <span className="text-xs text-[#3a4a40] font-medium">{mcq.chapter}</span>
+                          {mcq.sourceDoc && (
+                            <span className="text-[10px] font-bold text-[#b8893a] bg-[#F1ECE0] px-2 py-0.5 rounded-md border border-[#DCE8DD]">
+                              Source: {mcq.sourceDoc}
+                            </span>
+                          )}
+                        </div>
 
-                    <div className="flex items-center gap-2 self-end sm:self-auto">
-                      <button
-                        onClick={() => handleOpenEdit(mcq)}
-                        className="p-2 rounded-lg bg-[#147a4a]/10 text-[#147a4a] hover:bg-[#147a4a]/20 text-xs font-bold transition-colors flex items-center gap-1"
-                      >
-                        <FaEdit size={12} /> Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(mcq._id || mcq.id)}
-                        className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 text-xs font-bold transition-colors"
-                      >
-                        <FaTrashAlt size={12} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="font-bold text-base text-[#0E4429]">{mcq.questionText}</p>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {mcq.options && mcq.options.map((opt, oIdx) => (
-                      <div
-                        key={oIdx}
-                        className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between border ${
-                          oIdx === mcq.correctIndex
-                            ? 'bg-emerald-50 border-emerald-400 text-emerald-900 font-bold'
-                            : 'bg-[#F1ECE0]/50 border-[#DCE8DD] text-[#1C2620]'
-                        }`}
-                      >
-                        <span>
-                          <strong className="mr-2">{String.fromCharCode(65 + oIdx)}.</strong> {opt}
-                        </span>
-                        {oIdx === mcq.correctIndex && <FaCheck className="text-emerald-600" size={12} />}
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          <button
+                            onClick={() => handleOpenEdit(mcq)}
+                            className="p-2 rounded-lg bg-[#147a4a]/10 text-[#147a4a] hover:bg-[#147a4a]/20 text-xs font-bold transition-colors flex items-center gap-1"
+                          >
+                            <FaEdit size={12} /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(mcq._id || mcq.id)}
+                            className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 text-xs font-bold transition-colors"
+                          >
+                            <FaTrashAlt size={12} />
+                          </button>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))
+
+                      <p className="font-bold text-base text-[#0E4429]">{mcq.questionText}</p>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {mcq.options && mcq.options.map((opt, oIdx) => (
+                          <div
+                            key={oIdx}
+                            className={`p-3 rounded-xl text-xs font-semibold flex items-center justify-between border ${
+                              oIdx === mcq.correctIndex
+                                ? 'bg-emerald-50 border-emerald-400 text-emerald-900 font-bold'
+                                : 'bg-[#F1ECE0]/50 border-[#DCE8DD] text-[#1C2620]'
+                            }`}
+                          >
+                            <span>
+                              <strong className="mr-2">{String.fromCharCode(65 + oIdx)}.</strong> {opt}
+                            </span>
+                            {oIdx === mcq.correctIndex && <FaCheck className="text-emerald-600" size={12} />}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
             )}
           </div>
 

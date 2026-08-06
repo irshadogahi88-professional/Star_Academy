@@ -3,6 +3,7 @@ import { FaStar, FaBookOpen, FaFlask, FaPhoneAlt } from 'react-icons/fa'
 import { GiDna1, GiAtom } from 'react-icons/gi'
 import { TbMathSymbols } from 'react-icons/tb'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import TiltCard from '../../components/animations/TiltCard'
 import facultyService from '../../services/facultyService'
@@ -34,7 +35,7 @@ export default function Faculty() {
   }, [])
 
   return (
-    <>
+    <PageTransition>
       {/* Page Header */}
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -143,6 +144,6 @@ export default function Faculty() {
           )}
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

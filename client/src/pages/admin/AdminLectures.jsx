@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { FaVideo, FaPlus, FaTrashAlt, FaCheck, FaSearch } from 'react-icons/fa'
+import { FaVideo, FaPlus, FaTrashAlt, FaCheck, FaSearch, FaExternalLinkAlt, FaFilePdf } from 'react-icons/fa'
+import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
 export default function AdminLectures() {
@@ -134,29 +135,31 @@ export default function AdminLectures() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((lecture) => (
-            <div key={lecture._id} className="card !p-5 flex flex-col gap-3">
-              <div className="flex justify-between items-start gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="badge badge-gold text-[10px]">{lecture.subject}</span>
-                  {lecture.isPublicPreview && (
-                    <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-100 text-emerald-700">Demo</span>
-                  )}
+            <StaggerItem key={lecture._id}>
+              <div className="card !p-5 flex flex-col gap-3">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="badge badge-gold text-[10px]">{lecture.subject}</span>
+                    {lecture.isPublicPreview && (
+                      <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-100 text-emerald-700">Demo</span>
+                    )}
+                  </div>
+                  <button onClick={() => handleDelete(lecture._id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors">
+                    <FaTrashAlt size={12} />
+                  </button>
                 </div>
-                <button onClick={() => handleDelete(lecture._id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors">
-                  <FaTrashAlt size={12} />
-                </button>
+                <h3 className="font-bold text-[#0E4429] text-base leading-tight">{lecture.title}</h3>
+                <p className="text-xs text-[#3a4a40] font-semibold">Grade: {lecture.grade}</p>
+                
+                <div className="mt-auto pt-4 border-t border-[#DCE8DD]">
+                  <a href={lecture.mediaUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-[#147a4a] hover:underline flex items-center gap-1.5">
+                    <FaVideo size={12} /> View {lecture.mediaType === 'pdf' ? 'Notes' : 'Video'} Link
+                  </a>
+                </div>
               </div>
-              <h3 className="font-bold text-[#0E4429] text-base leading-tight">{lecture.title}</h3>
-              <p className="text-xs text-[#3a4a40] font-semibold">Grade: {lecture.grade}</p>
-              
-              <div className="mt-auto pt-4 border-t border-[#DCE8DD]">
-                <a href={lecture.mediaUrl} target="_blank" rel="noreferrer" className="text-xs font-bold text-[#147a4a] hover:underline flex items-center gap-1.5">
-                  <FaVideo size={12} /> View {lecture.mediaType === 'pdf' ? 'Notes' : 'Video'} Link
-                </a>
-              </div>
-            </div>
+            </StaggerItem>
           ))}
           {filtered.length === 0 && (
             <div className="col-span-full text-center p-10 text-[#3a4a40] font-bold">No lectures found.</div>

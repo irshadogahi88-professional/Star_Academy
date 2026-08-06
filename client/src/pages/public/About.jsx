@@ -4,6 +4,7 @@ import { FaStar, FaTrophy, FaGraduationCap, FaBookOpen, FaUsers, FaMapMarkerAlt,
 import { GiDna1, GiAtom } from 'react-icons/gi'
 import CountUp from '../../components/animations/CountUp'
 import ScrollReveal from '../../components/animations/ScrollReveal'
+import PageTransition from '../../components/animations/PageTransition'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import milestoneService from '../../services/milestoneService'
 
@@ -75,7 +76,7 @@ export default function About() {
   }
 
   return (
-    <>
+    <PageTransition>
       {/* Page Header */}
       <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-[#082d1b] to-[#0E4429]">
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] mix-blend-overlay"></div>
@@ -342,6 +343,6 @@ export default function About() {
           </div>
         </div>
       </section>
-    </>
+    </PageTransition>
   )
 }

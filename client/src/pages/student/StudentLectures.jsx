@@ -3,6 +3,7 @@ import { FaSearch, FaPlay, FaDownload, FaFilePdf, FaBookOpen } from 'react-icons
 import { GiAtom, GiDna1 } from 'react-icons/gi'
 import { FaFlask } from 'react-icons/fa'
 import { TbMathSymbols } from 'react-icons/tb'
+import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
 const subjects = ['All', 'Physics', 'Chemistry', 'Biology', 'Mathematics', 'English']
@@ -98,45 +99,47 @@ export default function StudentLectures() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((item) => (
-          <div key={item.id} className="card !p-6 flex flex-col justify-between hover:border-[#147a4a]/40">
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="badge badge-emerald text-xs">{item.subject}</span>
-                <span className="text-xs font-bold text-[#3a4a40]">{item.chapter}</span>
+          <StaggerItem key={item.id}>
+            <div className="card !p-6 flex flex-col justify-between hover:border-[#147a4a]/40 h-full">
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="badge badge-emerald text-xs">{item.subject}</span>
+                  <span className="text-xs font-bold text-[#3a4a40]">{item.chapter}</span>
+                </div>
+                <h3 className="font-extrabold text-lg text-[#0E4429] mb-2 leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {item.title}
+                </h3>
+                <p className="text-xs text-[#3a4a40]">
+                  {item.type === 'video' ? `⏱️ ${item.duration}` : `📄 ${item.size}`} • {item.date}
+                </p>
               </div>
-              <h3 className="font-extrabold text-lg text-[#0E4429] mb-2 leading-snug" style={{ fontFamily: 'var(--font-heading)' }}>
-                {item.title}
-              </h3>
-              <p className="text-xs text-[#3a4a40]">
-                {item.type === 'video' ? `⏱️ ${item.duration}` : `📄 ${item.size}`} • {item.date}
-              </p>
-            </div>
 
-            <div className="mt-6 pt-4 border-t border-[#DCE8DD]">
-              {item.type === 'video' ? (
-                <button
-                  onClick={() => setSelectedVideo(item)}
-                  className="btn-primary w-full text-xs !py-2.5"
-                >
-                  <FaPlay size={10} />
-                  <span>Play Video Lecture</span>
-                </button>
-              ) : (
-                <a
-                  href="#download-notes"
-                  onClick={(e) => { e.preventDefault(); alert(`Downloading PDF: ${item.title}`) }}
-                  className="btn-gold w-full text-xs !py-2.5"
-                >
-                  <FaDownload size={10} />
-                  <span>Download PDF Notes</span>
-                </a>
-              )}
+              <div className="mt-6 pt-4 border-t border-[#DCE8DD]">
+                {item.type === 'video' ? (
+                  <button
+                    onClick={() => setSelectedVideo(item)}
+                    className="btn-primary w-full text-xs !py-2.5"
+                  >
+                    <FaPlay size={10} />
+                    <span>Play Video Lecture</span>
+                  </button>
+                ) : (
+                  <a
+                    href="#download-notes"
+                    onClick={(e) => { e.preventDefault(); alert(`Downloading PDF: ${item.title}`) }}
+                    className="btn-gold w-full text-xs !py-2.5"
+                  >
+                    <FaDownload size={10} />
+                    <span>Download PDF Notes</span>
+                  </a>
+                )}
+              </div>
             </div>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
 
       {/* Video Modal Player */}
       {selectedVideo && (
