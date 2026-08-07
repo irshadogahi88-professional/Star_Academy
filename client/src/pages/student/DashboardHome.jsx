@@ -186,13 +186,10 @@ export default function DashboardHome() {
                     </span>
                   )
                   buttonEl = (
-                    <button
-                      disabled
-                      className="btn-gold text-xs !py-2.5 !px-5 self-start sm:self-center shrink-0 opacity-40 cursor-not-allowed !bg-gray-800 !text-gray-400 !border-transparent flex items-center gap-1.5"
-                    >
-                      <Lock size={12} />
-                      <span>Not Open</span>
-                    </button>
+                    <div className="text-center py-2.5 px-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 font-extrabold text-xs flex items-center justify-center gap-1.5 self-start sm:self-center shrink-0 shadow-sm">
+                      <Calendar size={12} />
+                      <span>Available: {startTime ? startTime.toLocaleString() : ''}</span>
+                    </div>
                   )
                 } else if (testStatus === 'expired') {
                   borderAccent = 'border-l-red-500 border border-red-500/10'

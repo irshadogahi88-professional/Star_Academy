@@ -129,13 +129,10 @@ export default function StudentTests() {
                 </span>
               )
               buttonEl = (
-                <button
-                  disabled
-                  className="w-full justify-center btn-gold text-xs !py-3.5 opacity-40 cursor-not-allowed flex items-center gap-2 !bg-gray-800 !text-gray-400 !border-transparent"
-                >
-                  <Lock size={12} />
-                  <span>Not Open Yet</span>
-                </button>
+                <div className="w-full text-center py-3.5 px-4 rounded-xl border border-amber-500/20 bg-amber-500/5 text-amber-400 font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-sm">
+                  <Calendar size={13} />
+                  <span>Available on: {formatDateTime(test.startTime)}</span>
+                </div>
               )
             } else if (testStatus === 'expired') {
               borderAccent = 'border-red-500/10 hover:border-red-500/30'
