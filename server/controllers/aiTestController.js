@@ -166,7 +166,15 @@ exports.createBankTest = async (req, res) => {
     } else if (mode === 'random') {
       const matchQuery = {}
       if (subject) matchQuery.subject = subject
-      if (grade) matchQuery.class = grade
+      if (grade) {
+        const classMap = {
+          'IX': '9', 'ix': '9', '9th': '9',
+          'X': '10', 'x': '10', '10th': '10',
+          'XI': '11', 'xi': '11', '11th': '11',
+          'XII': '12', 'xii': '12', '12th': '12',
+        }
+        matchQuery.class = classMap[grade] || grade
+      }
 
       selectedMCQs = await MCQ.aggregate([
         { $match: matchQuery },
@@ -193,12 +201,24 @@ exports.createBankTest = async (req, res) => {
           ? Math.round((totalMarks || formattedQuestions.length) * (req.body.passingScore / 100)) 
           : Math.round((totalMarks || formattedQuestions.length) * 0.4))
 
+    // Map frontend examMode ('timed' | 'practice') to database mode ('test' | 'practice')
+    const dbMode = examMode === 'practice' ? 'practice' : 'test'
+
+    // Map Roman grades to standard numbers to match TestSchema enum
+    const classMap = {
+      'IX': '9', 'ix': '9', '9th': '9',
+      'X': '10', 'x': '10', '10th': '10',
+      'XI': '11', 'xi': '11', '11th': '11',
+      'XII': '12', 'xii': '12', '12th': '12',
+    }
+    const dbGrade = classMap[grade] || grade || '11'
+
     const newTest = await Test.create({
       title: title || 'New Examination',
       description: `Generated via ${mode} selection from MCQ Bank.`,
       subject: subject || 'Physics',
-      grade: grade || '11',
-      mode: examMode || 'test',
+      grade: dbGrade,
+      mode: dbMode,
       durationMinutes: durationMinutes || 30,
       totalMarks: totalMarks || formattedQuestions.length,
       passingMarks: computedPassingMarks,
@@ -240,7 +260,7 @@ exports.updateTest = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to update this test' })
     }
 
-    const { title, durationMinutes, startTime, endTime, showResultsToStudents, subject, grade, mode, questions, allowPracticeMode, showAnswersAtEnd, passingMarks, passingScore, totalMarks } = req.body
+    const { title, durationMinutes, startTime, endTime, showResultsToStudents, subject, grade, mode, examMode, questions, allowPracticeMode, showAnswersAtEnd, passingMarks, passingScore, totalMarks } = req.body
 
     if (title !== undefined) test.title = title
     if (durationMinutes !== undefined) test.durationMinutes = durationMinutes
@@ -248,8 +268,23 @@ exports.updateTest = async (req, res) => {
     if (endTime !== undefined) test.endTime = endTime
     if (showResultsToStudents !== undefined) test.showResultsToStudents = showResultsToStudents
     if (subject !== undefined) test.subject = subject
-    if (grade !== undefined) test.grade = grade
-    if (mode !== undefined) test.mode = mode
+    
+    if (grade !== undefined) {
+      const classMap = {
+        'IX': '9', 'ix': '9', '9th': '9',
+        'X': '10', 'x': '10', '10th': '10',
+        'XI': '11', 'xi': '11', '11th': '11',
+        'XII': '12', 'xii': '12', '12th': '12',
+      }
+      test.grade = classMap[grade] || grade
+    }
+
+    if (mode !== undefined) {
+      test.mode = mode === 'timed' ? 'test' : mode
+    } else if (examMode !== undefined) {
+      test.mode = examMode === 'timed' ? 'test' : (examMode === 'practice' ? 'practice' : 'test')
+    }
+
     if (allowPracticeMode !== undefined) test.allowPracticeMode = allowPracticeMode
     if (showAnswersAtEnd !== undefined) test.showAnswersAtEnd = showAnswersAtEnd
     

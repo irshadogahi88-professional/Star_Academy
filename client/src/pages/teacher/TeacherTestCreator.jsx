@@ -76,7 +76,8 @@ export default function TeacherTestCreator() {
       setLoadingBank(true)
     }
     try {
-      let query = `?page=${pageToFetch}&limit=50`
+      const limit = sourceDocToUse !== 'All' ? 1000 : 50
+      let query = `?page=${pageToFetch}&limit=${limit}`
       if (formData.subject !== 'All') query += `&subject=${formData.subject}`
       if (formData.classLevel !== 'All') query += `&classLevel=${formData.classLevel}`
       if (sourceDocToUse !== 'All') query += `&sourceDoc=${encodeURIComponent(sourceDocToUse)}`
@@ -93,7 +94,7 @@ export default function TeacherTestCreator() {
         } else {
           setBankMcqs(data.data)
         }
-        setHasMoreBank(data.data.length === 50)
+        setHasMoreBank(data.data.length === limit)
         
         // Auto-select questions and update marks/duration if importing specific source document
         if (sourceDocToUse !== 'All' && pageToFetch === 1 && !append) {
@@ -560,7 +561,7 @@ export default function TeacherTestCreator() {
                     <button 
                       type="button" 
                       onClick={handleBatchSaveAndCreate}
-                      className="px-4 py-2 rounded-xl bg-emerald-500 text-emerald-950 font-bold text-xs hover:bg-emerald-400 shadow-sm flex items-center gap-1.5"
+                      className="btn-primary text-xs !py-2 !px-4 flex items-center gap-1.5"
                     >
                       <CheckCircle size={12} />
                       Publish Examination
