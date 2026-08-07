@@ -81,3 +81,29 @@ exports.deleteLecture = async (req, res) => {
     res.status(500).json({ success: false, message: error.message })
   }
 }
+
+// @desc    Update lecture
+// @route   PUT /api/lectures/:id
+// @access  Private (Teacher, Admin)
+exports.updateLecture = async (req, res) => {
+  try {
+    let lecture = await Lecture.findById(req.params.id)
+    if (!lecture) {
+      return res.status(404).json({ success: false, message: 'Lecture not found' })
+    }
+
+    // Only creator or admin can update
+    if (lecture.teacher && lecture.teacher.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, message: 'Not authorized to update this lecture' })
+    }
+
+    lecture = await Lecture.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+
+    res.status(200).json({ success: true, data: lecture })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}

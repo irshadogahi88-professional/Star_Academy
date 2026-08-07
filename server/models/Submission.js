@@ -24,4 +24,8 @@ const SubmissionSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+// Performance indexes
+SubmissionSchema.index({ student: 1, test: 1 })
+SubmissionSchema.index({ createdAt: -1 })
+
 module.exports = mongoose.model('Submission', SubmissionSchema)

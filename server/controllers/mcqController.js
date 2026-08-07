@@ -16,6 +16,7 @@ exports.getMCQs = async (req, res) => {
     if (req.query.classLevel) query.class = req.query.classLevel
     if (req.query.chapter) query.chapter = req.query.chapter
     if (req.query.difficulty) query.difficulty = req.query.difficulty
+    if (req.query.sourceDoc) query.sourceDoc = req.query.sourceDoc
     if (req.query.search) {
       query.questionText = { $regex: req.query.search, $options: 'i' }
     }

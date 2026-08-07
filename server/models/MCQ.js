@@ -33,4 +33,10 @@ const MCQSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
+// Performance indexes
+MCQSchema.index({ subject: 1, class: 1 })
+MCQSchema.index({ sourceDoc: 1 })
+MCQSchema.index({ status: 1 })
+MCQSchema.index({ createdAt: -1 })
+
 module.exports = mongoose.model('MCQ', MCQSchema)

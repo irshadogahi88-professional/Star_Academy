@@ -187,6 +187,12 @@ exports.createBankTest = async (req, res) => {
       subject: q.subject
     }))
 
+    const computedPassingMarks = req.body.passingMarks !== undefined 
+      ? req.body.passingMarks 
+      : (req.body.passingScore !== undefined 
+          ? Math.round((totalMarks || formattedQuestions.length) * (req.body.passingScore / 100)) 
+          : Math.round((totalMarks || formattedQuestions.length) * 0.4))
+
     const newTest = await Test.create({
       title: title || 'New Examination',
       description: `Generated via ${mode} selection from MCQ Bank.`,
@@ -194,7 +200,8 @@ exports.createBankTest = async (req, res) => {
       grade: grade || '11',
       mode: examMode || 'test',
       durationMinutes: durationMinutes || 30,
-      totalMarks: totalMarks || formattedQuestions.length * 5,
+      totalMarks: totalMarks || formattedQuestions.length,
+      passingMarks: computedPassingMarks,
       questions: formattedQuestions,
       mcqRefs: selectedMCQs.map(q => q._id),
       createdBy: req.user ? req.user.id : null,
@@ -202,6 +209,8 @@ exports.createBankTest = async (req, res) => {
       startTime: startTime || null,
       endTime: endTime || null,
       showResultsToStudents: showResultsToStudents !== undefined ? showResultsToStudents : true,
+      allowPracticeMode: req.body.allowPracticeMode !== undefined ? req.body.allowPracticeMode : true,
+      showAnswersAtEnd: req.body.showAnswersAtEnd !== undefined ? req.body.showAnswersAtEnd : true,
     })
 
     await logAudit(req, 'CREATE_BANK_TEST', 'Test', newTest._id, `Created test from MCQ bank: ${newTest.title}`)
@@ -231,7 +240,7 @@ exports.updateTest = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Not authorized to update this test' })
     }
 
-    const { title, durationMinutes, startTime, endTime, showResultsToStudents, subject, grade, mode, questions } = req.body
+    const { title, durationMinutes, startTime, endTime, showResultsToStudents, subject, grade, mode, questions, allowPracticeMode, showAnswersAtEnd, passingMarks, passingScore, totalMarks } = req.body
 
     if (title !== undefined) test.title = title
     if (durationMinutes !== undefined) test.durationMinutes = durationMinutes
@@ -241,11 +250,20 @@ exports.updateTest = async (req, res) => {
     if (subject !== undefined) test.subject = subject
     if (grade !== undefined) test.grade = grade
     if (mode !== undefined) test.mode = mode
+    if (allowPracticeMode !== undefined) test.allowPracticeMode = allowPracticeMode
+    if (showAnswersAtEnd !== undefined) test.showAnswersAtEnd = showAnswersAtEnd
     
     if (questions !== undefined && Array.isArray(questions)) {
       test.questions = questions
-      // Recalculate total marks (assuming 5 marks per question)
-      test.totalMarks = questions.length * 5
+      test.totalMarks = totalMarks !== undefined ? totalMarks : questions.length
+    } else if (totalMarks !== undefined) {
+      test.totalMarks = totalMarks
+    }
+
+    if (passingMarks !== undefined) {
+      test.passingMarks = passingMarks
+    } else if (passingScore !== undefined) {
+      test.passingMarks = Math.round(test.totalMarks * (passingScore / 100))
     }
 
     await test.save()

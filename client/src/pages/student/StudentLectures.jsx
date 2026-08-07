@@ -29,9 +29,39 @@ export default function StudentLectures() {
     fetchLectures()
   }, [])
 
+  const getEmbedUrl = (url, mediaType) => {
+    if (!url) return null
+    
+    if (mediaType === 'youtube' || url.includes('youtube.com') || url.includes('youtu.be')) {
+      let videoId = ''
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+      const match = url.match(regExp)
+      if (match && match[2].length === 11) {
+        videoId = match[2]
+      }
+      return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : url
+    }
+    
+    if (mediaType === 'gdrive' || url.includes('drive.google.com')) {
+      let embedUrl = url.replace(/\/view\??.*/, '/preview').replace(/\/edit\??.*/, '/preview')
+      if (!embedUrl.endsWith('/preview') && embedUrl.includes('/d/')) {
+        const parts = embedUrl.split('/d/')
+        if (parts[1]) {
+          const fileId = parts[1].split('/')[0]
+          embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
+        }
+      }
+      return embedUrl
+    }
+    
+    return url
+  }
+
   const filtered = lectures.filter((item) => {
     if (activeSubject !== 'All' && item.subject !== activeSubject) return false
-    if (activeType !== 'all' && item.type !== activeType) return false
+    const isVideo = item.mediaType !== 'pdf'
+    if (activeType === 'video' && !isVideo) return false
+    if (activeType === 'notes' && isVideo) return false
     if (search && !item.title.toLowerCase().includes(search.toLowerCase())) return false
     return true
   })
@@ -98,7 +128,7 @@ export default function StudentLectures() {
       {/* Grid */}
       <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map((item) => (
-          <StaggerItem key={item.id}>
+          <StaggerItem key={item._id || item.id}>
             <div className="card-glass !p-6 flex flex-col justify-between bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400/30 transition-all h-full rounded-2xl">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
@@ -109,12 +139,12 @@ export default function StudentLectures() {
                   {item.title}
                 </h3>
                 <p className="text-xs text-emerald-100/60 font-semibold">
-                  {item.type === 'video' ? `⏱️ ${item.duration}` : `📄 ${item.size}`} • {item.date}
+                  {item.mediaType !== 'pdf' ? '🎥 Video Lecture' : '📄 Study Notes'} • {item.grade ? `Grade ${item.grade}` : ''}
                 </p>
               </div>
 
               <div className="mt-6 pt-4 border-t border-[#10b981]/15">
-                {item.type === 'video' ? (
+                {item.mediaType !== 'pdf' ? (
                   <button
                     onClick={() => setSelectedVideo(item)}
                     className="btn-primary w-full text-xs !py-2.5 justify-center"
@@ -124,8 +154,9 @@ export default function StudentLectures() {
                   </button>
                 ) : (
                   <a
-                    href="#download-notes"
-                    onClick={(e) => { e.preventDefault(); alert(`Downloading PDF: ${item.title}`) }}
+                    href={item.mediaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="btn-gold w-full text-xs !py-2.5 justify-center"
                   >
                     <Download size={10} />
@@ -141,7 +172,7 @@ export default function StudentLectures() {
       {/* Video Modal Player */}
       {selectedVideo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-          <div className="bg-[#0a1b14] text-white rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl border border-[#10b981]/15">
+          <div className="bg-[#0a1b14] text-white rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl border border-[#10b981]/15">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-lg text-white">
                 {selectedVideo.title}
@@ -154,17 +185,26 @@ export default function StudentLectures() {
               </button>
             </div>
 
-            <div className="relative aspect-video rounded-2xl bg-black flex items-center justify-center border border-[#10b981]/10 overflow-hidden">
-              <div className="text-center p-6 space-y-3">
-                <Play size={48} className="mx-auto text-amber-500" />
-                <p className="font-extrabold text-lg text-white">Lecture Streaming Active</p>
-                <p className="text-xs text-emerald-100/50">Subject: {selectedVideo.subject} • Grade XI/XII</p>
-              </div>
+            <div className="relative aspect-video rounded-2xl bg-black border border-[#10b981]/10 overflow-hidden shadow-inner">
+              {selectedVideo.mediaUrl ? (
+                <iframe
+                  src={getEmbedUrl(selectedVideo.mediaUrl, selectedVideo.mediaType)}
+                  title={selectedVideo.title}
+                  className="w-full h-full absolute inset-0 border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <div className="text-center p-6 space-y-3 flex flex-col items-center justify-center h-full">
+                  <Play size={48} className="text-amber-500" />
+                  <p className="font-extrabold text-lg text-white">No stream URL provided.</p>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-between text-xs text-emerald-100/70 font-semibold">
               <span>Chapter: {selectedVideo.chapter}</span>
-              <span>Duration: {selectedVideo.duration}</span>
+              <span>Subject: {selectedVideo.subject} • Grade {selectedVideo.grade || 'XI/XII'}</span>
             </div>
           </div>
         </div>

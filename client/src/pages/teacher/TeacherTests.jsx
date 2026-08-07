@@ -58,7 +58,11 @@ export default function TeacherTests() {
         subject: editingTest.subject,
         grade: editingTest.grade,
         mode: editingTest.mode,
-        questions: editingTest.questions
+        questions: editingTest.questions,
+        allowPracticeMode: editingTest.allowPracticeMode,
+        showAnswersAtEnd: editingTest.showAnswersAtEnd,
+        passingMarks: editingTest.passingMarks,
+        totalMarks: editingTest.questions?.length || editingTest.totalMarks
       })
       if (res.data.success) {
         setTests(tests.map(t => t._id === editingTest._id ? res.data.data : t))
@@ -205,14 +209,33 @@ export default function TeacherTests() {
                   className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
                 />
               </div>
-              <div>
-                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Time Limit (Minutes)</label>
-                <input
-                  type="number" required min="1"
-                  value={editingTest.durationMinutes}
-                  onChange={e => setEditingTest({ ...editingTest, durationMinutes: Number(e.target.value) })}
-                  className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Time Limit (Minutes)</label>
+                  <input
+                    type="number" required min="1"
+                    value={editingTest.durationMinutes}
+                    onChange={e => setEditingTest({ ...editingTest, durationMinutes: Number(e.target.value) })}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none focus:border-emerald-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Passing Score (%)</label>
+                  <input
+                    type="number" min="30" max="90" required
+                    value={editingTest.passingScore !== undefined ? editingTest.passingScore : (editingTest.totalMarks ? Math.round((editingTest.passingMarks || (editingTest.totalMarks * 0.4)) / editingTest.totalMarks * 100) : 40)}
+                    onChange={e => {
+                      const score = Number(e.target.value)
+                      const qCount = editingTest.questions?.length || editingTest.totalMarks || 1
+                      setEditingTest({ 
+                        ...editingTest, 
+                        passingScore: score, 
+                        passingMarks: Math.round(qCount * (score / 100)) 
+                      })
+                    }}
+                    className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
@@ -281,15 +304,37 @@ export default function TeacherTests() {
                   />
                 </div>
               </div>
-              <label className="flex items-center gap-2 cursor-pointer mt-2">
-                <input 
-                  type="checkbox" 
-                  checked={editingTest.showResultsToStudents} 
-                  onChange={e => setEditingTest({ ...editingTest, showResultsToStudents: e.target.checked })} 
-                  className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#060e0a] border-[#10b981]/25" 
-                />
-                <span className="text-xs font-bold text-emerald-100/70">Allow students to view correct answers after submission</span>
-              </label>
+              <div className="space-y-2 mt-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingTest.showResultsToStudents !== false} 
+                    onChange={e => setEditingTest({ ...editingTest, showResultsToStudents: e.target.checked })} 
+                    className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#060e0a] border-[#10b981]/25" 
+                  />
+                  <span className="text-xs font-bold text-emerald-100/70">Publish Results (allow students to see score report)</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingTest.allowPracticeMode !== false} 
+                    onChange={e => setEditingTest({ ...editingTest, allowPracticeMode: e.target.checked })} 
+                    className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#060e0a] border-[#10b981]/25" 
+                  />
+                  <span className="text-xs font-bold text-emerald-100/70">Allow Practice Mode (untimed option for study)</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingTest.showAnswersAtEnd !== false} 
+                    onChange={e => setEditingTest({ ...editingTest, showAnswersAtEnd: e.target.checked })} 
+                    className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500 bg-[#060e0a] border-[#10b981]/25" 
+                  />
+                  <span className="text-xs font-bold text-emerald-100/70">Show Detailed Answer Key & Explanations on score report</span>
+                </label>
+              </div>
 
               <div className="border-t border-[#10b981]/15 pt-4 mt-4">
                 <div className="flex items-center justify-between mb-2">

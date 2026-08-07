@@ -19,6 +19,9 @@ exports.submitAttempt = async (req, res) => {
     let wrongAnswers = 0
     const processedAnswers = []
 
+    const totalQuestions = test.questions.length
+    const marksPerQuestion = totalQuestions > 0 ? (test.totalMarks / totalQuestions) : 1
+
     test.questions.forEach((q) => {
       const qIdStr = q._id.toString()
       const selectedIndex = answers[qIdStr] !== undefined ? answers[qIdStr] : answers[q.id]
@@ -26,7 +29,7 @@ exports.submitAttempt = async (req, res) => {
 
       if (selectedIndex !== undefined) {
         if (isCorrect) {
-          score += 4
+          score += marksPerQuestion
           correctAnswers += 1
         } else {
           wrongAnswers += 1
@@ -40,8 +43,7 @@ exports.submitAttempt = async (req, res) => {
       })
     })
 
-    const totalQuestions = test.questions.length
-    const maxScore = totalQuestions * 4
+    const maxScore = test.totalMarks || totalQuestions
     const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0
     const passed = score >= (test.passingMarks || 40)
 

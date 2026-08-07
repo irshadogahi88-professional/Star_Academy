@@ -18,9 +18,11 @@ import {
 import DocMcqParserModal from '../../components/modals/DocMcqParserModal'
 import McqReviewEditorModal from '../../components/modals/McqReviewEditorModal'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
+import { useNavigate } from 'react-router-dom'
 import api from '../../services/api'
 
 export default function TeacherMCQBank() {
+  const navigate = useNavigate()
   const [mcqs, setMcqs] = useState([])
   const [totalCount, setTotalCount] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
@@ -31,6 +33,7 @@ export default function TeacherMCQBank() {
   const [searchTerm, setSearchTerm] = useState('')
   const [subjectFilter, setSubjectFilter] = useState('All')
   const [classFilter, setClassFilter] = useState('All')
+  const [sourceDocFilter, setSourceDocFilter] = useState('All')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 50
 
@@ -61,6 +64,7 @@ export default function TeacherMCQBank() {
       let query = `?page=${currentPage}&limit=${itemsPerPage}`
       if (subjectFilter !== 'All') query += `&subject=${subjectFilter}`
       if (classFilter !== 'All') query += `&classLevel=${classFilter}`
+      if (sourceDocFilter !== 'All') query += `&sourceDoc=${encodeURIComponent(sourceDocFilter)}`
       if (searchTerm) query += `&search=${encodeURIComponent(searchTerm)}`
       
       const res = await api.get(`/tests/mcqs${query}`)
@@ -94,7 +98,7 @@ export default function TeacherMCQBank() {
     if (activeTab === 'batches') {
       fetchBatches()
     }
-  }, [currentPage, subjectFilter, classFilter, searchTerm, activeTab])
+  }, [currentPage, subjectFilter, classFilter, sourceDocFilter, searchTerm, activeTab])
 
   const handleParsedSuccess = (extractedMcqs, filename, subj, grade) => {
     setParsedData({
@@ -311,6 +315,24 @@ export default function TeacherMCQBank() {
             </div>
           </div>
 
+          {sourceDocFilter !== 'All' && (
+            <div className="flex items-center justify-between p-3.5 bg-amber-500/10 border border-amber-500/25 rounded-xl text-xs text-amber-400 font-bold shadow-sm">
+              <span className="flex items-center gap-2">
+                <FileText size={14} />
+                <span>Currently filtering list to only show questions from source file: <strong className="text-white">"{sourceDocFilter}"</strong></span>
+              </span>
+              <button 
+                onClick={() => {
+                  setSourceDocFilter('All')
+                  setCurrentPage(1)
+                }}
+                className="px-2.5 py-1 bg-amber-500 text-amber-950 rounded-lg hover:bg-amber-400 font-extrabold transition-all"
+              >
+                Clear Filter
+              </button>
+            </div>
+          )}
+
           {/* MCQ Table / Card List */}
           <div className="space-y-4">
             {loading ? (
@@ -454,6 +476,38 @@ export default function TeacherMCQBank() {
                   <option value="MDCAT Mock">MDCAT Mock</option>
                   <option value="ECAT Mock">ECAT Mock</option>
                 </select>
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    setSourceDocFilter(batch.sourceDoc)
+                    setActiveTab('questions')
+                    setCurrentPage(1)
+                  }}
+                  className="flex-1 py-2 px-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/25 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+                >
+                  <List size={12} />
+                  <span>View Questions</span>
+                </button>
+                <button
+                  onClick={() => {
+                    const path = window.location.pathname.startsWith('/admin') 
+                      ? '/admin/tests/create' 
+                      : '/teacher/tests/create'
+                    navigate(path, { 
+                      state: { 
+                        sourceDoc: batch.sourceDoc, 
+                        subject: batch.subject 
+                      } 
+                    })
+                  }}
+                  className="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
+                >
+                  <Plus size={12} />
+                  <span>Create Test</span>
+                </button>
               </div>
             </div>
           ))}

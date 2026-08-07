@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Video, Plus, Trash2, Check, Search, ExternalLink } from 'lucide-react'
+import { Video, Plus, Trash2, Check, Search, ExternalLink, Edit } from 'lucide-react'
 import { StaggerContainer, StaggerItem } from '../../components/animations/ScrollReveal'
 import api from '../../services/api'
 
@@ -9,6 +9,7 @@ export default function AdminLectures() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [statusMsg, setStatusMsg] = useState(null)
+  const [editingLectureId, setEditingLectureId] = useState(null)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -48,19 +49,49 @@ export default function AdminLectures() {
     fetchLectures()
   }, [page, searchTerm])
 
+  const resetForm = () => {
+    setFormData({ title: '', subject: 'Physics', grade: 'XI', mediaType: 'youtube', mediaUrl: '', description: '', isPublicPreview: false })
+    setEditingLectureId(null)
+  }
+
+  const handleEditClick = (lecture) => {
+    setEditingLectureId(lecture._id)
+    setFormData({
+      title: lecture.title,
+      subject: lecture.subject,
+      grade: lecture.grade,
+      mediaType: lecture.mediaType,
+      mediaUrl: lecture.mediaUrl,
+      description: lecture.description || '',
+      isPublicPreview: lecture.isPublicPreview || false,
+    })
+    setShowModal(true)
+  }
+
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-      const res = await api.post('/lectures', formData)
-      if (res.data.success) {
-        setLectures([res.data.data, ...lectures])
-        setShowModal(false)
-        setStatusMsg('✅ Lecture uploaded successfully!')
-        setTimeout(() => setStatusMsg(null), 3000)
-        setFormData({ title: '', subject: 'Physics', grade: 'XI', mediaType: 'youtube', mediaUrl: '', description: '', isPublicPreview: false })
+      if (editingLectureId) {
+        const res = await api.put(`/lectures/${editingLectureId}`, formData)
+        if (res.data.success) {
+          setLectures(lectures.map((l) => l._id === editingLectureId ? res.data.data : l))
+          setShowModal(false)
+          setStatusMsg('✅ Lecture updated successfully!')
+          setTimeout(() => setStatusMsg(null), 3000)
+          resetForm()
+        }
+      } else {
+        const res = await api.post('/lectures', formData)
+        if (res.data.success) {
+          setLectures([res.data.data, ...lectures])
+          setShowModal(false)
+          setStatusMsg('✅ Lecture uploaded successfully!')
+          setTimeout(() => setStatusMsg(null), 3000)
+          resetForm()
+        }
       }
     } catch (err) {
-      alert('Failed to save lecture: ' + err.response?.data?.message || err.message)
+      alert('Failed to save lecture: ' + (err.response?.data?.message || err.message))
     }
   }
 
@@ -92,7 +123,7 @@ export default function AdminLectures() {
           <p className="text-xs text-emerald-100/70 font-semibold">Upload educational video links and notes for students.</p>
         </div>
 
-        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-4 shadow-sm flex items-center gap-2">
+        <button onClick={() => { resetForm(); setShowModal(true); }} className="btn-primary text-xs !py-3 !px-4 shadow-sm flex items-center gap-2">
           <Plus size={12} />
           <span>Add New Lecture</span>
         </button>
@@ -146,9 +177,14 @@ export default function AdminLectures() {
                       <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">Demo</span>
                     )}
                   </div>
-                  <button onClick={() => handleDelete(lecture._id)} className="text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors">
-                    <Trash2 size={12} />
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button onClick={() => handleEditClick(lecture)} className="text-emerald-400 hover:bg-emerald-500/10 p-1.5 rounded-md transition-colors" title="Edit Lecture">
+                      <Edit size={12} />
+                    </button>
+                    <button onClick={() => handleDelete(lecture._id)} className="text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors" title="Delete Lecture">
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
                 </div>
                 <h3 className="font-extrabold text-white text-base leading-tight">{lecture.title}</h3>
                 <p className="text-xs text-emerald-100/70 font-semibold">Grade: {lecture.grade}</p>
@@ -217,7 +253,7 @@ export default function AdminLectures() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
           <div className="card-glass w-full max-w-lg !p-6 sm:!p-8 space-y-5 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
             <h2 className="text-2xl font-black text-white">
-              Upload Lecture
+              {editingLectureId ? 'Edit Lecture Details' : 'Upload Lecture'}
             </h2>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
@@ -276,7 +312,7 @@ export default function AdminLectures() {
                 </label>
               </div>
               <div className="pt-3 flex justify-end gap-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
+                <button type="button" onClick={() => { resetForm(); setShowModal(false); }} className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
                 <button type="submit" className="btn-primary text-xs !py-2 !px-5 shadow-sm">Save Lecture</button>
               </div>
             </form>

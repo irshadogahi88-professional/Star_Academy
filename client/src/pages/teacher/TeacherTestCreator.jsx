@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { PlusCircle, Bot, CheckCircle, Clock, Trophy, HelpCircle, Upload, X } from 'lucide-react'
 import api from '../../services/api'
 
 export default function TeacherTestCreator() {
   const navigate = useNavigate()
-  const [mode, setMode] = useState('manual') // 'manual' | 'ai'
+  const location = useLocation()
+  const [mode, setMode] = useState('manual') // 'manual' | 'ai' | 'random'
   const [formData, setFormData] = useState({
     title: '',
     subject: 'Physics',
@@ -32,22 +33,80 @@ export default function TeacherTestCreator() {
   const [loadingBank, setLoadingBank] = useState(false)
   const [selectedMcqIds, setSelectedMcqIds] = useState([])
   const [bankSearchTerm, setBankSearchTerm] = useState('')
+  const [documentBatches, setDocumentBatches] = useState([])
+  const [selectedSourceDoc, setSelectedSourceDoc] = useState('All')
+  const [bankPage, setBankPage] = useState(1)
+  const [hasMoreBank, setHasMoreBank] = useState(true)
+
+  // Fetch batches list on mount to populate the source document dropdown
+  useEffect(() => {
+    const fetchBatches = async () => {
+      try {
+        const res = await api.get('/tests/mcqs/batches')
+        if (res.data.success) {
+          setDocumentBatches(res.data.data)
+        }
+      } catch (err) {
+        console.error('Failed to fetch batches', err)
+      }
+    }
+    fetchBatches()
+  }, [])
+
+  // Pre-fill state if redirecting from MCQ Bank batch card
+  useEffect(() => {
+    if (location.state?.sourceDoc) {
+      setSelectedSourceDoc(location.state.sourceDoc)
+      if (location.state.subject) {
+        setFormData(prev => ({ ...prev, subject: location.state.subject }))
+      }
+    }
+  }, [location.state])
 
   // Fetch Bank MCQs when manual mode is selected or filters change
   useEffect(() => {
     if (mode === 'manual') {
-      fetchBankMcqs()
+      setBankPage(1)
+      fetchBankMcqs(1, false, selectedSourceDoc)
     }
-  }, [mode, formData.subject, formData.classLevel])
+  }, [mode, formData.subject, formData.classLevel, selectedSourceDoc])
 
-  const fetchBankMcqs = async () => {
-    setLoadingBank(true)
+  const fetchBankMcqs = async (pageToFetch = 1, append = false, sourceDocToUse = selectedSourceDoc) => {
+    if (pageToFetch === 1 && !append) {
+      setLoadingBank(true)
+    }
     try {
-      const query = `?subject=${formData.subject}&classLevel=${formData.classLevel}&limit=100`
+      let query = `?page=${pageToFetch}&limit=50`
+      if (formData.subject !== 'All') query += `&subject=${formData.subject}`
+      if (formData.classLevel !== 'All') query += `&classLevel=${formData.classLevel}`
+      if (sourceDocToUse !== 'All') query += `&sourceDoc=${encodeURIComponent(sourceDocToUse)}`
+      
       const response = await api.get(`/tests/mcqs${query}`)
       const data = response.data
       if (data.success) {
-        setBankMcqs(data.data)
+        if (append) {
+          setBankMcqs(prev => {
+            const existingIds = new Set(prev.map(m => m._id))
+            const newQuestions = data.data.filter(m => !existingIds.has(m._id))
+            return [...prev, ...newQuestions]
+          })
+        } else {
+          setBankMcqs(data.data)
+        }
+        setHasMoreBank(data.data.length === 50)
+        
+        // Auto-select questions and update marks/duration if importing specific source document
+        if (sourceDocToUse !== 'All' && pageToFetch === 1 && !append) {
+          const ids = data.data.map(q => q._id)
+          setSelectedMcqIds(ids)
+          const docTitleClean = sourceDocToUse.replace(/\.[^/.]+$/, "")
+          setFormData(prev => ({
+            ...prev,
+            title: prev.title || `${docTitleClean} Exam`,
+            totalMarks: ids.length,
+            timeLimitMinutes: ids.length
+          }))
+        }
       }
     } catch (err) {
       console.error('Error fetching bank MCQs:', err)
@@ -87,6 +146,13 @@ export default function TeacherTestCreator() {
       const data = response.data
       if (data.success && data.mcqs) {
         setAiParsedMcqs(data.mcqs)
+        const docTitleClean = selectedFile.name.replace(/\.[^/.]+$/, "")
+        setFormData(prev => ({
+          ...prev,
+          title: prev.title || `${docTitleClean} Exam`,
+          totalMarks: data.mcqs.length,
+          timeLimitMinutes: data.mcqs.length
+        }))
       } else {
         alert(data.message || 'Failed to extract MCQs.')
       }
@@ -117,19 +183,21 @@ export default function TeacherTestCreator() {
         mode: 'manual',
         examMode: formData.examMode,
         durationMinutes: formData.timeLimitMinutes,
-        totalMarks: mcqIds.length * 5,
+        totalMarks: formData.totalMarks || mcqIds.length,
         mcqIds: mcqIds,
         startTime: formData.startTime || null,
         endTime: formData.endTime || null,
         showResultsToStudents: formData.showResultsToStudents,
         allowPracticeMode: formData.allowPracticeMode,
-        showAnswersAtEnd: formData.showAnswersAtEnd
+        showAnswersAtEnd: formData.showAnswersAtEnd,
+        passingScore: formData.passingScore
       })
       
       const testData = testRes.data
       if (testData.success) {
         setCreated(true)
-        setTimeout(() => navigate('/teacher'), 2000)
+        const redirectPath = window.location.pathname.startsWith('/admin') ? '/admin/tests' : '/teacher/tests'
+        setTimeout(() => navigate(redirectPath), 2000)
       } else {
         alert(testData.message || 'Failed to publish test.')
       }
@@ -142,6 +210,8 @@ export default function TeacherTestCreator() {
     e.preventDefault()
     if (mode === 'ai') return // handled by batch save and create
     
+    const redirectPath = window.location.pathname.startsWith('/admin') ? '/admin/tests' : '/teacher/tests'
+
     if (mode === 'manual') {
       if (selectedMcqIds.length === 0) return alert('Please select at least one question from the bank.')
       try {
@@ -152,19 +222,20 @@ export default function TeacherTestCreator() {
           mode: 'manual',
           examMode: formData.examMode,
           durationMinutes: formData.timeLimitMinutes,
-          totalMarks: selectedMcqIds.length * 5,
+          totalMarks: selectedMcqIds.length,
           mcqIds: selectedMcqIds,
           startTime: formData.startTime || null,
           endTime: formData.endTime || null,
           showResultsToStudents: formData.showResultsToStudents,
           allowPracticeMode: formData.allowPracticeMode,
-          showAnswersAtEnd: formData.showAnswersAtEnd
+          showAnswersAtEnd: formData.showAnswersAtEnd,
+          passingScore: formData.passingScore
         })
         
         const data = response.data
         if (data.success) {
           setCreated(true)
-          setTimeout(() => navigate('/teacher'), 2000)
+          setTimeout(() => navigate(redirectPath), 2000)
         } else {
           alert(data.message || 'Failed to create test.')
         }
@@ -184,18 +255,19 @@ export default function TeacherTestCreator() {
           examMode: formData.examMode,
           durationMinutes: formData.timeLimitMinutes,
           totalMarks: formData.totalMarks,
-          randomCount: Math.min(100, Math.max(10, Math.floor(formData.totalMarks / 5))), // estimate count based on marks, max 100
+          randomCount: formData.totalMarks, // each MCQ carries 1 mark
           startTime: formData.startTime || null,
           endTime: formData.endTime || null,
           showResultsToStudents: formData.showResultsToStudents,
           allowPracticeMode: formData.allowPracticeMode,
-          showAnswersAtEnd: formData.showAnswersAtEnd
+          showAnswersAtEnd: formData.showAnswersAtEnd,
+          passingScore: formData.passingScore
         })
         
         const data = response.data
         if (data.success) {
           setCreated(true)
-          setTimeout(() => navigate('/teacher'), 2000)
+          setTimeout(() => navigate(redirectPath), 2000)
         } else {
           alert(data.message || 'Failed to create test.')
         }
@@ -204,11 +276,6 @@ export default function TeacherTestCreator() {
       }
       return
     }
-
-    setCreated(true)
-    setTimeout(() => {
-      navigate('/teacher')
-    }, 2000)
   }
 
   return (
@@ -367,7 +434,10 @@ export default function TeacherTestCreator() {
                 min="10"
                 max="500"
                 value={formData.totalMarks}
-                onChange={(e) => setFormData({ ...formData, totalMarks: Number(e.target.value) })}
+                onChange={(e) => {
+                  const val = Number(e.target.value)
+                  setFormData({ ...formData, totalMarks: val, timeLimitMinutes: val })
+                }}
                 className="w-full px-4 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400"
               />
             </div>
@@ -527,15 +597,43 @@ export default function TeacherTestCreator() {
 
           {mode === 'manual' && (
             <div className="space-y-4 pt-4 border-t border-[#10b981]/15">
-              <div className="flex items-center justify-between">
-                <h3 className="font-extrabold text-white text-lg">Select Questions from Bank</h3>
-                <span className="text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full shadow-sm">
-                  Selected: {selectedMcqIds.length} / {bankMcqs.length}
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-extrabold text-white text-lg">Select Questions from Bank</h3>
+                  <p className="text-xs text-emerald-100/60 font-semibold mt-0.5">
+                    Showing available MCQs for <strong>{formData.subject}</strong> (Grade {formData.classLevel}).
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap">
+                    Selected: {selectedMcqIds.length} / {bankMcqs.length}
+                  </span>
+                </div>
               </div>
-              <p className="text-xs text-emerald-100/60 font-semibold">
-                Showing available MCQs for <strong>{formData.subject}</strong> (Grade {formData.classLevel}). Change subject above to load different questions.
-              </p>
+
+              {/* Source Document Dropdown */}
+              <div className="p-4 bg-[#060e0a]/30 border border-[#10b981]/15 rounded-2xl space-y-2">
+                <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70">Filter by Source Document</label>
+                <select
+                  value={selectedSourceDoc}
+                  onChange={(e) => {
+                    setSelectedSourceDoc(e.target.value)
+                  }}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-emerald-400 font-extrabold text-sm focus:outline-none"
+                >
+                  <option value="All">All Source Documents (Show All MCQs)</option>
+                  {documentBatches.map((batch, idx) => (
+                    <option key={idx} value={batch.sourceDoc}>
+                      {batch.sourceDoc} ({batch.count} MCQs)
+                    </option>
+                  ))}
+                </select>
+                {selectedSourceDoc !== 'All' && (
+                  <p className="text-[10px] text-amber-400 font-semibold">
+                    💡 Tip: Selecting a source document automatically loads and pre-selects all of its MCQs for the exam.
+                  </p>
+                )}
+              </div>
 
               <div className="relative">
                 <HelpCircle className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-100/40" size={14} />
@@ -549,38 +647,54 @@ export default function TeacherTestCreator() {
               </div>
 
               <div className="max-h-80 overflow-y-auto space-y-2 pr-2 custom-scrollbar border border-[#10b981]/15 p-2 rounded-xl bg-[#060e0a]/40">
-                {loadingBank ? (
+                {loadingBank && bankMcqs.length === 0 ? (
                   <p className="text-center text-xs p-4 text-emerald-100/50 font-bold">Loading questions...</p>
                 ) : bankMcqs.filter(m => m.questionText.toLowerCase().includes(bankSearchTerm.toLowerCase())).length === 0 ? (
-                  <p className="text-center text-xs p-4 text-emerald-100/50 font-bold">No questions found in bank for this subject.</p>
+                  <p className="text-center text-xs p-4 text-emerald-100/50 font-bold">No questions found in bank for this selection.</p>
                 ) : (
-                  bankMcqs.filter(m => m.questionText.toLowerCase().includes(bankSearchTerm.toLowerCase())).map((mcq, idx) => {
-                    const isSelected = selectedMcqIds.includes(mcq._id)
-                    return (
-                      <div 
-                        key={mcq._id} 
-                        onClick={() => toggleMcqSelection(mcq._id)}
-                        className={`p-3 rounded-xl border cursor-pointer transition-colors flex gap-3 ${isSelected ? 'bg-emerald-500/10 border-emerald-500' : 'bg-[#0a1b14] border border-[#10b981]/10 hover:border-emerald-500/30'}`}
-                      >
-                        <div className="pt-0.5">
-                          <input 
-                            type="checkbox" 
-                            checked={isSelected}
-                            readOnly
-                            className="w-4 h-4 text-emerald-500 bg-[#060e0a] border-[#10b981]/25 rounded focus:ring-emerald-500 pointer-events-none" 
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <p className={`text-xs font-bold mb-1 ${isSelected ? 'text-emerald-400' : 'text-white'}`}>
-                            {mcq.questionText}
-                          </p>
-                          <div className="flex gap-2 text-[10px] text-emerald-100/40">
-                            <span className="capitalize">{mcq.difficulty || 'Medium'}</span> • <span>{mcq.chapter || 'General'}</span>
+                  <>
+                    {bankMcqs.filter(m => m.questionText.toLowerCase().includes(bankSearchTerm.toLowerCase())).map((mcq, idx) => {
+                      const isSelected = selectedMcqIds.includes(mcq._id)
+                      return (
+                        <div 
+                          key={mcq._id} 
+                          onClick={() => toggleMcqSelection(mcq._id)}
+                          className={`p-3 rounded-xl border cursor-pointer transition-colors flex gap-3 ${isSelected ? 'bg-emerald-500/10 border-emerald-500' : 'bg-[#0a1b14] border border-[#10b981]/10 hover:border-emerald-500/30'}`}
+                        >
+                          <div className="pt-0.5">
+                            <input 
+                              type="checkbox" 
+                              checked={isSelected}
+                              readOnly
+                              className="w-4 h-4 text-emerald-500 bg-[#060e0a] border-[#10b981]/25 rounded focus:ring-emerald-500 pointer-events-none" 
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className={`text-xs font-bold mb-1 ${isSelected ? 'text-emerald-400' : 'text-white'}`}>
+                              {mcq.questionText}
+                            </p>
+                            <div className="flex gap-2 text-[10px] text-emerald-100/40">
+                              <span className="capitalize">{mcq.difficulty || 'Medium'}</span> • <span>{mcq.chapter || 'General'}</span> • <span className="text-amber-500/70">{mcq.sourceDoc || 'Manual Entry'}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })
+                      )
+                    })}
+                    
+                    {hasMoreBank && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextPage = bankPage + 1
+                          setBankPage(nextPage)
+                          fetchBankMcqs(nextPage, true, selectedSourceDoc)
+                        }}
+                        className="w-full py-2.5 rounded-xl border border-[#10b981]/25 text-emerald-400 font-extrabold text-xs hover:bg-[#10b981]/10 bg-[#060e0a] transition-all flex items-center justify-center gap-1.5 mt-2"
+                      >
+                        {loadingBank ? 'Loading...' : 'Load More Questions'}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -588,7 +702,11 @@ export default function TeacherTestCreator() {
 
           {mode !== 'ai' && (
             <div className="pt-4 flex items-center justify-end gap-4 border-t border-[#10b981]/15">
-              <button type="button" onClick={() => navigate('/teacher')} className="px-5 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">
+              <button 
+                type="button" 
+                onClick={() => navigate(window.location.pathname.startsWith('/admin') ? '/admin/tests' : '/teacher/tests')} 
+                className="px-5 py-3 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]"
+              >
                 Cancel
               </button>
               <button type="submit" className="btn-primary text-xs !py-3 !px-6 shadow-md flex items-center gap-1.5">
