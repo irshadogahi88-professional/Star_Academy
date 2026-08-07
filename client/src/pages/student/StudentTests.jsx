@@ -9,11 +9,11 @@ export default function StudentTests() {
   const [loading, setLoading] = useState(true)
   const [currentTime, setCurrentTime] = useState(new Date())
 
-  // Update clock every 5 seconds to ensure live updates to upcoming/expired states
+  // Update clock every 60 seconds to ensure live updates to upcoming/expired states
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
-    }, 5000)
+    }, 60000)
     return () => clearInterval(timer)
   }, [])
 

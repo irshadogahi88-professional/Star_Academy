@@ -33,7 +33,7 @@ export default function DashboardHome() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
-    }, 5000)
+    }, 60000)
     return () => clearInterval(timer)
   }, [])
 
