@@ -283,12 +283,10 @@ export default function Home() {
 
             <ScrollReveal direction="right" className="space-y-6">
               <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-                <Award size={12} className="text-amber-400" />
-                Director's Message
+                <Award size={20} className="text-amber-400" />
+                <h2 className="text-lg font-extrabold">Director's Message</h2>
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold leading-[1.25] text-white pt-1">
-                A Message from the <span className="text-gradient-gold inline-block">Director</span>
-              </h2>
+              
               
               <div className="space-y-4 text-emerald-100/80 font-medium">
                 <p className="text-emerald-400 font-extrabold text-base">Dear Students,</p>
