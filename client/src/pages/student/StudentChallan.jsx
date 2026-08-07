@@ -15,10 +15,10 @@ export default function StudentChallan() {
     challanNo: 'CH-2026-0814',
     feeType: 'One-Time Session 2026 Admission & Tuition Fee',
     issueDate: '01-08-2026',
-    status: student.isApproved ? 'paid' : 'unpaid',
-    admissionFee: 2000,
-    sessionTuitionFee: 4000,
-    totalAmount: 6000,
+    status: (student.feeStatus === 'paid' || student.isApproved) ? 'paid' : 'unpaid',
+    admissionFee: 3000,
+    sessionTuitionFee: 25000,
+    totalAmount: 28000,
     bankName: 'Academy Office / Direct Cash Deposit',
   }
 

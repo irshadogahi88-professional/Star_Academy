@@ -188,7 +188,7 @@ export default function Lectures() {
                 <StaggerItem key={lecture._id || i}>
                   <SpotlightCard className="card-glass group relative overflow-hidden h-full flex flex-col justify-between p-6 bg-[#0a1b14]/50 border border-[#10b981]/15">
                     {/* Hover Overlay (Desktop only) */}
-                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 p-6 text-center bg-[#060e0a]/95 backdrop-blur-md hidden md:flex">
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 p-6 text-center bg-[#060e0a]/95 backdrop-blur-md hidden md:flex pointer-events-none group-hover:pointer-events-auto">
                       {isLocked ? (
                         <>
                           <Lock size={32} className="mb-2 text-amber-500" />

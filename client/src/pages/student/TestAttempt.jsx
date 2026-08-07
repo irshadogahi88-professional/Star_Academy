@@ -21,6 +21,7 @@ export default function TestAttempt() {
   const [timeLeft, setTimeLeft] = useState(0)
   const [tabSwitches, setTabSwitches] = useState(0)
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Fetch test details
@@ -96,8 +97,23 @@ export default function TestAttempt() {
     }
   }
 
-  const handleStart = (selectedMode) => {
+  const handleStart = async (selectedMode) => {
     setMode(selectedMode)
+    if (selectedMode === 'practice') {
+      setLoading(true)
+      try {
+        const res = await testService.getTestById(id, { mode: 'practice' })
+        if (res && res.success) {
+          setTestInfo(res.data)
+          setQuestions(res.data.questions || [])
+        } else {
+          alert('Failed to load practice questions. ' + (res.error || ''))
+        }
+      } catch (err) {
+        console.error('Failed to load practice questions:', err)
+      }
+      setLoading(false)
+    }
     setTestState('running')
   }
 
@@ -278,7 +294,7 @@ export default function TestAttempt() {
                 let iconBorder = isSelected ? "border-emerald-400" : "border-[#10b981]/25"
                 
                 if (mode === "practice" && hasAnsweredCurrent) {
-                  const isCorrectOption = correctIdx !== undefined && correctIdx === idx
+                  const isCorrectOption = correctIdx !== undefined && Number(correctIdx) === idx
                   
                   if (isCorrectOption) {
                     btnClass = "border-emerald-500 bg-emerald-500/15 text-emerald-400 font-bold shadow-md ring-2 ring-emerald-500/40"
@@ -346,6 +362,15 @@ export default function TestAttempt() {
             </button>
 
             <div className="flex items-center gap-2 sm:gap-3">
+              <button
+                onClick={() => setShowSubmitConfirm(true)}
+                disabled={isSubmitting}
+                className="flex items-center space-x-2 px-5 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-obsidian rounded-2xl font-black shadow-[0_0_15px_rgba(245,158,11,0.45)] hover:shadow-[0_0_25px_rgba(245,158,11,0.75)] hover:scale-[1.02] active:scale-[0.98] transition-all text-xs sm:text-sm"
+              >
+                <span>{isSubmitting ? "Submitting..." : "Submit Test"}</span>
+                <CheckCircle size={16} />
+              </button>
+
               {currentIndex < questions.length - 1 && (
                 <button
                   onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
@@ -355,22 +380,13 @@ export default function TestAttempt() {
                 </button>
               )}
               
-              {currentIndex < questions.length - 1 ? (
+              {currentIndex < questions.length - 1 && (
                 <button
                   onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
                   className="flex items-center space-x-2 px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-2xl font-black shadow-lg shadow-emerald-500/20 transition-all text-xs sm:text-sm"
                 >
                   <span>Next</span>
                   <ArrowRight size={16} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => handleSubmitTest(false)}
-                  disabled={isSubmitting}
-                  className="flex items-center space-x-2 px-6 py-3.5 bg-gradient-gold hover:bg-amber-500 text-emerald-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm"
-                >
-                  <span>{isSubmitting ? "Submitting..." : "Submit Test"}</span>
-                  <CheckCircle size={16} />
                 </button>
               )}
             </div>
@@ -413,15 +429,6 @@ export default function TestAttempt() {
                 )
               })}
             </div>
-
-            <button
-              onClick={() => handleSubmitTest(false)}
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-gold hover:bg-amber-600 text-emerald-950 rounded-xl font-black shadow-md transition-all disabled:opacity-50 text-sm"
-            >
-              <span>{isSubmitting ? "Submitting..." : "Submit Examination"}</span>
-              <CheckCircle size={16} />
-            </button>
           </div>
         </div>
 
@@ -479,18 +486,67 @@ export default function TestAttempt() {
               </div>
             </div>
 
-            <button
-              onClick={() => handleSubmitTest(false)}
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center space-x-2 px-6 py-4 bg-gradient-gold hover:bg-amber-600 text-emerald-950 rounded-xl font-black shadow-lg shadow-amber-500/10 transition-all disabled:opacity-50"
-            >
-              <span>{isSubmitting ? "Grading..." : "Submit Test"}</span>
-              <CheckCircle size={18} />
-            </button>
           </div>
         </div>
 
       </main>
+
+      {/* Submit Confirmation Modal */}
+      <AnimatePresence>
+        {showSubmitConfirm && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[#0a1b14] border border-[#10b981]/20 rounded-[2rem] max-w-md w-full p-8 text-center space-y-6 shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-emerald-500"></div>
+              
+              <div className="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center justify-center mx-auto">
+                <CheckCircle size={32} />
+              </div>
+              
+              <div>
+                <h3 className="font-black text-2xl text-white mb-2">
+                  Submit Your Test?
+                </h3>
+                <p className="text-sm text-emerald-100/60 leading-relaxed font-semibold">
+                  You have answered <strong className="text-emerald-400">{Object.keys(userAnswers).length}</strong> out of <strong className="text-white">{questions.length}</strong> questions.
+                </p>
+                {questions.length - Object.keys(userAnswers).length > 0 && (
+                  <p className="text-xs text-amber-500/80 font-bold mt-2 bg-amber-500/5 py-2 px-4 rounded-xl border border-amber-500/10 inline-block">
+                    ⚠️ You have {questions.length - Object.keys(userAnswers).length} unanswered question(s).
+                  </p>
+                )}
+              </div>
+              
+              <div className="flex gap-4">
+                <button
+                  onClick={() => setShowSubmitConfirm(false)}
+                  className="flex-1 py-3.5 bg-[#060e0a] border border-[#10b981]/25 text-emerald-100 rounded-xl font-bold hover:bg-[#08140f] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSubmitConfirm(false)
+                    handleSubmitTest(false)
+                  }}
+                  className="flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-obsidian rounded-xl font-black shadow-[0_0_15px_rgba(245,158,11,0.45)] hover:shadow-[0_0_25px_rgba(245,158,11,0.75)] transition-all"
+                >
+                  Yes, Submit
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Blur Warning Modal (Only for Exam Mode) */}
       <AnimatePresence>

@@ -49,7 +49,7 @@ export default function TestResult() {
         </button>
         <button 
           onClick={() => window.print()}
-          className="flex items-center space-x-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-emerald-950 rounded-xl font-bold shadow-md transition-all"
+          className="flex items-center space-x-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-emerald-950 rounded-xl font-bold shadow-[0_0_15px_rgba(16,185,129,0.45)] hover:shadow-[0_0_25px_rgba(16,185,129,0.75)] hover:scale-[1.02] active:scale-[0.98] transition-all"
         >
           <Printer className="w-4 h-4" />
           <span>Download Result (PDF)</span>

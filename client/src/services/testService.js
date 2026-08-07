@@ -13,9 +13,9 @@ export const testService = {
   },
 
   // Get test details (questions) by ID
-  getTestById: async (testId) => {
+  getTestById: async (testId, params = {}) => {
     try {
-      const response = await api.get(`/tests/${testId}`)
+      const response = await api.get(`/tests/${testId}`, { params })
       return response.data
     } catch (err) {
       return { success: false, error: err.response?.data?.message || err.message }
