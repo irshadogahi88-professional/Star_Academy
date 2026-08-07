@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Trophy, Plus, Trash2, Check, Search } from 'lucide-react'
+import { Trophy, Plus, Trash2, Check, Search, Edit2 } from 'lucide-react'
 import { getDirectImageUrl } from '../../utils/imageHelper'
 import api from '../../services/api'
 
@@ -9,6 +9,7 @@ export default function AdminSuccessStories() {
   const [searchTerm, setSearchTerm] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [statusMsg, setStatusMsg] = useState(null)
+  const [editingId, setEditingId] = useState(null)
 
   const [formData, setFormData] = useState({
     studentName: '',
@@ -43,18 +44,45 @@ export default function AdminSuccessStories() {
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-      const res = await api.post('/success-stories', formData)
-      if (res.data && (res.data.success || res.data._id)) {
-        const newStory = res.data.data || res.data
-        setStories([newStory, ...stories])
-        setShowModal(false)
-        setStatusMsg('✅ Success Story added successfully!')
-        setTimeout(() => setStatusMsg(null), 3000)
-        setFormData({ studentName: '', achievement: '', category: 'MDCAT', institute: '', score: '', year: new Date().getFullYear().toString(), photoUrl: '' })
+      if (editingId) {
+        const res = await api.patch(`/success-stories/${editingId}`, formData)
+        if (res.data && (res.data.success || res.data._id)) {
+          const updated = res.data.data || res.data
+          setStories(stories.map(s => s._id === editingId ? updated : s))
+          setShowModal(false)
+          setStatusMsg('✅ Success Story updated successfully!')
+          setTimeout(() => setStatusMsg(null), 3000)
+          setEditingId(null)
+          setFormData({ studentName: '', achievement: '', category: 'MDCAT', institute: '', score: '', year: new Date().getFullYear().toString(), photoUrl: '' })
+        }
+      } else {
+        const res = await api.post('/success-stories', formData)
+        if (res.data && (res.data.success || res.data._id)) {
+          const newStory = res.data.data || res.data
+          setStories([newStory, ...stories])
+          setShowModal(false)
+          setStatusMsg('✅ Success Story added successfully!')
+          setTimeout(() => setStatusMsg(null), 3000)
+          setFormData({ studentName: '', achievement: '', category: 'MDCAT', institute: '', score: '', year: new Date().getFullYear().toString(), photoUrl: '' })
+        }
       }
     } catch (err) {
       alert('Failed to save story: ' + (err.response?.data?.message || err.message))
     }
+  }
+
+  const handleEditClick = (story) => {
+    setEditingId(story._id)
+    setFormData({
+      studentName: story.studentName || '',
+      achievement: story.achievement || '',
+      category: story.category || 'MDCAT',
+      institute: story.institute || '',
+      score: story.score || '',
+      year: story.year || new Date().getFullYear().toString(),
+      photoUrl: story.photoUrl || '',
+    })
+    setShowModal(true)
   }
 
   const handleDelete = async (id) => {
@@ -88,7 +116,11 @@ export default function AdminSuccessStories() {
           <p className="text-xs text-emerald-100/70 font-semibold">Manage the successful candidates displayed on the public Success Wall.</p>
         </div>
 
-        <button onClick={() => setShowModal(true)} className="btn-primary text-xs !py-3 !px-4 shadow-sm flex items-center gap-2">
+        <button onClick={() => {
+          setEditingId(null)
+          setFormData({ studentName: '', achievement: '', category: 'MDCAT', institute: '', score: '', year: new Date().getFullYear().toString(), photoUrl: '' })
+          setShowModal(true)
+        }} className="btn-primary text-xs !py-3 !px-4 shadow-sm flex items-center gap-2">
           <Plus size={12} />
           <span>Add Candidate</span>
         </button>
@@ -124,9 +156,14 @@ export default function AdminSuccessStories() {
             <div key={story._id} className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 hover:border-emerald-400 transition-all rounded-3xl !p-5 flex flex-col gap-3 relative shadow-md">
               <div className="flex justify-between items-start gap-2">
                 <span className="badge badge-gold text-[10px] bg-amber-500/10 border border-amber-500/30 text-amber-400">{story.year}</span>
-                <button onClick={() => handleDelete(story._id)} className="text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors">
-                  <Trash2 size={12} />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => handleEditClick(story)} className="text-blue-400 hover:bg-blue-500/10 p-1.5 rounded-md transition-colors" title="Edit Candidate">
+                    <Edit2 size={12} />
+                  </button>
+                  <button onClick={() => handleDelete(story._id)} className="text-red-400 hover:bg-red-500/10 p-1.5 rounded-md transition-colors" title="Delete Candidate">
+                    <Trash2 size={12} />
+                  </button>
+                </div>
               </div>
               <div className="flex items-center gap-3 mt-2">
                 <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#10b981]/25 shrink-0 bg-[#060e0a]">
@@ -161,7 +198,7 @@ export default function AdminSuccessStories() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
           <div className="card-glass w-full max-w-lg !p-6 sm:!p-8 space-y-5 bg-[#0a1b14] border border-[#10b981]/25 rounded-3xl shadow-2xl">
             <h2 className="text-2xl font-black text-white">
-              Add Success Candidate
+              {editingId ? 'Edit Success Candidate' : 'Add Success Candidate'}
             </h2>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
@@ -206,7 +243,7 @@ export default function AdminSuccessStories() {
                 <input type="url" value={formData.photoUrl} onChange={(e) => setFormData({...formData, photoUrl: e.target.value})} className="w-full px-4 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-sm focus:outline-none focus:border-emerald-400" placeholder="https://..." />
               </div>
               <div className="pt-3 flex justify-end gap-3">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
+                <button type="button" onClick={() => { setShowModal(false); setEditingId(null); }} className="px-4 py-2 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-xs font-bold text-emerald-100/70 hover:bg-[#0a1b14]">Cancel</button>
                 <button type="submit" className="btn-primary text-xs !py-2 !px-5 shadow-sm">Save Candidate</button>
               </div>
             </form>

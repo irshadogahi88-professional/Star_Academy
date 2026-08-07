@@ -49,7 +49,7 @@ async function test() {
     };
 
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-3.5-flash', // Using one of the supported models
+      model: 'gemini-flash-latest', // Using one of the supported models
       generationConfig: {
         responseMimeType: "application/json",
         responseSchema: mcqSchema

@@ -99,7 +99,7 @@ export default function TeacherTests() {
             Review, edit, or delete existing examinations.
           </p>
         </div>
-        <Link to="/teacher/tests/create" className="btn-gold text-sm shadow-md flex items-center gap-1.5 self-start sm:self-center">
+        <Link to={window.location.pathname.startsWith('/admin') ? '/admin/tests/create' : '/teacher/tests/create'} className="btn-gold text-sm shadow-md flex items-center gap-1.5 self-start sm:self-center">
           <PlusCircle size={16} /> Create New Test
         </Link>
       </div>

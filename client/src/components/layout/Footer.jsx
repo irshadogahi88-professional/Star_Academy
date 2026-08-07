@@ -77,8 +77,8 @@ export default function Footer() {
               >
                 <FaFacebookF size={18} />
               </a>
-              <a
-                href="https://instagram.com"
+               <a
+                href="https://www.instagram.com/staracademyghotki?igsh=MWc2MWhhM3Njc29qMg%3D%3D&utm_source=qr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-11 h-11 rounded-xl bg-[#08140f] border border-[#10b981]/20 text-[#e2ede7] hover:border-[#bc1888] hover:bg-[#bc1888]/10 hover:text-[#bc1888] transition-all duration-300 hover:-translate-y-1 shadow-md"
