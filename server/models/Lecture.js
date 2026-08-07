@@ -14,7 +14,7 @@ const LectureSchema = new mongoose.Schema(
     subject: {
       type: String,
       required: [true, 'Subject is required'],
-      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
+      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'LR', 'Logical Reasoning', 'All', 'General', 'Computer Science', 'MDCAT Mock', 'ECAT Mock'],
     },
     grade: {
       type: String,

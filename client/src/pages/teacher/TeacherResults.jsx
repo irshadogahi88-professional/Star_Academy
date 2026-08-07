@@ -80,6 +80,12 @@ export default function TeacherResults() {
           <option value="Chemistry">Chemistry</option>
           <option value="Biology">Biology</option>
           <option value="Mathematics">Mathematics</option>
+          <option value="English">English</option>
+          <option value="LR">Logical Reasoning (LR)</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="General">General</option>
+          <option value="MDCAT Mock">MDCAT Mock</option>
+          <option value="ECAT Mock">ECAT Mock</option>
         </select>
       </div>
 

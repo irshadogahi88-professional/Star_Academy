@@ -48,14 +48,44 @@ async function test() {
       }
     };
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-flash-latest', // Using one of the supported models
-      generationConfig: {
-        responseMimeType: "application/json",
-        responseSchema: mcqSchema
+    const callGeminiAPI = async (apiKey, modelName, contents, schema) => {
+      const isOAuth = apiKey.startsWith('AQ.') || apiKey.startsWith('ya29.');
+      const url = isOAuth
+        ? `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`
+        : `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (isOAuth) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
       }
-    });
-    
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          contents,
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: schema
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Gemini API error (${response.status}): ${errText}`);
+      }
+
+      const resJson = await response.json();
+      const text = resJson.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        throw new Error('Empty response from Gemini API');
+      }
+      return text;
+    };
+
     const chunk = text.substring(0, 5000);
     const prompt = `You are an expert educational AI specialized in parsing complex MDCAT, ECAT, Physics, Mathematics, and Logical Reasoning (LR) test papers. Extract all Multiple Choice Questions (MCQs) from this text chunk for subject "Physics" (Grade/Level: "XI"). 
 
@@ -72,8 +102,8 @@ async function test() {
     """${chunk}"""`;
         
     console.log('Sending to Gemini...');
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const contents = [{ parts: [{ text: prompt }] }];
+    const responseText = await callGeminiAPI(apiKey, 'gemini-1.5-flash', contents, mcqSchema);
     
     console.log('Raw Response Length:', responseText.length);
     const parsed = JSON.parse(responseText);

@@ -23,7 +23,7 @@ const FacultySchema = new mongoose.Schema(
     subject: {
       type: String,
       required: [true, 'Subject is required'],
-      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'Computer Science', 'General'],
+      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'LR', 'Logical Reasoning', 'All', 'General', 'Computer Science', 'MDCAT Mock', 'ECAT Mock'],
     },
     phone: {
       type: String,

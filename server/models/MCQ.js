@@ -9,7 +9,7 @@ const MCQSchema = new mongoose.Schema(
     subject: {
       type: String,
       required: true,
-      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'],
+      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'LR', 'Logical Reasoning', 'All', 'General', 'Computer Science', 'MDCAT Mock', 'ECAT Mock'],
     },
     chapter: { type: String, default: 'General' },
     class: {

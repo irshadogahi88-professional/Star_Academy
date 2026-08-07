@@ -15,7 +15,7 @@ const TestSchema = new mongoose.Schema(
     subject: {
       type: String,
       required: true,
-      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'MDCAT Mock', 'ECAT Mock'],
+      enum: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English', 'LR', 'Logical Reasoning', 'All', 'General', 'Computer Science', 'MDCAT Mock', 'ECAT Mock'],
     },
     grade: {
       type: String,
