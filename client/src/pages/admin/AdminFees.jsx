@@ -148,7 +148,7 @@ export default function AdminFees() {
                         <span className="font-extrabold text-white">Grade {grade} ({stream})</span>
                         <p className="text-[11px] text-emerald-100/50 mt-0.5">One-Time Admission Fee</p>
                       </td>
-                      <td className="p-4 font-extrabold text-emerald-400 text-sm">Rs. 6,000</td>
+                      <td className="p-4 font-extrabold text-emerald-400 text-sm">Rs. {(student.feeAmount || 28000).toLocaleString()}</td>
                       <td className="p-4">
                         {isPaid ? (
                           <span className="inline-flex items-center gap-1 text-[11px] font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/25">
@@ -224,7 +224,7 @@ export default function AdminFees() {
                 </div>
                 <div className="flex justify-between py-2 border-y border-slate-200 mt-2">
                   <span className="text-slate-800 font-bold uppercase">Total Amount:</span>
-                  <span className="font-black text-emerald-600 text-sm">Rs. 6,000</span>
+                  <span className="font-black text-emerald-600 text-sm">Rs. {(selectedVoucher.feeAmount || 28000).toLocaleString()}</span>
                 </div>
                 <div className="pt-8 flex justify-between items-end">
                   <div className="text-center">
@@ -265,7 +265,7 @@ export default function AdminFees() {
                 </div>
                 <div className="flex justify-between py-2 border-y border-slate-200 mt-2">
                   <span className="text-slate-800 font-bold uppercase">Total Amount:</span>
-                  <span className="font-black text-emerald-600 text-sm">Rs. 6,000</span>
+                  <span className="font-black text-emerald-600 text-sm">Rs. {(selectedVoucher.feeAmount || 28000).toLocaleString()}</span>
                 </div>
                 <div className="pt-8 flex justify-between items-end">
                   <div className="text-center">

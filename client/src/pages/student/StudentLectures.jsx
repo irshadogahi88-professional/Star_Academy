@@ -58,7 +58,7 @@ export default function StudentLectures() {
   }
 
   const filtered = lectures.filter((item) => {
-    if (activeSubject !== 'All' && item.subject !== activeSubject) return false
+    if (activeSubject !== 'All' && item.subject?.trim().toLowerCase() !== activeSubject.trim().toLowerCase()) return false
     const isVideo = item.mediaType !== 'pdf'
     if (activeType === 'video' && !isVideo) return false
     if (activeType === 'notes' && isVideo) return false

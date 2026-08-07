@@ -134,8 +134,9 @@ exports.getTestById = async (req, res) => {
 
     const testObj = test.toObject()
 
-    // Redact answers if user is a student or unauthenticated
-    if (!req.user || req.user.role === 'student') {
+    // Redact answers if user is a student or unauthenticated (unless attempting in practice mode)
+    const isPracticeReq = testObj.mode === 'practice' || req.query.mode === 'practice'
+    if ((!req.user || req.user.role === 'student') && !isPracticeReq) {
       testObj.questions = testObj.questions.map(q => {
         const qObj = { ...q }
         delete qObj.correctOptionIndex

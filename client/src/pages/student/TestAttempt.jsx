@@ -271,20 +271,21 @@ export default function TestAttempt() {
             <div className="space-y-4 pl-2">
               {currentQ.options.map((opt, idx) => {
                 const isSelected = userAnswers[currentQ._id || currentQ.id] === idx
+                const correctIdx = currentQ.correctOptionIndex !== undefined ? currentQ.correctOptionIndex : currentQ.correctIndex
                 
                 let btnClass = "border-[#10b981]/25 hover:border-emerald-400/50 hover:bg-[#10b981]/10 text-emerald-100/90 bg-[#060e0a]"
                 let iconContent = isSelected ? <div className="w-3 h-3 bg-emerald-400 rounded-full" /> : null
                 let iconBorder = isSelected ? "border-emerald-400" : "border-[#10b981]/25"
                 
                 if (mode === "practice" && hasAnsweredCurrent) {
-                  const isCorrectOption = currentQ.correctOptionIndex === idx
+                  const isCorrectOption = correctIdx !== undefined && correctIdx === idx
                   
                   if (isCorrectOption) {
-                    btnClass = "border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold shadow-sm"
+                    btnClass = "border-emerald-500 bg-emerald-500/15 text-emerald-400 font-bold shadow-md ring-2 ring-emerald-500/40"
                     iconContent = <CheckCircle className="w-full h-full text-emerald-400" />
                     iconBorder = "border-transparent"
                   } else if (isSelected && !isCorrectOption) {
-                    btnClass = "border-red-500 bg-red-500/10 text-red-400 font-bold"
+                    btnClass = "border-red-500 bg-red-500/15 text-red-400 font-bold ring-2 ring-red-500/40"
                     iconContent = <XCircle className="w-full h-full text-red-400" />
                     iconBorder = "border-transparent"
                   } else {
@@ -299,9 +300,9 @@ export default function TestAttempt() {
                     key={idx}
                     onClick={() => handleSelectOption(idx)}
                     disabled={mode === "practice" && hasAnsweredCurrent}
-                    className={`w-full text-left p-5 sm:p-6 rounded-2xl border-2 transition-all duration-300 flex items-center group ${btnClass}`}
+                    className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 flex items-center group ${btnClass}`}
                   >
-                    <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center mr-5 flex-shrink-0 transition-colors ${iconBorder}`}>
+                    <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center mr-4 flex-shrink-0 transition-colors ${iconBorder}`}>
                       {iconContent}
                     </div>
                     <span className="text-base sm:text-lg leading-relaxed">{opt}</span>
@@ -315,16 +316,16 @@ export default function TestAttempt() {
               {mode === "practice" && hasAnsweredCurrent && currentQ.explanation && (
                 <motion.div 
                   initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                  animate={{ opacity: 1, height: 'auto', marginTop: 40 }}
+                  animate={{ opacity: 1, height: 'auto', marginTop: 32 }}
                   exit={{ opacity: 0, height: 0, marginTop: 0 }}
                   className="ml-2 overflow-hidden"
                 >
-                  <div className="p-6 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+                  <div className="p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
                     <div className="flex items-start space-x-3">
                       <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div>
-                        <h4 className="text-amber-500 font-bold mb-2">Explanation</h4>
-                        <p className="text-emerald-100/80 leading-relaxed text-sm sm:text-base">{currentQ.explanation}</p>
+                        <h4 className="text-amber-500 font-bold mb-1 text-sm sm:text-base">Explanation</h4>
+                        <p className="text-emerald-100/90 leading-relaxed text-xs sm:text-sm">{currentQ.explanation}</p>
                       </div>
                     </div>
                   </div>
@@ -333,29 +334,99 @@ export default function TestAttempt() {
             </AnimatePresence>
           </div>
 
-          <div className="flex items-center justify-between">
+          {/* Action Navigation Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
             <button
               onClick={() => setCurrentIndex(c => Math.max(0, c - 1))}
               disabled={currentIndex === 0}
-              className="flex items-center space-x-3 px-6 sm:px-8 py-4 rounded-2xl font-bold border border-[#10b981]/15 bg-[#0a1b14] text-emerald-100 hover:bg-[#08140f] disabled:opacity-50 transition-all"
+              className="flex items-center space-x-2 px-5 py-3.5 rounded-2xl font-extrabold border border-[#10b981]/25 bg-[#0a1b14] text-emerald-100 hover:bg-[#08140f] disabled:opacity-40 transition-all text-xs sm:text-sm"
             >
-              <ArrowLeft size={14} />
-              <span className="hidden sm:inline">Previous</span>
+              <ArrowLeft size={16} />
+              <span>Previous</span>
             </button>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              {currentIndex < questions.length - 1 && (
+                <button
+                  onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
+                  className="flex items-center space-x-1.5 px-4 py-3.5 rounded-2xl font-extrabold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all text-xs sm:text-sm"
+                >
+                  <span>Skip</span>
+                </button>
+              )}
+              
+              {currentIndex < questions.length - 1 ? (
+                <button
+                  onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
+                  className="flex items-center space-x-2 px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-2xl font-black shadow-lg shadow-emerald-500/20 transition-all text-xs sm:text-sm"
+                >
+                  <span>Next</span>
+                  <ArrowRight size={16} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleSubmitTest(false)}
+                  disabled={isSubmitting}
+                  className="flex items-center space-x-2 px-6 py-3.5 bg-gradient-gold hover:bg-amber-500 text-emerald-950 rounded-2xl font-black shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm"
+                >
+                  <span>{isSubmitting ? "Submitting..." : "Submit Test"}</span>
+                  <CheckCircle size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Question Tracker Grid (Visible on mobile/tablet) */}
+          <div className="block lg:hidden card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-[2rem] p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-black text-white uppercase tracking-wider text-xs">Question Grid</h3>
+              <span className="text-xs font-bold text-emerald-400">{Object.keys(userAnswers).length} / {questions.length} Attempted</span>
+            </div>
             
+            <div className="grid grid-cols-6 sm:grid-cols-10 gap-2 mb-6">
+              {questions.map((q, idx) => {
+                const isAttempted = userAnswers[q._id || q.id] !== undefined
+                const isCurrent = currentIndex === idx
+                const isFlagged = flagged[q._id || q.id]
+                
+                let btnClass = "bg-[#060e0a] text-emerald-100/50 hover:bg-[#08140f] border-[#10b981]/15 border"
+                if (isAttempted) {
+                  btnClass = "bg-emerald-500 text-emerald-950 border-transparent font-black"
+                }
+                if (isCurrent) {
+                  btnClass = isAttempted 
+                    ? "bg-emerald-500 text-emerald-950 ring-2 ring-offset-2 ring-offset-[#08140f] ring-emerald-500" 
+                    : "bg-transparent text-amber-500 border-amber-500 border-2"
+                }
+
+                return (
+                  <button
+                    key={q._id || q.id}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`relative w-full aspect-square rounded-xl font-bold text-xs flex items-center justify-center transition-all ${btnClass}`}
+                  >
+                    {idx + 1}
+                    {isFlagged && (
+                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 border-2 border-[#0a1b14] rounded-full"></span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
             <button
-              onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
-              disabled={currentIndex === questions.length - 1}
-              className="flex items-center space-x-3 px-8 sm:px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-emerald-950 rounded-2xl font-bold shadow-lg shadow-emerald-500/20 transition-all disabled:opacity-50"
+              onClick={() => handleSubmitTest(false)}
+              disabled={isSubmitting}
+              className="w-full flex items-center justify-center space-x-2 px-6 py-3.5 bg-gradient-gold hover:bg-amber-600 text-emerald-950 rounded-xl font-black shadow-md transition-all disabled:opacity-50 text-sm"
             >
-              <span className="hidden sm:inline">Next</span>
-              <ArrowRight size={14} />
+              <span>{isSubmitting ? "Submitting..." : "Submit Examination"}</span>
+              <CheckCircle size={16} />
             </button>
           </div>
         </div>
 
-        {/* Navigation Sidebar */}
-        <div className="w-full lg:w-80 flex-shrink-0">
+        {/* Navigation Sidebar (Desktop) */}
+        <div className="hidden lg:block w-80 flex-shrink-0">
           <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-[2rem] p-6 sm:p-8 sticky top-28">
             <div className="flex items-center justify-between mb-8">
               <h3 className="font-black text-white uppercase tracking-wider text-sm">Question Tracker</h3>
@@ -400,7 +471,7 @@ export default function TestAttempt() {
               </div>
               <div className="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-emerald-100/70">
                 <div className="w-3 h-3 rounded-full bg-[#060e0a] border border-[#10b981]/15"></div>
-                <span>Not Attempted ({questions.length - Object.keys(userAnswers).length})</span>
+                <span>Skipped / Unattempted ({questions.length - Object.keys(userAnswers).length})</span>
               </div>
               <div className="flex items-center space-x-3 text-xs sm:text-sm font-semibold text-emerald-100/70">
                 <div className="w-3 h-3 rounded-full bg-amber-500"></div>

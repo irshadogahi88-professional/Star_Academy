@@ -31,13 +31,15 @@ export default function StudentLayout() {
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
 
+  const isStudentApproved = user ? user.isApproved !== false : true
+
   // Default fallback user if viewing without login
   const student = user || {
     fullName: 'Sir Irshad Ahmed Ogahi',
     email: 'student@staracademy.edu.pk',
     class: 'XI',
     stream: 'Pre-Medical',
-    status: 'pending',
+    isApproved: true,
   }
 
   const handleLogout = () => {
@@ -78,7 +80,7 @@ export default function StudentLayout() {
 
           <div className="pt-2 border-t border-[#10b981]/10 flex items-center justify-between text-xs">
             <span className="text-emerald-100/50 text-[11px] font-bold">Account:</span>
-            {student.status === 'approved' ? (
+            {isStudentApproved ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                 <CheckCircle size={10} /> Approved
               </span>

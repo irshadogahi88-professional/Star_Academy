@@ -4,6 +4,14 @@ import { FileText, Edit2, Trash2, Eye, PlusCircle, X, Save, AlertTriangle } from
 import api from '../../services/api'
 import { useAuthStore } from '../../store/useAuthStore'
 
+const toLocalDatetimeInput = (dateStr) => {
+  if (!dateStr) return ''
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return ''
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
 export default function TeacherTests() {
   const { user } = useAuthStore()
   const [tests, setTests] = useState([])
@@ -52,8 +60,8 @@ export default function TeacherTests() {
       const res = await api.put(`/tests/${editingTest._id}`, {
         title: editingTest.title,
         durationMinutes: editingTest.durationMinutes,
-        startTime: editingTest.startTime,
-        endTime: editingTest.endTime,
+        startTime: editingTest.startTime ? new Date(editingTest.startTime).toISOString() : null,
+        endTime: editingTest.endTime ? new Date(editingTest.endTime).toISOString() : null,
         showResultsToStudents: editingTest.showResultsToStudents,
         subject: editingTest.subject,
         grade: editingTest.grade,
@@ -289,7 +297,7 @@ export default function TeacherTests() {
                   <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Open Time (Optional)</label>
                   <input
                     type="datetime-local"
-                    value={editingTest.startTime ? new Date(new Date(editingTest.startTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                    value={toLocalDatetimeInput(editingTest.startTime)}
                     onChange={e => setEditingTest({ ...editingTest, startTime: e.target.value || null })}
                     className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
                   />
@@ -298,7 +306,7 @@ export default function TeacherTests() {
                   <label className="block text-xs uppercase tracking-wider font-extrabold text-emerald-100/70 mb-1.5">Close Time (Optional)</label>
                   <input
                     type="datetime-local"
-                    value={editingTest.endTime ? new Date(new Date(editingTest.endTime).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                    value={toLocalDatetimeInput(editingTest.endTime)}
                     onChange={e => setEditingTest({ ...editingTest, endTime: e.target.value || null })}
                     className="w-full px-3 py-2.5 rounded-xl bg-[#060e0a] border border-[#10b981]/25 text-white text-xs font-bold focus:outline-none"
                   />

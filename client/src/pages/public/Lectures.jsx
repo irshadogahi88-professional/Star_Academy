@@ -182,16 +182,22 @@ export default function Lectures() {
             </div>
           ) : (
             <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filtered.map((lecture, i) => (
+              {filtered.map((lecture, i) => {
+                const isLocked = lecture.isLocked || !lecture.isPublicPreview
+                return (
                 <StaggerItem key={lecture._id || i}>
                   <SpotlightCard className="card-glass group relative overflow-hidden h-full flex flex-col justify-between p-6 bg-[#0a1b14]/50 border border-[#10b981]/15">
                     {/* Hover Overlay (Desktop only) */}
                     <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 p-6 text-center bg-[#060e0a]/95 backdrop-blur-md hidden md:flex">
-                      {lecture.isLocked ? (
+                      {isLocked ? (
                         <>
-                          <Lock size={32} className="mb-3 text-amber-500" />
-                          <p className="text-white font-extrabold text-base mb-4">Login to Access</p>
-                          <Link to="/login" className="btn-gold text-xs font-extrabold px-5 py-2.5"><span>Login Now</span></Link>
+                          <Lock size={32} className="mb-2 text-amber-500" />
+                          <p className="text-white font-extrabold text-sm mb-1">Locked Content</p>
+                          <p className="text-emerald-100/60 text-xs mb-4">Register or Login to view full lecture</p>
+                          <div className="flex gap-2">
+                            <Link to="/register" className="btn-gold text-xs font-extrabold px-4 py-2"><span>Register</span></Link>
+                            <Link to="/login" className="px-4 py-2 rounded-xl border border-[#10b981]/25 text-emerald-400 hover:text-white text-xs font-extrabold"><span>Login</span></Link>
+                          </div>
                         </>
                       ) : (
                         <>
@@ -212,8 +218,10 @@ export default function Lectures() {
                               }`}>
                               {lecture.mediaType !== 'pdf' ? '🎥 Video' : '📄 Notes'}
                             </span>
-                            {!lecture.isLocked && lecture.isPublicPreview && (
+                            {!isLocked ? (
                               <span className="badge badge-emerald text-[10px] uppercase font-black tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Demo</span>
+                            ) : (
+                              <span className="badge badge-gold text-[10px] uppercase font-black tracking-widest bg-amber-500/10 text-amber-400 border border-amber-500/20">Locked</span>
                             )}
                           </div>
                           <span className="text-xs font-semibold text-emerald-100/50">{lecture.chapter || ''}</span>
@@ -229,10 +237,10 @@ export default function Lectures() {
 
                         {/* Mobile Action Button */}
                         <div className="block md:hidden">
-                          {lecture.isLocked ? (
-                            <Link to="/login" className="btn-gold w-full text-xs font-extrabold py-3 justify-center flex items-center gap-1.5">
+                          {isLocked ? (
+                            <Link to="/register" className="btn-gold w-full text-xs font-extrabold py-3 justify-center flex items-center gap-1.5">
                               <Lock size={12} className="text-[#060e0a]" />
-                              <span>Login Now</span>
+                              <span>Register to Unlock</span>
                             </Link>
                           ) : (
                             <a href={lecture.mediaUrl} target="_blank" rel="noopener noreferrer" className="btn-primary w-full text-xs font-extrabold py-3 justify-center flex items-center gap-1.5">
@@ -245,7 +253,7 @@ export default function Lectures() {
                     </div>
                   </SpotlightCard>
                 </StaggerItem>
-              ))}
+              )})}
             </StaggerContainer>
           )}
 
