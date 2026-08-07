@@ -11,6 +11,7 @@ export default function TestAttempt() {
   const [questions, setQuestions] = useState([])
   const [testInfo, setTestInfo] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const [testState, setTestState] = useState('intro') // 'intro', 'running'
   const [mode, setMode] = useState('exam') // 'practice', 'exam'
@@ -34,13 +35,12 @@ export default function TestAttempt() {
         setQuestions(res.data.questions || [])
         setTimeLeft((res.data.durationMinutes || 10) * 60)
       } else {
-        alert('Failed to load test. ' + (res.error || ''))
-        navigate('/student/tests')
+        setError(res.error || res.message || 'Failed to load test.')
       }
       setLoading(false)
     }
     if (id) fetchTest()
-  }, [id, navigate])
+  }, [id])
 
   // Timer countdown
   useEffect(() => {
@@ -107,10 +107,13 @@ export default function TestAttempt() {
           setTestInfo(res.data)
           setQuestions(res.data.questions || [])
         } else {
-          alert('Failed to load practice questions. ' + (res.error || ''))
+          setError(res.error || res.message || 'Failed to load practice questions.')
+          return
         }
       } catch (err) {
         console.error('Failed to load practice questions:', err)
+        setError(err.message || 'Failed to load practice questions.')
+        return
       }
       setLoading(false)
     }
@@ -167,13 +170,38 @@ export default function TestAttempt() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#08140f] flex items-center justify-center p-6 text-white animate-fadeIn">
+        <div className="max-w-md w-full card-glass bg-[#0a1b14]/50 border border-red-500/25 rounded-[2rem] p-8 text-center space-y-6">
+          <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+            <AlertTriangle size={32} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-black text-white">Test Access Denied</h2>
+            <p className="text-sm text-emerald-100/60 leading-relaxed font-semibold mt-2">
+              {error}
+            </p>
+          </div>
+          <button 
+            onClick={() => navigate('/dashboard/tests')}
+            className="w-full btn-gold text-sm py-3.5 flex items-center justify-center gap-2"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Dashboard</span>
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (!questions || questions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#060e0a] px-4 text-center">
         <AlertTriangle className="text-amber-500 mb-4 animate-pulse" size={48} />
         <h2 className="text-3xl font-black text-white mb-2">No Questions Available</h2>
         <p className="text-emerald-100/50 mb-6 font-semibold">This test currently has no questions assigned to it.</p>
-        <button onClick={() => navigate('/student/tests')} className="btn-primary">Return to Dashboard</button>
+        <button onClick={() => navigate('/dashboard/tests')} className="btn-primary">Return to Dashboard</button>
       </div>
     )
   }
@@ -351,21 +379,21 @@ export default function TestAttempt() {
           </div>
 
           {/* Action Navigation Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-8">
             <button
               onClick={() => setCurrentIndex(c => Math.max(0, c - 1))}
               disabled={currentIndex === 0}
-              className="flex items-center space-x-2 px-5 py-3.5 rounded-2xl font-extrabold border border-[#10b981]/25 bg-[#0a1b14] text-emerald-100 hover:bg-[#08140f] disabled:opacity-40 transition-all text-xs sm:text-sm"
+              className="btn-outline !py-3.5 !px-5 text-xs sm:text-sm !rounded-2xl flex items-center justify-center gap-2"
             >
               <ArrowLeft size={16} />
               <span>Previous</span>
             </button>
 
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <button
                 onClick={() => setShowSubmitConfirm(true)}
                 disabled={isSubmitting}
-                className="flex items-center space-x-2 px-5 py-3.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-obsidian rounded-2xl font-black shadow-[0_0_15px_rgba(245,158,11,0.45)] hover:shadow-[0_0_25px_rgba(245,158,11,0.75)] hover:scale-[1.02] active:scale-[0.98] transition-all text-xs sm:text-sm"
+                className="btn-gold shadow-[0_0_20px_rgba(245,158,11,0.45)] hover:shadow-[0_0_30px_rgba(245,158,11,0.7)] hover:scale-[1.03] !py-3.5 !px-6 text-xs sm:text-sm !rounded-2xl flex items-center justify-center gap-2"
               >
                 <span>{isSubmitting ? "Submitting..." : "Submit Test"}</span>
                 <CheckCircle size={16} />
@@ -374,7 +402,7 @@ export default function TestAttempt() {
               {currentIndex < questions.length - 1 && (
                 <button
                   onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
-                  className="flex items-center space-x-1.5 px-4 py-3.5 rounded-2xl font-extrabold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all text-xs sm:text-sm"
+                  className="border border-amber-500/30 bg-[#0a1b14] text-amber-500 hover:bg-amber-500/10 px-4 py-3.5 rounded-2xl font-extrabold text-xs sm:text-sm transition-all text-center"
                 >
                   <span>Skip</span>
                 </button>
@@ -383,7 +411,7 @@ export default function TestAttempt() {
               {currentIndex < questions.length - 1 && (
                 <button
                   onClick={() => setCurrentIndex(c => Math.min(questions.length - 1, c + 1))}
-                  className="flex items-center space-x-2 px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-2xl font-black shadow-lg shadow-emerald-500/20 transition-all text-xs sm:text-sm"
+                  className="btn-primary shadow-[0_0_20px_rgba(16,185,129,0.35)] hover:shadow-[0_0_30px_rgba(16,185,129,0.65)] hover:scale-[1.03] !py-3.5 !px-6 text-xs sm:text-sm !rounded-2xl flex items-center justify-center gap-2"
                 >
                   <span>Next</span>
                   <ArrowRight size={16} />
@@ -392,14 +420,14 @@ export default function TestAttempt() {
             </div>
           </div>
 
-          {/* Mobile Question Tracker Grid (Visible on mobile/tablet) */}
+          {/* Mobile Question Tracker Scrollbar (Visible on mobile/tablet) */}
           <div className="block lg:hidden card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-[2rem] p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-black text-white uppercase tracking-wider text-xs">Question Grid</h3>
+              <h3 className="font-black text-white uppercase tracking-wider text-xs">Jump to Question</h3>
               <span className="text-xs font-bold text-emerald-400">{Object.keys(userAnswers).length} / {questions.length} Attempted</span>
             </div>
             
-            <div className="grid grid-cols-6 sm:grid-cols-10 gap-2 mb-6">
+            <div className="flex overflow-x-auto gap-3 pb-3 scrollbar-none snap-x snap-mandatory">
               {questions.map((q, idx) => {
                 const isAttempted = userAnswers[q._id || q.id] !== undefined
                 const isCurrent = currentIndex === idx
@@ -419,11 +447,11 @@ export default function TestAttempt() {
                   <button
                     key={q._id || q.id}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`relative w-full aspect-square rounded-xl font-bold text-xs flex items-center justify-center transition-all ${btnClass}`}
+                    className={`relative flex-shrink-0 w-11 h-11 rounded-xl font-bold text-sm flex items-center justify-center transition-all snap-center ${btnClass}`}
                   >
                     {idx + 1}
                     {isFlagged && (
-                      <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 border-2 border-[#0a1b14] rounded-full"></span>
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-500 border-2 border-[#0a1b14] rounded-full"></span>
                     )}
                   </button>
                 )

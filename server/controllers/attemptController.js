@@ -14,6 +14,23 @@ exports.submitAttempt = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Test not found' })
     }
 
+    // Restrict student from submitting outside the availability window
+    if (req.user && req.user.role === 'student') {
+      const now = new Date()
+      if (test.startTime && new Date(test.startTime) > now) {
+        return res.status(403).json({ 
+          success: false, 
+          message: `This test has not started yet. You cannot submit attempts.` 
+        })
+      }
+      if (test.endTime && new Date(test.endTime) < now) {
+        return res.status(403).json({ 
+          success: false, 
+          message: `This test expired on ${new Date(test.endTime).toLocaleString()} and is closed.` 
+        })
+      }
+    }
+
     let score = 0
     let correctAnswers = 0
     let wrongAnswers = 0

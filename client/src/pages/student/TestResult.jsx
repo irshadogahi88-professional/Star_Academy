@@ -71,8 +71,36 @@ export default function TestResult() {
         <div className="card-glass bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-[2rem] p-8 sm:p-12 text-center shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-amber-500"></div>
           
-          <div className="w-20 h-20 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-emerald-400" />
+          {/* Animated Circular SVG Progress Ring */}
+          <div className="relative w-40 h-40 mx-auto mb-8 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="80"
+                cy="80"
+                r="70"
+                className="stroke-[#060e0a] fill-none"
+                strokeWidth="10"
+              />
+              <circle
+                cx="80"
+                cy="80"
+                r="70"
+                className="stroke-emerald-500 fill-none transition-all duration-1000 ease-out"
+                strokeWidth="10"
+                strokeDasharray={440}
+                strokeDashoffset={440 - (440 * scorePercentage) / 100}
+                strokeLinecap="round"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(16, 185, 129, 0.45))'
+                }}
+              />
+            </svg>
+            <div className="absolute text-center">
+              <span className="text-4xl font-black text-white">
+                {scorePercentage.toFixed(0)}%
+              </span>
+              <p className="text-[10px] text-emerald-100/50 font-black uppercase tracking-wider mt-0.5">Accuracy</p>
+            </div>
           </div>
           
           <h2 className="text-3xl font-black text-white mb-2">
@@ -80,7 +108,7 @@ export default function TestResult() {
           </h2>
           <p className="text-emerald-100/50 mb-8 text-base font-bold uppercase tracking-widest">Performance Report for {studentName}</p>
           
-          <div className="bg-[#08140f]/60 border border-[#10b981]/10 p-6 sm:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-around gap-8 md:gap-0">
+          <div className="bg-[#08140f]/60 border border-[#10b981]/10 p-6 sm:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-around gap-6 md:gap-0">
             <div className="text-center w-full md:w-1/2">
               <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-300 mb-2">
                 {scorePercentage.toFixed(0)}%

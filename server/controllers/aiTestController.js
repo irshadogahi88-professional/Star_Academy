@@ -106,15 +106,6 @@ exports.getTests = async (req, res) => {
     if (subject) query.subject = subject
     if (grade) query.grade = grade
 
-    // Filter for students: hide expired or future tests
-    if (req.user && req.user.role === 'student') {
-      const now = new Date()
-      query.$and = [
-        { $or: [{ startTime: null }, { startTime: { $lte: now } }] },
-        { $or: [{ endTime: null }, { endTime: { $gte: now } }] }
-      ]
-    }
-
     const tests = await Test.find(query).sort('-createdAt')
     res.status(200).json({ success: true, count: tests.length, data: tests })
   } catch (error) {
@@ -130,6 +121,23 @@ exports.getTestById = async (req, res) => {
     const test = await Test.findById(req.params.id)
     if (!test) {
       return res.status(404).json({ success: false, message: 'Test not found' })
+    }
+
+    // Restrict student access outside the availability window
+    if (req.user && req.user.role === 'student') {
+      const now = new Date()
+      if (test.startTime && new Date(test.startTime) > now) {
+        return res.status(403).json({ 
+          success: false, 
+          message: `This test has not started yet. It will be available starting ${new Date(test.startTime).toLocaleString()}.` 
+        })
+      }
+      if (test.endTime && new Date(test.endTime) < now) {
+        return res.status(403).json({ 
+          success: false, 
+          message: `This test expired on ${new Date(test.endTime).toLocaleString()} and is closed.` 
+        })
+      }
     }
 
     const testObj = test.toObject()

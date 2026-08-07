@@ -14,7 +14,10 @@ import {
   CheckCircle,
   Clock,
   HelpCircle,
-  Trophy
+  Trophy,
+  Calendar,
+  Lock,
+  ShieldAlert
 } from 'lucide-react'
 
 export default function DashboardHome() {
@@ -24,6 +27,15 @@ export default function DashboardHome() {
   const [metrics, setMetrics] = useState({ testsAttempted: 0, avgScore: 0, streak: 0 })
   const [recentTests, setRecentTests] = useState([])
   const [loading, setLoading] = useState(true)
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  // Keep live time updated for scheduling state updates
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,38 +163,105 @@ export default function DashboardHome() {
                 <p className="text-xs text-emerald-100/50 font-semibold">Tests will appear here once published by faculty.</p>
               </div>
             ) : (
-              recentTests.map((t) => (
-                <div key={t._id} className={`card-glass !p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5 border-l-4 bg-[#0a1b14]/40 border border-[#10b981]/15 hover:border-emerald-400/30 ${
-                  t.mode === 'practice' ? 'border-l-amber-500' : 'border-l-emerald-400'
-                }`}>
-                  <div className="space-y-2">
-                    <span className={`badge ${t.mode === 'practice' ? 'badge-gold' : 'badge-emerald'} text-[11px] font-extrabold`}>
-                      {t.subject} • {t.mode === 'practice' ? 'Practice Mode' : 'Timed Test'}
+              recentTests.map((t) => {
+                const startTime = t.startTime ? new Date(t.startTime) : null
+                const endTime = t.endTime ? new Date(t.endTime) : null
+                
+                let testStatus = 'active'
+                if (startTime && startTime > currentTime) {
+                  testStatus = 'upcoming'
+                } else if (endTime && endTime < currentTime) {
+                  testStatus = 'expired'
+                }
+
+                let borderAccent = t.mode === 'practice' ? 'border-l-amber-500' : 'border-l-emerald-400'
+                let buttonEl = null
+                let statusBadge = null
+
+                if (testStatus === 'upcoming') {
+                  borderAccent = 'border-l-amber-600 border border-amber-500/10'
+                  statusBadge = (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                      <Calendar size={10} /> Upcoming
                     </span>
-                    <h3 className="font-bold text-lg text-white leading-snug">
-                      {t.title}
-                    </h3>
-                    <div className="text-xs text-emerald-100/60 flex flex-wrap items-center gap-4 font-semibold pt-1">
-                      <span className="flex items-center gap-1.5">
-                        <Clock size={12} className="text-emerald-400" /> {t.durationMinutes ? `${t.durationMinutes} Mins` : 'Untimed'}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <HelpCircle size={12} className="text-emerald-400" /> {t.questions?.length || 0} MCQs
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Trophy size={12} className="text-amber-500" /> Max: {t.totalMarks || 100}
-                      </span>
+                  )
+                  buttonEl = (
+                    <button
+                      disabled
+                      className="btn-gold text-xs !py-2.5 !px-5 self-start sm:self-center shrink-0 opacity-40 cursor-not-allowed !bg-gray-800 !text-gray-400 !border-transparent flex items-center gap-1.5"
+                    >
+                      <Lock size={12} />
+                      <span>Not Open</span>
+                    </button>
+                  )
+                } else if (testStatus === 'expired') {
+                  borderAccent = 'border-l-red-500 border border-red-500/10'
+                  statusBadge = (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-red-500/10 text-red-400 border border-red-500/20">
+                      <ShieldAlert size={10} /> Expired
+                    </span>
+                  )
+                  buttonEl = (
+                    <button
+                      disabled
+                      className="btn-primary text-xs !py-2.5 !px-5 self-start sm:self-center shrink-0 opacity-30 cursor-not-allowed !bg-red-950/20 !text-red-400/50 !border-red-500/10 flex items-center gap-1.5"
+                    >
+                      <Lock size={12} />
+                      <span>Closed</span>
+                    </button>
+                  )
+                } else {
+                  buttonEl = (
+                    <Link
+                      to={`/dashboard/tests/${t._id}/attempt`}
+                      className={`${t.mode === 'practice' ? 'btn-gold' : 'btn-primary'} text-xs !py-2.5 !px-5 self-start sm:self-center shrink-0`}
+                    >
+                      <span>{t.mode === 'practice' ? 'Practice Now' : 'Start Test'}</span>
+                      <ArrowRight size={14} />
+                    </Link>
+                  )
+                }
+
+                return (
+                  <div key={t._id} className={`card-glass !p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5 border-l-4 bg-[#0a1b14]/40 border border-[#10b981]/15 hover:border-emerald-400/30 transition-all ${borderAccent}`}>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`badge ${t.mode === 'practice' ? 'badge-gold' : 'badge-emerald'} text-[11px] font-extrabold`}>
+                          {t.subject} • {t.mode === 'practice' ? 'Practice Mode' : 'Timed Test'}
+                        </span>
+                        {statusBadge}
+                      </div>
+                      <h3 className="font-bold text-lg text-white leading-snug">
+                        {t.title}
+                      </h3>
+                      
+                      {startTime && testStatus === 'upcoming' && (
+                        <p className="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+                          <Calendar size={12} /> Opens: {startTime.toLocaleString()}
+                        </p>
+                      )}
+                      {endTime && testStatus === 'active' && (
+                        <p className="text-[11px] font-bold text-red-400 flex items-center gap-1">
+                          <Clock size={12} /> Closes: {endTime.toLocaleString()}
+                        </p>
+                      )}
+
+                      <div className="text-xs text-emerald-100/60 flex flex-wrap items-center gap-4 font-semibold pt-1">
+                        <span className="flex items-center gap-1.5">
+                          <Clock size={12} className="text-emerald-400" /> {t.durationMinutes ? `${t.durationMinutes} Mins` : 'Untimed'}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <HelpCircle size={12} className="text-emerald-400" /> {t.questions?.length || 0} MCQs
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Trophy size={12} className="text-amber-500" /> Max: {t.totalMarks || 100}
+                        </span>
+                      </div>
                     </div>
+                    {buttonEl}
                   </div>
-                  <Link
-                    to={`/dashboard/tests/${t._id}/attempt`}
-                    className={`${t.mode === 'practice' ? 'btn-gold' : 'btn-primary'} text-xs !py-2.5 !px-5 self-start sm:self-center shrink-0`}
-                  >
-                    <span>{t.mode === 'practice' ? 'Practice Now' : 'Start Test'}</span>
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         </div>
