@@ -282,46 +282,38 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal direction="right" className="space-y-6">
-              <span className="badge badge-emerald font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-                <BookOpen size={12} />
-                About Us
+              <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
+                <Award size={12} className="text-amber-400" />
+                Director's Message
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold leading-[1.25] text-white pt-1">
-                Building Bright Futures Through{' '}
-                <span className="text-gradient-gold inline-block">Dedication & Excellence</span>
+                A Message from the <span className="text-gradient-gold inline-block">Director</span>
               </h2>
-              <p className="text-base leading-relaxed text-emerald-100/70">
-                Star Educational Academy is where hardworking boys and girls build a bright
-                and successful future through dedication and excellence. With separate classes
-                for Pre-Medical and Pre-Engineering tracks, we provide focused coaching for
-                Grades IX, X, XI & XII.
-              </p>
-              <p className="text-base leading-relaxed text-emerald-100/70">
-                Our expert faculty, led by Sir Irshad Ahmed Ogahi, has consistently delivered
-                outstanding results — including the 1st Position in MDCAT across District Ghotki
-                and 30+ medical admissions in a single year.
-              </p>
-
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                {[
-                  { label: 'Expert Faculty', value: '6+ Teachers' },
-                  { label: 'Programs', value: 'Pre-Med & Pre-Eng' },
-                  { label: 'Grades Covered', value: 'IX to XII' },
-                  { label: 'Track Record', value: '100% Success' },
-                ].map((item, i) => (
-                  <div key={i} className="p-3.5 rounded-xl border border-[#10b981]/15 bg-[#060e0a]/40 shadow-xs">
-                    <p className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400">{item.label}</p>
-                    <p className="font-extrabold text-sm text-emerald-100 mt-0.5">{item.value}</p>
-                  </div>
-                ))}
+              
+              <div className="space-y-4 text-emerald-100/80 font-medium">
+                <p className="text-emerald-400 font-extrabold text-base">Dear Students,</p>
+                <p className="text-sm leading-relaxed text-emerald-100/70">
+                  Success is never a matter of chance; it is the outcome of hard work, discipline, consistency, and proper guidance. At Star Academy Ghotki, our aim is not only to prepare you for MDCAT and ECAT, but also to develop your confidence, strengthen your concepts, and guide you toward achieving excellence in your academic journey.
+                </p>
+                <p className="text-sm leading-relaxed text-emerald-100/70">
+                  We firmly believe that every student carries the ability to succeed. With sincere effort from students, continuous support from parents, and dedicated teaching from our faculty, no goal is out of reach.
+                </p>
+                <p className="text-sm leading-relaxed text-emerald-100/70 font-semibold italic border-l-2 border-amber-500 pl-4 my-3">
+                  "Stay committed, stay disciplined, trust your efforts, and keep moving forward. Your success story starts with the choices you make today."
+                </p>
               </div>
 
-              <div className="mt-8 pt-4 flex justify-center lg:justify-start">
+              <div className="pt-2 border-t border-[#10b981]/15">
+                <p className="text-white font-black text-sm">Sir Irshad Ahmed Ogahi</p>
+                <p className="text-[10px] font-bold text-amber-500">Director, Star Academy Ghotki</p>
+              </div>
+
+              <div className="mt-6 pt-2 flex justify-center lg:justify-start">
                 <Link
                   to="/about"
-                  className="btn-primary h-12 px-7 rounded-xl text-sm font-extrabold"
+                  className="btn-gold h-11 px-6 rounded-xl text-xs font-extrabold flex items-center gap-2"
                 >
-                  <span>Learn More About Us</span>
+                  <span>Explore About Us</span>
                   <ChevronRight size={14} />
                 </Link>
               </div>
