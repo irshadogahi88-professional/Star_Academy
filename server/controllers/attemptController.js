@@ -23,10 +23,16 @@ exports.submitAttempt = async (req, res) => {
           message: `This test has not started yet. You cannot submit attempts.` 
         })
       }
-      if (test.endTime && new Date(test.endTime) < now) {
+      
+      // Allow a submission grace period equal to test duration + 15 minutes network/buffer time
+      const durationMs = (test.durationMinutes || 30) * 60 * 1000
+      const gracePeriodMs = 15 * 60 * 1000
+      const cutoffTime = new Date(new Date(test.endTime).getTime() + durationMs + gracePeriodMs)
+
+      if (test.endTime && cutoffTime < now) {
         return res.status(403).json({ 
           success: false, 
-          message: `This test expired on ${new Date(test.endTime).toLocaleString()} and is closed.` 
+          message: `This test expired on ${new Date(test.endTime).toLocaleString()} and the submission window is closed.` 
         })
       }
     }
@@ -231,7 +237,7 @@ exports.getStudentAnalytics = async (req, res) => {
 exports.getAllSubmissions = async (req, res) => {
   try {
     const submissions = await Submission.find({})
-      .populate('test', 'title subject maxScore passingMarks')
+      .populate('test', 'title subject totalMarks passingMarks')
       .populate('student', 'fullName email')
       .sort({ createdAt: -1 })
 

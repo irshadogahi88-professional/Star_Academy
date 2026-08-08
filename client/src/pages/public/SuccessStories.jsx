@@ -47,6 +47,31 @@ export default function SuccessStories() {
       {/* Stories Grid */}
       <section className="section-padding bg-[#08140f]">
         <div className="section-container">
+          <ScrollReveal delay={0.1}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16 px-4">
+              <div className="card-glass bg-[#0a1b14]/50 border border-amber-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300 mb-2">1st</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">MDCAT Position</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Top rank in highly competitive medical admissions</p>
+              </div>
+              
+              <div className="card-glass bg-[#0a1b14]/50 border border-emerald-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-emerald-400/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-300 mb-2">30+</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">MBBS/BDS Admissions</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Students selected in prestigious public medical colleges</p>
+              </div>
+              
+              <div className="card-glass bg-[#0a1b14]/50 border border-amber-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300 mb-2">100%</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">Pre-Eng Success</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Perfect selection rate for engineering candidates</p>
+              </div>
+            </div>
+          </ScrollReveal>
+
           {loading ? (
             <div className="flex items-center justify-center py-16">
               <div className="w-10 h-10 border-4 border-[#10b981] border-t-transparent rounded-full animate-spin" />

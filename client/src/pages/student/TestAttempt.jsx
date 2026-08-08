@@ -60,7 +60,14 @@ export default function TestAttempt() {
   useEffect(() => {
     if (testState !== 'running' || mode !== 'exam') return
 
-    const handleBlur = () => {
+    let lastSwitchedTime = 0
+
+    const triggerCheatingWarning = () => {
+      const now = Date.now()
+      // Cooldown of 1.5 seconds to prevent double triggers from simultaneous blur and visibility events
+      if (now - lastSwitchedTime < 1500) return
+      lastSwitchedTime = now
+
       setTabSwitches((prev) => {
         const next = prev + 1
         setShowWarningModal(true)
@@ -70,8 +77,29 @@ export default function TestAttempt() {
         return next
       })
     }
+
+    const handleBlur = () => {
+      // 300ms delay to ignore transient blurs caused by mobile keyboard autocomplete, dropdowns, or system overlays
+      setTimeout(() => {
+        if (!document.hasFocus()) {
+          triggerCheatingWarning()
+        }
+      }, 300)
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        triggerCheatingWarning()
+      }
+    }
+
     window.addEventListener('blur', handleBlur)
-    return () => window.removeEventListener('blur', handleBlur)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      window.removeEventListener('blur', handleBlur)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [testState, mode])
 
   const currentQ = questions.length > 0 ? questions[currentIndex] : null

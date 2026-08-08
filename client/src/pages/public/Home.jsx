@@ -283,10 +283,12 @@ export default function Home() {
 
             <ScrollReveal direction="right" className="space-y-6">
               <span className="badge badge-gold font-bold inline-flex items-center gap-1.5 px-4 py-1 text-xs">
-                <Award size={20} className="text-amber-400" />
-                <h2 className="text-lg font-extrabold">Director's Message</h2>
+                <Award size={12} className="text-amber-400" />
+                Director's Message
               </span>
-              
+              <h2 className="text-3xl sm:text-4xl font-extrabold leading-[1.25] text-white pt-1">
+                A Message from the <span className="text-gradient-gold inline-block">Director</span>
+              </h2>
               
               <div className="space-y-4 text-emerald-100/80 font-medium">
                 <p className="text-emerald-400 font-extrabold text-base">Dear Students,</p>
@@ -424,6 +426,31 @@ export default function Home() {
               Every year, our students achieve remarkable results in board exams, MDCAT, ECAT,
               and secure admissions in top universities across Pakistan.
             </p>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16 px-4">
+              <div className="card-glass bg-[#060e0a]/65 border border-amber-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300 mb-2">1st</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">MDCAT Position</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Top rank in highly competitive medical admissions</p>
+              </div>
+              
+              <div className="card-glass bg-[#060e0a]/65 border border-emerald-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-emerald-400/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-300 mb-2">30+</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">MBBS/BDS Admissions</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Students selected in prestigious public medical colleges</p>
+              </div>
+              
+              <div className="card-glass bg-[#060e0a]/65 border border-amber-500/20 p-8 rounded-3xl text-center shadow-lg relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
+                <p className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300 mb-2">100%</p>
+                <h4 className="text-base font-black text-white uppercase tracking-wider">Pre-Eng Success</h4>
+                <p className="text-xs text-emerald-100/50 mt-2 font-semibold">Perfect selection rate for engineering candidates</p>
+              </div>
+            </div>
           </ScrollReveal>
 
           <div

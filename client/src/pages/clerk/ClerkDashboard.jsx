@@ -22,7 +22,7 @@ export default function ClerkDashboard() {
             pendingStudents: m.pendingStudents || 0,
             approvedStudents: m.approvedStudents || 0,
             unpaidChallans: m.pendingStudents || 0,
-            totalChallanRevenue: `₨ ${((m.approvedStudents || 0) * 5000).toLocaleString()}`,
+            totalChallanRevenue: `₨ ${((m.approvedStudents || 0) * 28000).toLocaleString()}`,
           })
         }
       } catch (err) {
@@ -89,7 +89,7 @@ export default function ClerkDashboard() {
             <Receipt size={20} />
           </div>
           <p className="text-3xl font-black text-white">{stats.unpaidChallans}</p>
-          <p className="text-[11px] font-semibold text-emerald-100/50">One-Time Session Fee ₨ 5,000</p>
+          <p className="text-[11px] font-semibold text-emerald-100/50">One-Time Session Fee ₨ 28,000</p>
         </div>
 
         <div className="card-glass !p-6 border-l-4 border-amber-500 space-y-2 bg-[#0a1b14]/50 border border-[#10b981]/15 rounded-2xl shadow-lg relative">

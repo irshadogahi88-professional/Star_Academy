@@ -188,19 +188,10 @@ export default function Footer() {
 
       {/* Copyright Bar */}
       <div className="border-t border-[#10b981]/15 py-8 bg-[#050c08]">
-        <div className="section-container flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <p className="text-xs font-bold text-emerald-100/50 flex items-center justify-center gap-1.5">
-            <span>© {new Date().getFullYear()} Star Educational Academy. Made with</span>
-            <Heart size={10} className="text-amber-500 fill-amber-500" />
-            <span>in Ghotki.</span>
+        <div className="section-container flex items-center justify-center text-center">
+          <p className="text-xs font-bold text-emerald-100/50">
+            © 2026 Star Educational Academy. 🤍
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-2 text-xs font-black text-amber-500">
-            <span>MDCAT 1st Position</span>
-            <span className="opacity-40">•</span>
-            <span>30+ MBBS/BDS Admissions</span>
-            <span className="opacity-40">•</span>
-            <span>100% Pre-Eng Success</span>
-          </div>
         </div>
       </div>
     </footer>

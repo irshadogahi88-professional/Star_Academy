@@ -18,8 +18,31 @@ export default function StudentAnalytics() {
     const fetchAnalytics = async () => {
       try {
         const res = await api.get('/attempts/analytics')
-        if (res.data) {
-          setAnalytics(res.data)
+        if (res.data && res.data.success && res.data.data) {
+          const apiData = res.data.data
+          
+          // Map subjectStats score to accuracy
+          const mappedSubjectStats = (apiData.subjectStats || []).map(item => ({
+            ...item,
+            accuracy: item.score
+          }))
+
+          // Map strongest/weakest subjects to descriptive strings for UI listing
+          const mappedStrengths = (apiData.strongestSubjects || []).map(
+            item => `${item.subject} (${item.score}% accuracy across ${item.tests} tests)`
+          )
+          const mappedWeakAreas = (apiData.weakestSubjects || []).map(
+            item => `${item.subject} (${item.score}% accuracy — needs practice)`
+          )
+
+          setAnalytics({
+            overallAccuracy: apiData.overallAccuracy || 0,
+            streak: apiData.streak || 0,
+            subjectBreakdown: mappedSubjectStats,
+            strengths: mappedStrengths,
+            weakAreas: mappedWeakAreas,
+            totalAttempts: apiData.totalTests || 0
+          })
         }
       } catch (err) {
         console.error('Failed to fetch analytics:', err)

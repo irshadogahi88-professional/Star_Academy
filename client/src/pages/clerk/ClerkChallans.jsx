@@ -22,7 +22,7 @@ export default function ClerkChallans() {
           id: s._id,
           studentName: s.fullName,
           rollNo: s.studentDetails?.rollNo || 'Pending',
-          amount: s.feeAmount || 5000,
+          amount: s.feeAmount || 28000,
           description: s.feeDescription || 'One-Time Admission & Annual Session Fee (2026)',
           dueDate: s.feeDueDate || new Date(new Date(s.createdAt).getTime() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
           status: s.feeStatus || 'unpaid',

@@ -35,7 +35,7 @@ export default function TeacherResults() {
             testTitle: sub.test?.title || 'Unknown Test',
             subject: sub.test?.subject || 'General',
             score: sub.score,
-            totalMarks: sub.test?.maxScore || sub.test?.totalMarks || 100,
+            totalMarks: sub.test?.totalMarks || 100,
             percentage: sub.percentage,
             passed: sub.passed,
             tabSwitches: sub.tabSwitches || 0,
