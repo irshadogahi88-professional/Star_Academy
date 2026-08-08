@@ -33,7 +33,7 @@ router.put('/mcqs/:id', protect, authorize('teacher', 'admin'), updateMCQ)
 router.delete('/mcqs/:id', protect, authorize('teacher', 'admin'), deleteMCQ)
 
 // Document Parsing & Batch Management Endpoints
-router.post('/parse-doc', upload.single('file'), parseDocument)
+router.post('/parse-doc', protect, authorize('teacher', 'admin'), upload.single('file'), parseDocument)
 router.post('/batch-save-mcqs', protect, authorize('teacher', 'admin'), batchSaveMCQs)
 router.delete('/batch-source-doc', protect, authorize('teacher', 'admin'), deleteSourceDocBatch)
 router.patch('/batch-source-doc', protect, authorize('teacher', 'admin'), updateSourceDocBatch)

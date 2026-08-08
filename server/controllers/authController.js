@@ -56,14 +56,19 @@ exports.register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'An account with this email already exists' })
     }
 
+    // Restrict public registration to student or teacher to prevent admin hijack
+    let assignedRole = 'student'
+    if (role === 'teacher') {
+      assignedRole = 'teacher'
+    }
+
     const userData = {
       fullName,
       email,
       phone,
       password,
-      role: role || 'student',
-      // Admin accounts are auto-approved; students/teachers require clerk/admin approval
-      isApproved: role === 'admin' ? true : false,
+      role: assignedRole,
+      isApproved: false, // Always false; requires manual approval
     }
 
     if (userData.role === 'student') {

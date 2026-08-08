@@ -41,11 +41,12 @@ export default function DashboardHome() {
     const fetchData = async () => {
       try {
         const analyticsRes = await api.get('/attempts/analytics')
-        if (analyticsRes.data) {
+        if (analyticsRes.data && analyticsRes.data.success && analyticsRes.data.data) {
+          const stats = analyticsRes.data.data
           setMetrics({
-            testsAttempted: analyticsRes.data.totalAttempts || 0,
-            avgScore: analyticsRes.data.overallAccuracy ? analyticsRes.data.overallAccuracy.toFixed(0) : 0,
-            streak: analyticsRes.data.streak || 0,
+            testsAttempted: stats.totalTests || 0,
+            avgScore: stats.overallAccuracy ? Math.round(stats.overallAccuracy) : 0,
+            streak: stats.streak || 0,
           })
         }
       } catch (err) {
