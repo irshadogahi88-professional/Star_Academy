@@ -162,32 +162,26 @@ export default function TestAttempt() {
 
     const apiRes = await testService.submitTestAttempt(id, payload)
 
-    let score = 0
-    let resultPayload = null
-
     if (apiRes && apiRes.success && apiRes.data) {
       score = apiRes.data.score
       resultPayload = apiRes.data
-    } else {
-      // Fallback local scoring if API fails
-      questions.forEach((q) => {
-        if (userAnswers[q._id || q.id] === q.correctOptionIndex) {
-          score += 4 // Assuming 4 marks per correct answer
-        }
-      })
-    }
 
-    navigate(`/dashboard/tests/${id}/result`, {
-      state: {
-        answers: userAnswers,
-        score,
-        totalQuestions: questions.length,
-        autoSubmitted: auto,
-        tabSwitches,
-        apiData: resultPayload,
-        testInfo, // Pass test info to result screen for constraints check
-      },
-    })
+      navigate(`/dashboard/tests/${id}/result`, {
+        state: {
+          answers: userAnswers,
+          score,
+          totalQuestions: questions.length,
+          autoSubmitted: auto,
+          tabSwitches,
+          apiData: resultPayload,
+          testInfo, // Pass test info to result screen for constraints check
+        },
+      })
+    } else {
+      setIsSubmitting(false)
+      const errorMsg = apiRes?.error || 'A network error occurred or the test submission window has closed.'
+      alert(`Submission Failed: ${errorMsg}\n\nPlease check your internet connection and click "Submit" again.`)
+    }
   }
 
   if (loading) {
